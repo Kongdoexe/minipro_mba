@@ -183,7 +183,7 @@ class _RegisterState extends State<Register> {
         title:  Center(
           child:  Column(
             children: [
-              Image.asset('assets/images//check.png',
+              Image.asset('assets/images/check.png',
                 width: 70,
               ),
               const Text(
