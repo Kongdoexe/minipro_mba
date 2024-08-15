@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:minipro_mba/pages/User/BuyLotto.dart';
 import 'package:minipro_mba/pages/User/CheckLotto.dart';
 import 'package:minipro_mba/pages/User/ResultLotto.dart';
 import 'package:minipro_mba/pages/login.dart';
