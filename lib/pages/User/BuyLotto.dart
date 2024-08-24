@@ -1,17 +1,8 @@
 import 'package:flutter/material.dart';
-<<<<<<< HEAD
-=======
-
-
 import 'package:iconsax/iconsax.dart';
->>>>>>> e728fb415db177f3927f7261b0bc20840c22dcb7
-
-
-
 
 class BuylottoPage extends StatefulWidget {
   const BuylottoPage({super.key});
-
   @override
   State<BuylottoPage> createState() => _BuylottoPageState();
 }
@@ -19,14 +10,6 @@ class BuylottoPage extends StatefulWidget {
 class _BuylottoPageState extends State<BuylottoPage> {
   @override
   Widget build(BuildContext context) {
-<<<<<<< HEAD
-    return Container();
-  }
-}
-=======
-
-
-
     return Scaffold(
       backgroundColor: const Color.fromRGBO(255, 138, 128, 1),
       appBar: AppBar(
@@ -192,7 +175,6 @@ class _BuylottoPageState extends State<BuylottoPage> {
       )),
     );
   }
-
   void search() {}
 }
 
