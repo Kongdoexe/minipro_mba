@@ -3,7 +3,6 @@ import 'package:iconsax/iconsax.dart';
 
 class BuylottoPage extends StatefulWidget {
   const BuylottoPage({super.key});
-
   @override
   State<BuylottoPage> createState() => _BuylottoPageState();
 }
@@ -176,7 +175,6 @@ class _BuylottoPageState extends State<BuylottoPage> {
       )),
     );
   }
-
   void search() {}
 }
 
