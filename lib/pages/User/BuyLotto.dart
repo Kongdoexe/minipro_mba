@@ -187,4 +187,3 @@ class _BuylottoPageState extends State<BuylottoPage> {
 
   void search() {}
 }
->>>>>>> e728fb415db177f3927f7261b0bc20840c22dcb7
