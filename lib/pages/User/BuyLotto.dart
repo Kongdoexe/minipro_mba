@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:iconsax/iconsax.dart';
+import 'package:minipro_mba/pages/User/CartLotto.dart';
 
 class BuylottoPage extends StatefulWidget {
   const BuylottoPage({super.key});
@@ -12,6 +13,7 @@ int selectedItems = 0;
 
   @override
   Widget build(BuildContext context) {
+    final screenSize = MediaQuery.of(context).size;
     return Scaffold(
       backgroundColor: const Color.fromRGBO(255, 138, 128, 1),
       appBar: AppBar(
@@ -188,7 +190,7 @@ int selectedItems = 0;
                                     padding: const EdgeInsets.all(8.0),
                                     child: OutlinedButton(
                                       onPressed: choose,
-                                      child: const Text('เลือก'),
+                                      child: const Text('เลือก', style: TextStyle(color: Colors.black)),
                                       style: OutlinedButton.styleFrom(
                                         side: const BorderSide(
                                             color: Color.fromARGB(255, 231, 84, 81)), // กำหนดสีขอบ
@@ -337,9 +339,7 @@ int selectedItems = 0;
                     children: [
                       Text('สลากที่เลือก $selectedItems ใบ'),
                       ElevatedButton(
-                        onPressed: () {
-                          // ทำงานเมื่อต้องการตรวจสอบสลาก
-                        },
+                        onPressed: check,
                         child: const Text('ตรวจสอบสลากของคุณ'),
                       ),
                     ],
@@ -353,14 +353,17 @@ int selectedItems = 0;
       )),
       bottomNavigationBar: NavigationBarTheme(
         data: NavigationBarThemeData(
-            labelTextStyle: MaterialStateProperty.all(
-              const TextStyle(color: Colors.white, fontSize: 14),
-            ),
-            iconTheme: const MaterialStatePropertyAll(IconThemeData(size: 30))),
+          labelTextStyle: WidgetStatePropertyAll(
+            TextStyle(color: Colors.white, fontSize: screenSize.width * 0.034),
+          ),
+          iconTheme: WidgetStatePropertyAll(
+            IconThemeData(size: screenSize.width * 0.068),
+          ),
+        ),
         child: NavigationBar(
           backgroundColor: const Color.fromRGBO(249, 85, 85, 1),
-          selectedIndex: 3,
-          onDestinationSelected: (value) => 3,
+          selectedIndex: 1,
+          onDestinationSelected: (value) => 1,
           destinations: const [
             NavigationDestination(icon: Icon(Iconsax.home), label: "หน้าแรก"),
             NavigationDestination(
@@ -383,5 +386,11 @@ int selectedItems = 0;
     setState(() {
       selectedItems++;
     });
+  }
+
+  void check() {
+    Navigator.push(context,
+    MaterialPageRoute(builder: (context) => const CartlottoPage(),
+    ));
   }
 }
