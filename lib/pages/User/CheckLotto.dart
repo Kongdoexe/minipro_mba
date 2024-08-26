@@ -16,6 +16,7 @@ class _CheckLottoPageState extends State<CheckLottoPage> {
 
   @override
   Widget build(BuildContext context) {
+    final screenSize = MediaQuery.of(context).size;
     return Scaffold(
       backgroundColor: const Color.fromRGBO(255, 138, 128, 1),
       appBar: AppBar(
@@ -27,43 +28,50 @@ class _CheckLottoPageState extends State<CheckLottoPage> {
               children: [
                 Image.asset(
                   "assets/images/ICON.png",
-                  width: 50,
-                  height: 50,
+                  width: screenSize.width * 0.12,
+                  height: screenSize.height * 1,
                 ),
-                const Text("ตรวจสลาก"),
+                const Text(
+                  "ตรวจสลาก",
+                  style: TextStyle(
+                      fontFamily: 'MaliBold',
+                      color: Color.fromARGB(255, 255, 255, 255),
+                      fontWeight: FontWeight.bold),
+                ),
               ],
             ),
             SizedBox(
-              width: 40,
-              height: 40,
+              width: screenSize.width * 0.12,
+              height: screenSize.height * 1,
               child: PopupMenuButton<int>(
-                icon: const Icon(
+                icon: Icon(
                   Icons.menu,
-                  size: 30,
+                  size: screenSize.height * 0.04,
                 ),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(10),
                 ),
-                offset: const Offset(-5, 30), //position
+                offset: Offset(screenSize.width * -0.02,
+                    screenSize.height * 0.515), //position
                 itemBuilder: (context) => [
-                  const PopupMenuItem(
+                  PopupMenuItem(
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
-                        Icon(Iconsax.shopping_cart, color: Colors.black),
-                        SizedBox(width: 10),
-                        Text('ตระกร้า'),
+                        const Icon(Iconsax.shopping_cart, color: Colors.black),
+                        SizedBox(width: screenSize.width * 0.05),
+                        const Text('ตระกร้า'),
                       ],
                     ),
                   ),
                   const PopupMenuDivider(),
-                  const PopupMenuItem(
+                  PopupMenuItem(
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
-                        Icon(Iconsax.logout, color: Colors.black),
-                        SizedBox(width: 10),
-                        Text('ออกจากระบบ'),
+                        const Icon(Iconsax.logout, color: Colors.black),
+                        SizedBox(width: screenSize.width * 0.05),
+                        const Text('ออกจากระบบ'),
                       ],
                     ),
                   ),
@@ -191,10 +199,13 @@ class _CheckLottoPageState extends State<CheckLottoPage> {
       ),
       bottomNavigationBar: NavigationBarTheme(
         data: NavigationBarThemeData(
-            labelTextStyle: MaterialStateProperty.all(
-              const TextStyle(color: Colors.white, fontSize: 14),
-            ),
-            iconTheme: const MaterialStatePropertyAll(IconThemeData(size: 30))),
+          labelTextStyle: WidgetStatePropertyAll(
+            TextStyle(color: Colors.white, fontSize: screenSize.width * 0.034),
+          ),
+          iconTheme: WidgetStatePropertyAll(
+            IconThemeData(size: screenSize.width * 0.068),
+          ),
+        ),
         child: NavigationBar(
           backgroundColor: const Color.fromRGBO(249, 85, 85, 1),
           selectedIndex: 1,

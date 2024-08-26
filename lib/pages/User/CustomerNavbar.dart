@@ -1,0 +1,52 @@
+import 'package:flutter/material.dart';
+import 'package:iconsax/iconsax.dart';
+
+class CustomNavigationBar extends StatelessWidget {
+  final int selectedIndex;
+  final Function(int) onDestinationSelected;
+  final Size screenSize;
+
+  const CustomNavigationBar({
+    Key? key,
+    required this.selectedIndex,
+    required this.onDestinationSelected,
+    required this.screenSize,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.only(top: 1),
+      child: NavigationBarTheme(
+        data: NavigationBarThemeData(
+          labelTextStyle: WidgetStateProperty.all(
+            TextStyle(color: Colors.white, fontSize: screenSize.width * 0.030),
+          ),
+          iconTheme: WidgetStateProperty.all(
+            IconThemeData(size: screenSize.width * 0.068),
+          ),
+          indicatorColor: Colors.white.withOpacity(0.2),
+          indicatorShape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(100),
+          ),
+        ),
+        child: NavigationBar(
+          backgroundColor: const Color.fromRGBO(249, 85, 85, 1),
+          selectedIndex: selectedIndex,
+          onDestinationSelected: onDestinationSelected,
+          destinations: const [
+            NavigationDestination(icon: Icon(Iconsax.home), label: "หน้าแรก"),
+            NavigationDestination(
+                icon: Icon(Iconsax.wallet_check), label: "ตรวจสลาก"),
+            NavigationDestination(
+                icon: Icon(Iconsax.ticket), label: "สลากของฉัน"),
+            NavigationDestination(
+                icon: Icon(Iconsax.money_tick), label: "ซื้อสลาก"),
+            NavigationDestination(
+                icon: Icon(Iconsax.profile_2user), label: "โปรไฟล์"),
+          ],
+        ),
+      ),
+    );
+  }
+}
