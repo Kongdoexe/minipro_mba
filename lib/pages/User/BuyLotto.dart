@@ -28,7 +28,7 @@ int selectedItems = 0;
                   width: 50,
                   height: 50,
                 ),
-                const Text("ตรวจสลาก"),
+                const Text("ซื้อสลาก"),
               ],
             ),
             SizedBox(
