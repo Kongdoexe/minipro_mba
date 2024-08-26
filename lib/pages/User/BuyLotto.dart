@@ -9,7 +9,7 @@ class BuylottoPage extends StatefulWidget {
 }
 
 class _BuylottoPageState extends State<BuylottoPage> {
-int selectedItems = 0;
+  int selectedItems = 0;
 
   @override
   Widget build(BuildContext context) {
@@ -67,7 +67,7 @@ int selectedItems = 0;
                   ),
                 ],
               ),
-            )
+            ),
           ],
         ),
       ),
@@ -169,7 +169,8 @@ int selectedItems = 0;
                                         width: 150, // กำหนดความกว้างของ Card
                                         height: 50, // กำหนดความสูงของ Card
                                         child: Card(
-                                          color: Color.fromARGB(255, 186, 186, 186),
+                                          color: Color.fromARGB(
+                                              255, 186, 186, 186),
                                           child: Center(
                                               child: Text(
                                             '123456',
@@ -190,10 +191,13 @@ int selectedItems = 0;
                                     padding: const EdgeInsets.all(8.0),
                                     child: OutlinedButton(
                                       onPressed: choose,
-                                      child: const Text('เลือก', style: TextStyle(color: Colors.black)),
+                                      child: const Text('เลือก',
+                                          style:
+                                              TextStyle(color: Colors.black)),
                                       style: OutlinedButton.styleFrom(
                                         side: const BorderSide(
-                                            color: Color.fromARGB(255, 231, 84, 81)), // กำหนดสีขอบ
+                                            color: Color.fromARGB(255, 231, 84,
+                                                81)), // กำหนดสีขอบ
                                       ),
                                     ),
                                   ),
@@ -209,7 +213,7 @@ int selectedItems = 0;
                       ),
                     ),
                   ),
-                  
+
                   // Padding(
                   //   padding: const EdgeInsets.fromLTRB(30, 10, 30, 0),
                   //   child: Card(
@@ -328,7 +332,8 @@ int selectedItems = 0;
               ),
             ),
           ),
-          if (selectedItems > 0) ...[  //ตรวจสอบการเลือกสลาก
+          if (selectedItems > 0) ...[
+            //ตรวจสอบการเลือกสลาก
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: Card(
@@ -340,7 +345,12 @@ int selectedItems = 0;
                       Text('สลากที่เลือก $selectedItems ใบ'),
                       ElevatedButton(
                         onPressed: check,
-                        child: const Text('ตรวจสอบสลากของคุณ'),
+                        child: const Text(
+                          'ตรวจสอบสลากของคุณ',
+                          style: TextStyle(
+                              color: Color.fromARGB(255, 231, 84, 81),
+                              fontWeight: FontWeight.bold),
+                        ),
                       ),
                     ],
                   ),
@@ -349,7 +359,6 @@ int selectedItems = 0;
             ),
           ],
         ],
-        
       )),
       bottomNavigationBar: NavigationBarTheme(
         data: NavigationBarThemeData(
@@ -389,8 +398,10 @@ int selectedItems = 0;
   }
 
   void check() {
-    Navigator.push(context,
-    MaterialPageRoute(builder: (context) => const CartlottoPage(),
-    ));
+    Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => const CartlottoPage(),
+        ));
   }
 }
