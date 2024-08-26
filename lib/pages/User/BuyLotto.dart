@@ -362,8 +362,8 @@ int selectedItems = 0;
         ),
         child: NavigationBar(
           backgroundColor: const Color.fromRGBO(249, 85, 85, 1),
-          selectedIndex: 1,
-          onDestinationSelected: (value) => 1,
+          selectedIndex: 3,
+          onDestinationSelected: (value) => 3,
           destinations: const [
             NavigationDestination(icon: Icon(Iconsax.home), label: "หน้าแรก"),
             NavigationDestination(
