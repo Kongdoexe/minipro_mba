@@ -11,7 +11,7 @@ class ResultLottoPage extends StatefulWidget {
 class _ResultLottoPageState extends State<ResultLottoPage> {
   final PageController _pageController = PageController();
   int _currentPage = 0;
-  List<bool> results = [false, true, true];
+  List<bool> results = [true, true, true];
 
   @override
   void initState() {
