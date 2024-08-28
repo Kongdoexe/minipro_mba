@@ -1,5 +1,9 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:iconsax/iconsax.dart';
+import 'package:minipro_mba/pages/User/CustomerAppBar.dart';
+import 'package:minipro_mba/pages/User/CustomerNavbar.dart';
 
 class ResultLottoPage extends StatefulWidget {
   const ResultLottoPage({super.key});
@@ -28,97 +32,32 @@ class _ResultLottoPageState extends State<ResultLottoPage> {
     final screenSize = MediaQuery.of(context).size;
     return Scaffold(
       backgroundColor: const Color.fromRGBO(255, 138, 128, 1),
-      appBar: AppBar(
-        backgroundColor: const Color.fromRGBO(255, 138, 128, 1),
-        title: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Row(
-              children: [
-                Image.asset(
-                  "assets/images/ICON.png",
-                  width: screenSize.width * 0.12,
-                  height: screenSize.height * 1,
-                ),
-                const Text(
-                  "ตรวจสลาก",
-                  style: TextStyle(
-                      fontFamily: 'MaliBold',
-                      color: Color.fromARGB(255, 255, 255, 255),
-                      fontWeight: FontWeight.bold),
-                ),
-              ],
-            ),
-            SizedBox(
-              width: screenSize.width * 0.12,
-              height: screenSize.height * 1,
-              child: PopupMenuButton<int>(
-                icon: Icon(
-                  Icons.menu,
-                  size: screenSize.height * 0.04,
-                ),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10),
-                ),
-                offset: Offset(screenSize.width * -0.02,
-                    screenSize.height * 0.515), //position
-                itemBuilder: (context) => [
-                  PopupMenuItem(
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        const Icon(Iconsax.shopping_cart, color: Colors.black),
-                        SizedBox(width: screenSize.width * 0.05),
-                        const Text('ตระกร้า'),
-                      ],
-                    ),
-                  ),
-                  const PopupMenuDivider(),
-                  PopupMenuItem(
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        const Icon(Iconsax.logout, color: Colors.black),
-                        SizedBox(width: screenSize.width * 0.05),
-                        const Text('ออกจากระบบ'),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-            )
-          ],
-        ),
-      ),
+      appBar: CustomAppBar(screenSize: screenSize),
       body: Stack(
         children: [
           Positioned.fill(
             child: Padding(
               padding: EdgeInsets.only(
-                right: screenSize.width * 0.08,
-                left: screenSize.width * 0.08,
-                bottom: screenSize.height * 0.12,
-                top: screenSize.height * 0.10,
+                right: screenSize.width * 0.12,
+                left: screenSize.width * 0.12,
+                bottom: screenSize.height * 0.135,
+                top: screenSize.height * 0.06,
               ),
               child: Container(
                 decoration: const BoxDecoration(
                   color: Colors.white,
-                  borderRadius: BorderRadius.all(Radius.circular(20)),
+                  borderRadius: BorderRadius.all(Radius.circular(10)),
                 ),
                 child: Column(
                   children: [
                     Expanded(
-                      child: Padding(
-                        padding:
-                            EdgeInsets.only(top: screenSize.height * 0.032),
-                        child: PageView(
-                          controller: _pageController,
-                          children: results
-                              .map((result) => result
-                                  ? buildTrueWidget()
-                                  : buildFalseWidget())
-                              .toList(),
-                        ),
+                      child: PageView(
+                        controller: _pageController,
+                        children: results
+                            .map((result) => result
+                                ? buildTrueWidget(screenSize)
+                                : buildFalseWidget(screenSize))
+                            .toList(),
                       ),
                     ),
                     Padding(
@@ -151,93 +90,71 @@ class _ResultLottoPageState extends State<ResultLottoPage> {
             child: Column(
               children: [
                 Padding(
-                  padding: EdgeInsets.only(top: screenSize.height * 0.04),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Text(
-                        "ผลการตรวจรางวัล",
-                        style: TextStyle(
-                            fontFamily: 'MaliMedium',
-                            fontSize: screenSize.width * 0.05,
-                            color: const Color.fromARGB(255, 0, 0, 0),
-                            fontWeight: FontWeight.bold),
-                      ),
-                    ],
-                  ),
-                ),
-                SizedBox(
-                  height: screenSize.height * 0.66,
-                ),
-                SizedBox(
-                  width: screenSize.width * 0.4,
-                  height: screenSize.height * 0.05,
-                  child: TextButton(
-                    onPressed: () {},
-                    style: TextButton.styleFrom(
-                        backgroundColor:
-                            const Color.fromRGBO(255, 209, 128, 1)),
-                    child: Text(
-                      "รับรางวัล",
-                      style: TextStyle(
-                          fontFamily: 'MaliMedium',
-                          fontSize: screenSize.width * 0.036,
-                          color: const Color.fromARGB(255, 0, 0, 0),
-                          fontWeight: FontWeight.bold),
+                  padding: EdgeInsets.only(top: screenSize.height * 0.01),
+                  child: Text(
+                    "ผลการตรวจรางวัล",
+                    style: TextStyle(
+                      fontFamily: 'MaliMedium',
+                      fontSize: screenSize.width * 0.046,
+                      color: const Color.fromARGB(255, 0, 0, 0),
+                      fontWeight: FontWeight.bold,
                     ),
                   ),
                 ),
+                const Spacer(),
+                SizedBox(
+                  width: screenSize.width * 0.35,
+                  height: screenSize.height * 0.06,
+                  child: TextButton(
+                    onPressed: CheckScreen,
+                    style: TextButton.styleFrom(
+                      backgroundColor: const Color.fromRGBO(255, 209, 128, 1),
+                    ),
+                    child: Text(
+                      "รับรางวัล",
+                      style: TextStyle(
+                        fontFamily: 'MaliMedium',
+                        fontSize: screenSize.width * 0.04,
+                        color: const Color.fromARGB(255, 0, 0, 0),
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                ),
+                SizedBox(height: screenSize.height * 0.05),
               ],
             ),
           ),
         ],
       ),
-      bottomNavigationBar: NavigationBarTheme(
-        data: NavigationBarThemeData(
-          labelTextStyle: WidgetStatePropertyAll(
-            TextStyle(color: Colors.white, fontSize: screenSize.width * 0.034),
-          ),
-          iconTheme: WidgetStatePropertyAll(
-            IconThemeData(size: screenSize.width * 0.068),
-          ),
-        ),
-        child: NavigationBar(
-          backgroundColor: const Color.fromRGBO(249, 85, 85, 1),
-          selectedIndex: 1,
-          onDestinationSelected: (value) => 1,
-          destinations: const [
-            NavigationDestination(icon: Icon(Iconsax.home), label: "หน้าแรก"),
-            NavigationDestination(
-                icon: Icon(Iconsax.wallet_check), label: "ตรวจสลาก"),
-            NavigationDestination(
-                icon: Icon(Iconsax.ticket), label: "สลากของฉัน"),
-            NavigationDestination(
-                icon: Icon(Iconsax.money_tick), label: "ซื้อสลาก"),
-            NavigationDestination(
-                icon: Icon(Iconsax.profile_2user), label: "โปรไฟล์"),
-          ],
-        ),
+      bottomNavigationBar: CustomNavigationBar(
+        selectedIndex: 1,
+        onDestinationSelected: (value) {},
+        screenSize: screenSize,
       ),
     );
   }
 
-  Widget buildTrueWidget() {
+  void CheckScreen() {
     final screenSize = MediaQuery.of(context).size;
+    log("Width :${screenSize.width}");
+    log("Height :${screenSize.height}");
+  }
+
+  Widget buildTrueWidget(Size screenSize) {
     return SingleChildScrollView(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           SizedBox(
-            width: screenSize.width * 2.0,
+            width: screenSize.width,
             child: Image.asset(
               "assets/images/Cheap.png",
               height: screenSize.height * 0.31,
               fit: BoxFit.contain,
             ),
           ),
-          Padding(
-            padding: EdgeInsets.only(top: screenSize.height * 0.005),
-          ),
+          SizedBox(height: screenSize.height * 0.005),
           Text(
             "451238",
             style: TextStyle(
@@ -296,19 +213,19 @@ class _ResultLottoPageState extends State<ResultLottoPage> {
     );
   }
 
-  Widget buildFalseWidget() {
-    final screenSize = MediaQuery.of(context).size;
+  Widget buildFalseWidget(Size screenSize) {
     return SingleChildScrollView(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           SizedBox(
-              width: screenSize.width * 2,
-              child: Image.asset(
-                "assets/images/Not_cheap.png",
-                height: screenSize.height * 0.31,
-                fit: BoxFit.contain,
-              )),
+            width: screenSize.width,
+            child: Image.asset(
+              "assets/images/Not_cheap.png",
+              height: screenSize.height * 0.31,
+              fit: BoxFit.contain,
+            ),
+          ),
           SizedBox(height: screenSize.height * 0.02),
           Text(
             "451238",
@@ -348,7 +265,7 @@ class _ResultLottoPageState extends State<ResultLottoPage> {
             ),
           ),
           Text(
-            "เราเอาใหชีวิตยังอีกยาวไกลยิ่งนักเจ้าขา",
+            "ชีวิตยังอีกยาวไกล",
             style: TextStyle(
               fontFamily: 'MaliMedium',
               fontSize: screenSize.width * 0.036,
