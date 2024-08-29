@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:minipro_mba/pages/login.dart';
-import 'package:minipro_mba/shared/Data.dart';
+import 'package:minipro_mba/share/Data.dart';
 import 'package:provider/provider.dart';
 
 void main() {

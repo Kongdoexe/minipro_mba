@@ -9,7 +9,7 @@ import 'package:minipro_mba/pages/User/HomePageuser.dart';
 import 'dart:convert';
 import 'dart:developer';
 
-import 'package:minipro_mba/shared/Data.dart';
+import 'package:minipro_mba/share/Data.dart';
 import 'package:provider/provider.dart';
 
 class LoginPage extends StatefulWidget {

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:minipro_mba/pages/User/CustomerAppBar.dart';
 import 'package:minipro_mba/pages/User/CustomerNavbar.dart';
-import 'package:minipro_mba/shared/Data.dart';
+import 'package:minipro_mba/share/Data.dart';
 import 'package:provider/provider.dart'; // Make sure you have this package installed
 
 class Homepageuser extends StatefulWidget {
