@@ -3,6 +3,7 @@ import 'package:iconsax/iconsax.dart';
 import 'package:minipro_mba/pages/Admin/HomePage.dart';
 import 'package:minipro_mba/pages/User/BuyLotto.dart';
 import 'package:minipro_mba/pages/User/CheckLotto.dart';
+import 'package:minipro_mba/pages/User/HomePageuser.dart';
 import 'package:minipro_mba/pages/User/MyLotto.dart';
 import 'package:minipro_mba/pages/User/Profile.dart';
 
@@ -79,7 +80,7 @@ class CustomNavigationBar extends StatelessWidget {
   void navigateHomePage(BuildContext context) {
     Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) => const HomePage()),
+      MaterialPageRoute(builder: (context) => const Homepageuser()),
     );
   }
 

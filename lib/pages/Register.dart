@@ -13,7 +13,7 @@ class Register extends StatefulWidget {
 }
 
 class _RegisterState extends State<Register> {
-  TextEditingController Name = TextEditingController();
+  TextEditingController name = TextEditingController();
   TextEditingController email = TextEditingController();
   TextEditingController password = TextEditingController();
   TextEditingController phone = TextEditingController();
@@ -64,7 +64,7 @@ class _RegisterState extends State<Register> {
                 Text('ชื่อ-สกุล : '),
                 SizedBox(height: 10),
                  TextField(
-                  controller: Name,
+                  controller: name,
                   decoration: const InputDecoration(
                     border: OutlineInputBorder(
                       borderSide: BorderSide(

@@ -1,16 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:minipro_mba/pages/Admin/HomePage.dart';
-import 'package:minipro_mba/pages/User/BuyLotto.dart';
-import 'package:minipro_mba/pages/User/CartLotto.dart';
-import 'package:minipro_mba/pages/User/CheckLotto.dart';
-import 'package:minipro_mba/pages/User/HomePageuser.dart';
-import 'package:minipro_mba/pages/User/MyLotto.dart';
-import 'package:minipro_mba/pages/User/PayLotto.dart';
-import 'package:minipro_mba/pages/User/ResultLotto.dart';
 import 'package:minipro_mba/pages/login.dart';
+import 'package:minipro_mba/shared/Data.dart';
+import 'package:provider/provider.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(ChangeNotifierProvider(
+      create: (context) => Data(),
+      child: const MyApp(),
+    ),);
 }
 
 class MyApp extends StatelessWidget {

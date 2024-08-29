@@ -9,6 +9,9 @@ import 'package:minipro_mba/pages/User/HomePageuser.dart';
 import 'dart:convert';
 import 'dart:developer';
 
+import 'package:minipro_mba/shared/Data.dart';
+import 'package:provider/provider.dart';
+
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
 
@@ -69,7 +72,7 @@ class _LoginPageState extends State<LoginPage> {
                   padding: EdgeInsets.only(right: 230, top: 40),
                   child: Text(
                     'อีเมลล์',
-                    style: TextStyle(fontWeight: FontWeight.w700,fontSize:17),
+                    style: TextStyle(fontWeight: FontWeight.w700, fontSize: 17),
                   ),
                 ),
                 Padding(
@@ -94,7 +97,7 @@ class _LoginPageState extends State<LoginPage> {
                   padding: EdgeInsets.only(right: 220, top: 30),
                   child: Text(
                     'รหัสผ่าน',
-                    style: TextStyle(fontWeight: FontWeight.w700,fontSize:17),
+                    style: TextStyle(fontWeight: FontWeight.w700, fontSize: 17),
                   ),
                 ),
                 Padding(
@@ -125,7 +128,10 @@ class _LoginPageState extends State<LoginPage> {
                       onPressed: () {
                         loginUser();
                       },
-                      child: Text('เข้าสู่ระบบ',style: TextStyle(fontSize:16),),
+                      child: Text(
+                        'เข้าสู่ระบบ',
+                        style: TextStyle(fontSize: 16),
+                      ),
                       style: ButtonStyle(
                         backgroundColor: MaterialStateProperty.all<Color>(
                             const Color.fromARGB(255, 230, 92, 87)),
@@ -138,7 +144,10 @@ class _LoginPageState extends State<LoginPage> {
                   children: [
                     const Padding(
                       padding: EdgeInsets.only(top: 20),
-                      child: Text('คุณยังไม่มีบัญชีใช่หรือไม่ ?',style: TextStyle(fontSize:16),),
+                      child: Text(
+                        'คุณยังไม่มีบัญชีใช่หรือไม่ ?',
+                        style: TextStyle(fontSize: 16),
+                      ),
                     ),
                     Padding(
                       padding: EdgeInsets.only(top: 20),
@@ -146,9 +155,9 @@ class _LoginPageState extends State<LoginPage> {
                         onPressed: register,
                         child: const Text(
                           'สมัครสมาชิก',
-                          style:
-                              TextStyle(color: Color.fromRGBO(221, 86, 76, 1),fontSize: 16)
-                              ,
+                          style: TextStyle(
+                              color: Color.fromRGBO(221, 86, 76, 1),
+                              fontSize: 16),
                         ),
                       ),
                     )
@@ -166,12 +175,14 @@ class _LoginPageState extends State<LoginPage> {
     Navigator.push(
       context,
       MaterialPageRoute(
-        builder: (context) => Register(),
+        builder: (context) => const Register(),
       ),
     );
   }
 
   void loginUser() {
+    final userTest = context.read<Data>();
+    log(userTest.mid.toString());
     LoginRequestGet login = LoginRequestGet(
         email: _emailController.text, password: _passwordController.text);
 
@@ -189,22 +200,21 @@ class _LoginPageState extends State<LoginPage> {
         .then((response) {
       if (response.statusCode == 200 && response.body.isNotEmpty) {
         try {
-
           Map<String, dynamic> responseData = jsonDecode(response.body);
 
           LoginResponseGet memberlogin =
               LoginResponseGet.fromJson(responseData);
 
-          print('เข้าสู่ระบบสำเร็จ');
+          userTest.setUserId(memberlogin.memberId);
+
+          log(userTest.mid.toString());
 
           // ตรวจสอบค่า isadmin
           if (memberlogin.isadmin == 0) {
             Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (context) => Homepageuser(
-                  mid: memberlogin.memberId,
-                ),
+                builder: (context) => const Homepageuser(),
               ),
             );
             print('id=${memberlogin.memberId}');
@@ -212,8 +222,7 @@ class _LoginPageState extends State<LoginPage> {
             Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (context) => HomePage(
-                    ),
+                builder: (context) => HomePage(),
               ),
             );
           } else {
@@ -232,8 +241,6 @@ class _LoginPageState extends State<LoginPage> {
         ScaffoldMessenger.of(context)
             .showSnackBar(SnackBar(content: Text('Login failed')));
       }
-    }).catchError((error) {
-     
-    });
+    }).catchError((error) {});
   }
 }
