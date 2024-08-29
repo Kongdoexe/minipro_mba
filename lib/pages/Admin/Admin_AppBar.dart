@@ -5,11 +5,11 @@ import 'package:minipro_mba/pages/login.dart';
 import 'package:minipro_mba/share/Data.dart';
 import 'package:provider/provider.dart';
 
-class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
+class AdminAppBar extends StatelessWidget implements PreferredSizeWidget {
   final Size screenSize;
   final String namePage;
 
-  const CustomAppBar({
+  const AdminAppBar({
     super.key,
     required this.screenSize,
     required this.namePage,

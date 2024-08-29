@@ -1,5 +1,3 @@
-import 'dart:ffi';
-
 import 'package:flutter/material.dart';
 import 'package:minipro_mba/config/config.dart';
 import 'package:minipro_mba/pages/login.dart';
@@ -27,10 +25,11 @@ class _RegisterState extends State<Register> {
       url=value['apiEndpoint'].toString();
     });
   }
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Color.fromRGBO(245, 160, 154, 1),
+        backgroundColor: const Color.fromRGBO(245, 160, 154, 1),
         toolbarHeight: 80,
         title: Padding(
           padding: const EdgeInsets.only(left: 30),
@@ -40,7 +39,7 @@ class _RegisterState extends State<Register> {
                 'assets/images/ICON.png',
                 height: 60,
               ),
-              SizedBox(width: 5), // เพิ่มระยะห่างระหว่างรูปภาพและข้อความ
+              const SizedBox(width: 5), // เพิ่มระยะห่างระหว่างรูปภาพและข้อความ
               const Text(
                 'สมัครสมาชิก',
                 style: TextStyle(
@@ -54,15 +53,15 @@ class _RegisterState extends State<Register> {
       ),
       body: SingleChildScrollView(
         child: Container(
-          color: Color.fromARGB(0, 0, 0, 0),
+          color: const Color.fromARGB(0, 0, 0, 0),
           child: Padding(
-            padding: EdgeInsets.only(top: 30, left: 50, right: 50),
+            padding: const EdgeInsets.only(top: 30, left: 50, right: 50),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text('ชื่อ-สกุล : '),
-                SizedBox(height: 10),
+                const Text('ชื่อ-สกุล : '),
+                const SizedBox(height: 10),
                  TextField(
                   controller: name,
                   decoration: const InputDecoration(
@@ -82,7 +81,7 @@ class _RegisterState extends State<Register> {
                   padding: EdgeInsets.only(top: 15),
                   child: Text('อีเมลล์ : '),
                 ),
-                SizedBox(height: 10),
+                const SizedBox(height: 10),
                  TextField(
                   controller: email,
                   decoration: const InputDecoration(
@@ -102,7 +101,7 @@ class _RegisterState extends State<Register> {
                   padding: EdgeInsets.only(top: 15),
                   child: Text('เบอร์โทรศัพท์ : '),
                 ),
-                SizedBox(height: 10),
+                const SizedBox(height: 10),
                  TextField(
                   controller: phone,
                   decoration: const InputDecoration(
@@ -122,7 +121,7 @@ class _RegisterState extends State<Register> {
                   padding: EdgeInsets.only(top: 15),
                   child: Text('รหัสผ่าน : '),
                 ),
-                SizedBox(height: 10),
+                const SizedBox(height: 10),
                 const TextField(
                   decoration: InputDecoration(
                     border: OutlineInputBorder(
@@ -141,7 +140,7 @@ class _RegisterState extends State<Register> {
                   padding: EdgeInsets.only(top: 15),
                   child: Text('จำนวนเงินในวอลเล็ท : '),
                 ),
-                SizedBox(height: 10),
+                const SizedBox(height: 10),
                 const TextField(
                   decoration: InputDecoration(
                     border: OutlineInputBorder(
@@ -161,11 +160,11 @@ class _RegisterState extends State<Register> {
                   child: Center(
                       child: FilledButton(
                     onPressed: regissuccess,
-                    child: Text('สมัครสมาชิก'),
                     style: ButtonStyle(
-                      backgroundColor: MaterialStateProperty.all<Color>(
+                      backgroundColor: WidgetStateProperty.all<Color>(
                           const Color.fromARGB(255, 230, 92, 87)),
                     ),
+                    child: const Text('สมัครสมาชิก'),
                   )),
                 ),
                 Row(
@@ -176,7 +175,7 @@ class _RegisterState extends State<Register> {
                       child: Text('คุณมีบัญชีอยู่แล้ว ?'),
                     ),
                     Padding(
-                      padding: EdgeInsets.only(top: 9),
+                      padding: const EdgeInsets.only(top: 9),
                       child: TextButton(
                           onPressed: gologin,
                           child: const Text(
@@ -229,18 +228,18 @@ class _RegisterState extends State<Register> {
           FilledButton(
             onPressed: () {
               Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => LoginPage()));
+                  MaterialPageRoute(builder: (context) => const LoginPage()));
             },
-            child: Center(child: const Text('ตกลง',
+            style: ButtonStyle(
+              backgroundColor: WidgetStateProperty.all<Color>(
+                  const Color.fromARGB(255, 230, 92, 87)),
+            ),
+            child: const Center(child: Text('ตกลง',
               style: TextStyle(
                 fontSize: 20,
                 fontWeight: FontWeight.w800,
               ),
             )),
-            style: ButtonStyle(
-              backgroundColor: MaterialStateProperty.all<Color>(
-                  const Color.fromARGB(255, 230, 92, 87)),
-            ),
           )
         ],
       ),
@@ -249,6 +248,6 @@ class _RegisterState extends State<Register> {
 
   void gologin() {
     Navigator.push(
-        context, MaterialPageRoute(builder: (context) => LoginPage()));
+        context, MaterialPageRoute(builder: (context) => const LoginPage()));
   }
 }
