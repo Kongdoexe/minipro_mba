@@ -1,5 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:iconsax/iconsax.dart';
+import 'package:minipro_mba/pages/Admin/HomePage.dart';
+import 'package:minipro_mba/pages/User/BuyLotto.dart';
+import 'package:minipro_mba/pages/User/CheckLotto.dart';
+import 'package:minipro_mba/pages/User/MyLotto.dart';
+import 'package:minipro_mba/pages/User/Profile.dart';
 
 class CustomNavigationBar extends StatelessWidget {
   final int selectedIndex;
@@ -20,10 +25,10 @@ class CustomNavigationBar extends StatelessWidget {
       child: NavigationBarTheme(
         data: NavigationBarThemeData(
           labelTextStyle: WidgetStateProperty.all(
-            TextStyle(color: Colors.white, fontSize: screenSize.width * 0.030),
+            TextStyle(color: Colors.white, fontSize: screenSize.width * 0.035),
           ),
           iconTheme: WidgetStateProperty.all(
-            IconThemeData(size: screenSize.width * 0.068),
+            IconThemeData(size: screenSize.width * 0.07),
           ),
           indicatorColor: Colors.white.withOpacity(0.2),
           indicatorShape: RoundedRectangleBorder(
@@ -33,7 +38,28 @@ class CustomNavigationBar extends StatelessWidget {
         child: NavigationBar(
           backgroundColor: const Color.fromRGBO(249, 85, 85, 1),
           selectedIndex: selectedIndex,
-          onDestinationSelected: onDestinationSelected,
+          onDestinationSelected: (int index) {
+            onDestinationSelected(index); // Call the passed function
+
+            // Navigate to the corresponding page based on the selected index
+            switch (index) {
+              case 0:
+                navigateHomePage(context);
+                break;
+              case 1:
+                navigateCheckLotto(context);
+                break;
+              case 2:
+                navigateMyLotto(context);
+                break;
+              case 3:
+                navigateBuyLotto(context);
+                break;
+              case 4:
+                navigateProfile(context);
+                break;
+            }
+          },
           destinations: const [
             NavigationDestination(icon: Icon(Iconsax.home), label: "หน้าแรก"),
             NavigationDestination(
@@ -47,6 +73,41 @@ class CustomNavigationBar extends StatelessWidget {
           ],
         ),
       ),
+    );
+  }
+
+  void navigateHomePage(BuildContext context) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => const HomePage()),
+    );
+  }
+
+  void navigateCheckLotto(BuildContext context) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => const CheckLottoPage()),
+    );
+  }
+
+  void navigateMyLotto(BuildContext context) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => const MyLottoPage()),
+    );
+  }
+
+  void navigateBuyLotto(BuildContext context) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => const BuylottoPage()),
+    );
+  }
+
+  void navigateProfile(BuildContext context) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => const ProfilePage()),
     );
   }
 }

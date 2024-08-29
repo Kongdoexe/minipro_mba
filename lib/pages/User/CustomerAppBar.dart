@@ -1,17 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:iconsax/iconsax.dart';
+import 'package:minipro_mba/pages/User/CartLotto.dart';
+import 'package:minipro_mba/pages/login.dart';
 
 class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   final Size screenSize;
+  final String namePage;
 
   const CustomAppBar({
-    Key? key,
+    super.key,
     required this.screenSize,
-  }) : super(key: key);
+    required this.namePage,
+  });
 
   @override
   Widget build(BuildContext context) {
     return AppBar(
+      automaticallyImplyLeading: false,
       backgroundColor: const Color.fromRGBO(255, 138, 128, 1),
       title: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -21,15 +26,15 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
               Image.asset(
                 "assets/images/ICON.png",
                 width: screenSize.width * 0.12,
-                height: screenSize.height * 0.08, // ปรับขนาดตามที่ต้องการ
+                height: screenSize.height * 0.08,
               ),
-              const SizedBox(width: 8),
-              const Text(
-                "ตรวจสลาก",
+              SizedBox(width: screenSize.width * 0.01),
+              Text(
+                namePage,
                 style: TextStyle(
                   fontFamily: 'MaliBold',
                   color: Colors.white,
-                  fontSize: 18,
+                  fontSize: screenSize.width * 0.052,
                   fontWeight: FontWeight.bold,
                 ),
               ),
@@ -49,8 +54,16 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                 screenSize.width * -0.02,
                 screenSize.height * 0.055,
               ),
+              onSelected: (int value) {
+                if (value == 0) {
+                  navigateCartLotto(context);
+                } else if (value == 1) {
+                  navigateLoginOut(context);
+                }
+              },
               itemBuilder: (context) => [
                 PopupMenuItem(
+                  value: 0,
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
@@ -62,6 +75,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                 ),
                 const PopupMenuDivider(),
                 PopupMenuItem(
+                  value: 1,
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
@@ -73,12 +87,26 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
                 ),
               ],
             ),
-          )
+          ),
         ],
       ),
     );
   }
 
+  void navigateCartLotto(BuildContext context) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => const CartlottoPage()),
+    );
+  }
+
+  void navigateLoginOut(BuildContext context) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => const LoginPage()),
+    );
+  }
+
   @override
-  Size get preferredSize => Size.fromHeight(kToolbarHeight);
+  Size get preferredSize => const Size.fromHeight(kToolbarHeight);
 }

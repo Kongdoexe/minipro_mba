@@ -1,7 +1,7 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
-import 'package:iconsax/iconsax.dart'; // Make sure to include this package if you want to use Iconsax icons
+import 'package:flutter/services.dart';
+import 'package:minipro_mba/pages/User/CustomerAppBar.dart';
+import 'package:minipro_mba/pages/User/CustomerNavbar.dart'; // Make sure to include this package if you want to use Iconsax icons
 
 class CheckLottoPage extends StatefulWidget {
   const CheckLottoPage({super.key});
@@ -11,7 +11,7 @@ class CheckLottoPage extends StatefulWidget {
 }
 
 class _CheckLottoPageState extends State<CheckLottoPage> {
-  TextEditingController Test = TextEditingController(text: "รอบที่ 1");
+  TextEditingController test = TextEditingController(text: "รอบที่ 1");
   int i = 1;
 
   @override
@@ -19,98 +19,45 @@ class _CheckLottoPageState extends State<CheckLottoPage> {
     final screenSize = MediaQuery.of(context).size;
     return Scaffold(
       backgroundColor: const Color.fromRGBO(255, 138, 128, 1),
-      appBar: AppBar(
-        backgroundColor: const Color.fromRGBO(255, 138, 128, 1),
-        title: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Row(
-              children: [
-                Image.asset(
-                  "assets/images/ICON.png",
-                  width: screenSize.width * 0.12,
-                  height: screenSize.height * 1,
-                ),
-                const Text(
-                  "ตรวจสลาก",
-                  style: TextStyle(
-                      fontFamily: 'MaliBold',
-                      color: Color.fromARGB(255, 255, 255, 255),
-                      fontWeight: FontWeight.bold),
-                ),
-              ],
-            ),
-            SizedBox(
-              width: screenSize.width * 0.12,
-              height: screenSize.height * 1,
-              child: PopupMenuButton<int>(
-                icon: Icon(
-                  Icons.menu,
-                  size: screenSize.height * 0.04,
-                ),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10),
-                ),
-                offset: Offset(screenSize.width * -0.02,
-                    screenSize.height * 0.515), //position
-                itemBuilder: (context) => [
-                  PopupMenuItem(
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        const Icon(Iconsax.shopping_cart, color: Colors.black),
-                        SizedBox(width: screenSize.width * 0.05),
-                        const Text('ตระกร้า'),
-                      ],
-                    ),
-                  ),
-                  const PopupMenuDivider(),
-                  PopupMenuItem(
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        const Icon(Iconsax.logout, color: Colors.black),
-                        SizedBox(width: screenSize.width * 0.05),
-                        const Text('ออกจากระบบ'),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-            )
-          ],
-        ),
+      appBar: CustomAppBar(
+        screenSize: screenSize,
+        namePage: 'ตรวจสลาก',
       ),
       body: Stack(
         children: [
           Positioned.fill(
             child: Padding(
-              padding: const EdgeInsets.only(top: 140),
+              padding: EdgeInsets.only(top: screenSize.height * 0.16),
               child: Container(
-                decoration: const BoxDecoration(
-                  color: Color(0xFFFFFFFF),
+                decoration: BoxDecoration(
+                  color: const Color(0xFFFFFFFF),
                   borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(120),
-                    topRight: Radius.circular(120),
+                    topLeft: Radius.circular(screenSize.width * 0.32),
+                    topRight: Radius.circular(screenSize.width * 0.32),
                   ),
                 ),
               ),
             ),
           ),
           Positioned.fill(
-            top: 60,
+            top: screenSize.height * 0.076,
             child: SingleChildScrollView(
               child: Padding(
-                padding: const EdgeInsets.only(top: 20, left: 70, right: 80),
+                padding: EdgeInsets.only(
+                    top: screenSize.height * 0.01,
+                    left: screenSize.width * 0.2,
+                    right: screenSize.width * 0.2),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Text(
+                    Text(
                       "เลือกรอบที่ออกรางวัล",
-                      style: TextStyle(fontSize: 16),
+                      style: TextStyle(
+                          fontFamily: 'MaliMedium',
+                          fontSize: screenSize.width * 0.05),
                     ),
                     TextField(
-                      controller: Test,
+                      controller: test,
                       decoration: InputDecoration(
                         fillColor: const Color.fromARGB(255, 255, 255, 255),
                         filled: true,
@@ -122,67 +69,88 @@ class _CheckLottoPageState extends State<CheckLottoPage> {
                       ),
                     ),
                     Padding(
-                      padding: const EdgeInsets.only(top: 80, right: 20),
+                      padding: EdgeInsets.only(top: screenSize.height * 0.06),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          const Text("กรอกหมายเลขสลาก",
-                              style: TextStyle(fontSize: 20)),
-                          const Padding(padding: EdgeInsets.only(top: 20)),
+                          Text("กรอกหมายเลขสลาก",
+                              style: TextStyle(
+                                  fontFamily: 'MaliMedium',
+                                  fontSize: screenSize.width * 0.045)),
+                          Padding(
+                              padding: EdgeInsets.only(
+                                  top: screenSize.height * 0.01)),
                           ...List.generate(i, (index) {
                             return Padding(
-                              padding: const EdgeInsets.only(bottom: 10),
+                              padding: EdgeInsets.only(
+                                  bottom: screenSize.height * 0.01),
                               child: Row(
                                 children: [
-                                  Expanded(
+                                  SizedBox(
+                                    width: screenSize.width * 0.45,
                                     child: TextField(
                                       keyboardType: TextInputType.number,
+                                      maxLength: 6,
+                                      inputFormatters: [
+                                        FilteringTextInputFormatter.digitsOnly,
+                                        LengthLimitingTextInputFormatter(6),
+                                      ],
                                       decoration: InputDecoration(
                                         fillColor: Colors.white,
                                         filled: true,
-                                        hintText: 'หมายเลขสลาก ${index + 1}',
+                                        hintText: 'กรอกหมายเลขสลาก',
                                         suffixIcon: IconButton(
                                           icon:
                                               const Icon(Icons.close_outlined),
                                           onPressed: deleteRecode,
                                         ),
                                         border: const OutlineInputBorder(),
+                                        counterText: '',
                                       ),
                                     ),
                                   ),
+                                  Padding(
+                                      padding: EdgeInsets.only(
+                                          left: screenSize.width * 0.024)),
                                   if (index == i - 1) ...[
-                                    const Padding(
-                                        padding: EdgeInsets.only(right: 10)),
                                     IconButton(
-                                      icon: const Icon(
+                                      icon: Icon(
                                         Icons.add,
                                         color: Colors.white,
-                                        size: 15,
+                                        size: screenSize.width * 0.06,
                                       ),
                                       style: IconButton.styleFrom(
                                         backgroundColor: const Color.fromRGBO(
                                             255, 59, 48, 1),
                                       ),
-                                      onPressed: AddRecord,
+                                      onPressed: addRecord,
                                     )
                                   ]
                                 ],
                               ),
                             );
                           }),
-                          Padding(
-                            padding: const EdgeInsets.only(top: 80, left: 20),
+                          SizedBox(
+                            width: screenSize.width * 1,
+                            height: screenSize.height * 0.2,
                             child: Center(
-                              child: FilledButton(
+                              child: TextButton(
                                 onPressed: () {},
-                                style: ButtonStyle(
-                                  backgroundColor: MaterialStateProperty.all(
-                                      const Color(
-                                          0xFFFFD180)), // Set background color
+                                style: TextButton.styleFrom(
+                                  backgroundColor:
+                                      const Color.fromRGBO(255, 209, 128, 1),
+                                  padding: EdgeInsets.symmetric(
+                                      vertical: screenSize.height * 0.015,
+                                      horizontal: screenSize.width * 0.08),
                                 ),
-                                child: const Text(
+                                child: Text(
                                   "ตรวจสลาก",
-                                  style: TextStyle(fontSize: 20, color: Colors.black),
+                                  style: TextStyle(
+                                    fontFamily: 'MaliMedium',
+                                    fontSize: screenSize.width * 0.04,
+                                    color: const Color.fromARGB(255, 0, 0, 0),
+                                    fontWeight: FontWeight.bold,
+                                  ),
                                 ),
                               ),
                             ),
@@ -197,36 +165,15 @@ class _CheckLottoPageState extends State<CheckLottoPage> {
           ),
         ],
       ),
-      bottomNavigationBar: NavigationBarTheme(
-        data: NavigationBarThemeData(
-          labelTextStyle: WidgetStatePropertyAll(
-            TextStyle(color: Colors.white, fontSize: screenSize.width * 0.034),
-          ),
-          iconTheme: WidgetStatePropertyAll(
-            IconThemeData(size: screenSize.width * 0.068),
-          ),
-        ),
-        child: NavigationBar(
-          backgroundColor: const Color.fromRGBO(249, 85, 85, 1),
-          selectedIndex: 1,
-          onDestinationSelected: (value) => 1,
-          destinations: const [
-            NavigationDestination(icon: Icon(Iconsax.home), label: "หน้าแรก"),
-            NavigationDestination(
-                icon: Icon(Iconsax.wallet_check), label: "ตรวจสลาก"),
-            NavigationDestination(
-                icon: Icon(Iconsax.ticket), label: "สลากของฉัน"),
-            NavigationDestination(
-                icon: Icon(Iconsax.money_tick), label: "ซื้อสลาก"),
-            NavigationDestination(
-                icon: Icon(Iconsax.profile_2user), label: "โปรไฟล์"),
-          ],
-        ),
+      bottomNavigationBar: CustomNavigationBar(
+        selectedIndex: 1,
+        onDestinationSelected: (value) {},
+        screenSize: screenSize,
       ),
     );
   }
 
-  void AddRecord() {
+  void addRecord() {
     setState(() {
       i += 1;
     });

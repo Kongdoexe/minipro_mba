@@ -1,7 +1,6 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
-import 'package:iconsax/iconsax.dart';
 import 'package:minipro_mba/pages/User/CustomerAppBar.dart';
 import 'package:minipro_mba/pages/User/CustomerNavbar.dart';
 
@@ -32,7 +31,7 @@ class _ResultLottoPageState extends State<ResultLottoPage> {
     final screenSize = MediaQuery.of(context).size;
     return Scaffold(
       backgroundColor: const Color.fromRGBO(255, 138, 128, 1),
-      appBar: CustomAppBar(screenSize: screenSize),
+      appBar: CustomAppBar(screenSize: screenSize, namePage: 'ตรวจสลาก',),
       body: Stack(
         children: [
           Positioned.fill(

@@ -12,9 +12,7 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      
-      body: SingleChildScrollView
-      (
+      body: SingleChildScrollView(
         child: Container(
           color: Color.fromARGB(0, 255, 255, 255),
           child: Padding(
@@ -79,9 +77,9 @@ class _LoginPageState extends State<LoginPage> {
                     )),
                     focusedBorder: OutlineInputBorder(
                       borderSide: BorderSide(
-                          color:  Color.fromRGBO(243, 134, 134, 1),
+                          color: Color.fromRGBO(243, 134, 134, 1),
                           width: 2), // เปลี่ยนขอบเป็นสีแดงเมื่อคลิก
-                    ),               
+                    ),
                   )),
                 ),
                 Padding(
@@ -89,10 +87,13 @@ class _LoginPageState extends State<LoginPage> {
                   child: Container(
                     width: 150,
                     height: 40,
-                    child: FilledButton(onPressed: () {}, child: Text('เข้าสู่ระบบ'),
-                    style: ButtonStyle(
-                      backgroundColor: MaterialStateProperty.all<Color>(const Color.fromARGB(255, 230, 92, 87)),
-                    ),
+                    child: FilledButton(
+                      onPressed: () {},
+                      child: Text('เข้าสู่ระบบ'),
+                      style: ButtonStyle(
+                        backgroundColor: MaterialStateProperty.all<Color>(
+                            const Color.fromARGB(255, 230, 92, 87)),
+                      ),
                     ),
                   ),
                 ),
@@ -104,12 +105,14 @@ class _LoginPageState extends State<LoginPage> {
                       child: Text('คุณยังไม่มีบัญชีใช่หรือไม่ ?'),
                     ),
                     Padding(
-                      padding:  EdgeInsets.only(top: 9),
-                      child: TextButton(onPressed: register, child: const Text('สมัครสมาชิก',
-                       style: TextStyle(
-                        color: Color.fromRGBO(221, 86, 76, 1)
-                       ),
-                      )),
+                      padding: EdgeInsets.only(top: 9),
+                      child: TextButton(
+                          onPressed: register,
+                          child: const Text(
+                            'สมัครสมาชิก',
+                            style: TextStyle(
+                                color: Color.fromRGBO(221, 86, 76, 1)),
+                          )),
                     )
                   ],
                 )
@@ -122,8 +125,10 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   void register() {
-    Navigator.push(context,
-    MaterialPageRoute(builder: (context) => Register(),
-    ));
+    Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => Register(),
+        ));
   }
 }
