@@ -1,5 +1,9 @@
+import 'dart:ffi';
+
 import 'package:flutter/material.dart';
+import 'package:minipro_mba/config/config.dart';
 import 'package:minipro_mba/pages/login.dart';
+import 'package:http/http.dart' as http;
 
 class Register extends StatefulWidget {
   const Register({super.key});
@@ -9,7 +13,20 @@ class Register extends StatefulWidget {
 }
 
 class _RegisterState extends State<Register> {
+  TextEditingController Name = TextEditingController();
+  TextEditingController email = TextEditingController();
+  TextEditingController password = TextEditingController();
+  TextEditingController phone = TextEditingController();
+  TextEditingController wallet = TextEditingController();
+  String url ='';
+  
   @override
+  void initState() {
+    super.initState();
+    Configuration.getConfig().then((value) {
+      url=value['apiEndpoint'].toString();
+    });
+  }
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
@@ -46,8 +63,9 @@ class _RegisterState extends State<Register> {
               children: [
                 Text('ชื่อ-สกุล : '),
                 SizedBox(height: 10),
-                const TextField(
-                  decoration: InputDecoration(
+                 TextField(
+                  controller: Name,
+                  decoration: const InputDecoration(
                     border: OutlineInputBorder(
                       borderSide: BorderSide(
                         width: 1,
@@ -65,8 +83,9 @@ class _RegisterState extends State<Register> {
                   child: Text('อีเมลล์ : '),
                 ),
                 SizedBox(height: 10),
-                const TextField(
-                  decoration: InputDecoration(
+                 TextField(
+                  controller: email,
+                  decoration: const InputDecoration(
                     border: OutlineInputBorder(
                       borderSide: BorderSide(
                         width: 1,
@@ -84,8 +103,9 @@ class _RegisterState extends State<Register> {
                   child: Text('เบอร์โทรศัพท์ : '),
                 ),
                 SizedBox(height: 10),
-                const TextField(
-                  decoration: InputDecoration(
+                 TextField(
+                  controller: phone,
+                  decoration: const InputDecoration(
                     border: OutlineInputBorder(
                       borderSide: BorderSide(
                         width: 1,

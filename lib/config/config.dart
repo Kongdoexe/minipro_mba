@@ -7,6 +7,9 @@ class Configuration {
     return rootBundle.loadString('assets/config/config.json').then((value) {
       // JSON => Map<String , dynamic>
       return jsonDecode(value) as Map<String, dynamic>;
-    }).catchError((err) {});
+    }).catchError((err) {
+      print('Error loading configuration: $err');
+      return {};
+    });
   }
 }
