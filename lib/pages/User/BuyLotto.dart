@@ -1,8 +1,14 @@
+import 'dart:developer';
+import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:minipro_mba/pages/User/CartLotto.dart';
+import 'package:minipro_mba/pages/User/CustomerAppBar.dart';
+import 'package:minipro_mba/pages/User/CustomerNavbar.dart';
 
 class BuylottoPage extends StatefulWidget {
+  // int memberId = 0;
+  // BuylottoPage({super.key, required this.memberId});
   const BuylottoPage({super.key});
   @override
   State<BuylottoPage> createState() => _BuylottoPageState();
@@ -10,67 +16,14 @@ class BuylottoPage extends StatefulWidget {
 
 class _BuylottoPageState extends State<BuylottoPage> {
   int selectedItems = 0;
+  List<bool> results = [true, true, true];
 
   @override
   Widget build(BuildContext context) {
     final screenSize = MediaQuery.of(context).size;
     return Scaffold(
       backgroundColor: const Color.fromRGBO(255, 138, 128, 1),
-      appBar: AppBar(
-        backgroundColor: const Color.fromRGBO(255, 138, 128, 1),
-        title: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Row(
-              children: [
-                Image.asset(
-                  "assets/images/ICON.png",
-                  width: 50,
-                  height: 50,
-                ),
-                const Text("ซื้อสลาก"),
-              ],
-            ),
-            SizedBox(
-              width: 40,
-              height: 40,
-              child: PopupMenuButton<int>(
-                icon: const Icon(
-                  Icons.menu,
-                  size: 30,
-                ),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10),
-                ),
-                offset: const Offset(-5, 30), //position
-                itemBuilder: (context) => [
-                  const PopupMenuItem(
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        Icon(Iconsax.shopping_cart, color: Colors.black),
-                        SizedBox(width: 10),
-                        Text('ตระกร้า'),
-                      ],
-                    ),
-                  ),
-                  const PopupMenuDivider(),
-                  const PopupMenuItem(
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        Icon(Iconsax.logout, color: Colors.black),
-                        SizedBox(width: 10),
-                        Text('ออกจากระบบ'),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ],
-        ),
-      ),
+      appBar: CustomAppBar(screenSize: screenSize, namePage: 'ซื้อสลาก',),
       body: Container(
           child: Column(
         children: [
@@ -360,33 +313,18 @@ class _BuylottoPageState extends State<BuylottoPage> {
           ],
         ],
       )),
-      bottomNavigationBar: NavigationBarTheme(
-        data: NavigationBarThemeData(
-          labelTextStyle: WidgetStatePropertyAll(
-            TextStyle(color: Colors.white, fontSize: screenSize.width * 0.034),
-          ),
-          iconTheme: WidgetStatePropertyAll(
-            IconThemeData(size: screenSize.width * 0.068),
-          ),
-        ),
-        child: NavigationBar(
-          backgroundColor: const Color.fromRGBO(249, 85, 85, 1),
-          selectedIndex: 3,
-          onDestinationSelected: (value) => 3,
-          destinations: const [
-            NavigationDestination(icon: Icon(Iconsax.home), label: "หน้าแรก"),
-            NavigationDestination(
-                icon: Icon(Iconsax.wallet_check), label: "ตรวจสลาก"),
-            NavigationDestination(
-                icon: Icon(Iconsax.ticket), label: "สลากของฉัน"),
-            NavigationDestination(
-                icon: Icon(Iconsax.money_tick), label: "ซื้อสลาก"),
-            NavigationDestination(
-                icon: Icon(Iconsax.profile_2user), label: "โปรไฟล์"),
-          ],
-        ),
+      bottomNavigationBar: CustomNavigationBar(
+        selectedIndex: 3,
+        onDestinationSelected: (value) {},
+        screenSize: screenSize,
       ),
     );
+  }
+
+  void CheckScreen() {
+    final screenSize = MediaQuery.of(context).size;
+    log("Width :${screenSize.width}");
+    log("Height :${screenSize.height}");
   }
 
   void search() {}

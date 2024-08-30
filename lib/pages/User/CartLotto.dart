@@ -1,8 +1,15 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:iconsax/iconsax.dart';
+import 'package:minipro_mba/config/config.dart';
+import 'package:minipro_mba/pages/User/CustomerAppBar.dart';
+import 'package:minipro_mba/pages/User/CustomerNavbar.dart';
 import 'package:minipro_mba/pages/User/PayLotto.dart';
+import 'package:http/http.dart' as http;
 
 class CartlottoPage extends StatefulWidget {
+  // int memberId = 0;
   const CartlottoPage({super.key});
 
   @override
@@ -16,61 +23,7 @@ class _CartlottoPageState extends State<CartlottoPage> {
 
     return Scaffold(
       backgroundColor: const Color.fromRGBO(255, 138, 128, 1),
-      appBar: AppBar(
-        backgroundColor: const Color.fromRGBO(255, 138, 128, 1),
-        title: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Row(
-              children: [
-                Image.asset(
-                  "assets/images/ICON.png",
-                  width: 50,
-                  height: 50,
-                ),
-                const Text("ซื้อสลาก"),
-              ],
-            ),
-            SizedBox(
-              width: 40,
-              height: 40,
-              child: PopupMenuButton<int>(
-                icon: const Icon(
-                  Icons.menu,
-                  size: 30,
-                ),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10),
-                ),
-                offset: const Offset(-5, 30), //position
-                itemBuilder: (context) => [
-                  const PopupMenuItem(
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        Icon(Iconsax.shopping_cart, color: Colors.black),
-                        SizedBox(width: 10),
-                        Text('ตระกร้า'),
-                      ],
-                    ),
-                  ),
-                  const PopupMenuDivider(),
-                  const PopupMenuItem(
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        Icon(Iconsax.logout, color: Colors.black),
-                        SizedBox(width: 10),
-                        Text('ออกจากระบบ'),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-            )
-          ],
-        ),
-      ),
+      appBar: CustomAppBar(screenSize: screenSize, namePage: 'ตรวจสลาก',),
       body: Stack(
         children: [
           // Main content
@@ -278,37 +231,38 @@ class _CartlottoPageState extends State<CartlottoPage> {
           ),
         ],
       ),
-      bottomNavigationBar: NavigationBarTheme(
-        data: NavigationBarThemeData(
-          labelTextStyle: WidgetStatePropertyAll(
-            TextStyle(color: Colors.white, fontSize: screenSize.width * 0.034),
-          ),
-          iconTheme: WidgetStatePropertyAll(
-            IconThemeData(size: screenSize.width * 0.068),
-          ),
-        ),
-        child: NavigationBar(
-          backgroundColor: const Color.fromRGBO(249, 85, 85, 1),
-          selectedIndex: 3,
-          onDestinationSelected: (value) => 3,
-          destinations: const [
-            NavigationDestination(icon: Icon(Iconsax.home), label: "หน้าแรก"),
-            NavigationDestination(
-                icon: Icon(Iconsax.wallet_check), label: "ตรวจสลาก"),
-            NavigationDestination(
-                icon: Icon(Iconsax.ticket), label: "สลากของฉัน"),
-            NavigationDestination(
-                icon: Icon(Iconsax.money_tick), label: "ซื้อสลาก"),
-            NavigationDestination(
-                icon: Icon(Iconsax.profile_2user), label: "โปรไฟล์"),
-          ],
-        ),
+      bottomNavigationBar: CustomNavigationBar(
+        selectedIndex: 3,
+        onDestinationSelected: (value) {},
+        screenSize: screenSize,
       ),
     );
   }
 
-  void delete() {
-    // Implement delete functionality
+  void delete() async {
+    // var config = await Configuration.getConfig();
+    // var url = config['apiEndpoint'];
+    // try {
+    //   var res = await http.delete(Uri.parse('$url/lottery/RemoveNumberFromCart${widget.memberidx}'));
+    //   log(res.statusCode.toString());
+    //   showDialog(
+    //     context: context,
+    //     builder: (context) => AlertDialog(
+    //       title: const Text('สำเร็จ'),
+    //       content: const Text('ลบ lotto เรียบร้อย'),
+    //       actions: [
+    //         FilledButton(
+    //             onPressed: () { 
+    //               Navigator.popUntil(
+    //                 context,
+    //                 (route) => route.isFirst,
+    //               );
+    //             },
+    //             child: const Text('ปิด'))
+    //       ],
+    //     ),
+    //   );
+    // } catch (err) {}
   }
 
   void choosemore() {
