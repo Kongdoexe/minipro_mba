@@ -104,6 +104,9 @@ class CustomNavigationBar extends StatelessWidget {
     );
   }
 
+  
+
+
   void navigateProfile(BuildContext context) {
     Navigator.push(
       context,
