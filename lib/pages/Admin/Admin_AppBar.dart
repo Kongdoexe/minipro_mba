@@ -19,7 +19,7 @@ class AdminAppBar extends StatelessWidget implements PreferredSizeWidget {
   Widget build(BuildContext context) {
     return AppBar(
       automaticallyImplyLeading: false,
-      backgroundColor: const Color.fromRGBO(255, 138, 128, 1),
+      backgroundColor: const Color.fromRGBO(255, 149, 0, 1),
       title: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
@@ -27,8 +27,8 @@ class AdminAppBar extends StatelessWidget implements PreferredSizeWidget {
             children: [
               Image.asset(
                 "assets/images/ICON.png",
-                width: screenSize.width * 0.12,
-                height: screenSize.height * 0.08,
+                width: screenSize.width * 0.14,
+                height: screenSize.height * 0.1,
               ),
               SizedBox(width: screenSize.width * 0.01),
               Text(
@@ -57,25 +57,9 @@ class AdminAppBar extends StatelessWidget implements PreferredSizeWidget {
                 screenSize.height * 0.055,
               ),
               onSelected: (int value) {
-                if (value == 0) {
-                  navigateCartLotto(context);
-                } else if (value == 1) {
-                  navigateLoginOut(context);
-                }
+                navigateLoginOut(context);
               },
               itemBuilder: (context) => [
-                PopupMenuItem(
-                  value: 0,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      const Icon(Iconsax.shopping_cart, color: Colors.black),
-                      SizedBox(width: screenSize.width * 0.05),
-                      const Text('ตระกร้า'),
-                    ],
-                  ),
-                ),
-                const PopupMenuDivider(),
                 PopupMenuItem(
                   value: 1,
                   child: Row(
@@ -92,13 +76,6 @@ class AdminAppBar extends StatelessWidget implements PreferredSizeWidget {
           ),
         ],
       ),
-    );
-  }
-
-  void navigateCartLotto(BuildContext context) {
-    Navigator.push(
-      context,
-      MaterialPageRoute(builder: (context) => const CartlottoPage()),
     );
   }
 

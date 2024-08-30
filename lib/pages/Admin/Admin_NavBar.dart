@@ -50,7 +50,7 @@ class Adminnavbar extends StatelessWidget {
           },
           destinations: const [
             NavigationDestination(icon: Icon(Iconsax.home), label: "หน้าแรก"),
-            NavigationDestination(icon: Icon(Iconsax.wallet_check), label: "สุ่มออกรางวัล")
+            NavigationDestination(icon: Icon(Iconsax.box_add), label: "สุ่มออกรางวัล")
           ],
         ),
       ),
@@ -67,7 +67,7 @@ class Adminnavbar extends StatelessWidget {
   void navigateCheckLotto(BuildContext context) {
     Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) => const RamdomPage()),
+      MaterialPageRoute(builder: (context) => const RandomPage()),
     );
   }
 }

@@ -27,8 +27,8 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
             children: [
               Image.asset(
                 "assets/images/ICON.png",
-                width: screenSize.width * 0.12,
-                height: screenSize.height * 0.08,
+                width: screenSize.width * 0.14,
+                height: screenSize.height * 0.1,
               ),
               SizedBox(width: screenSize.width * 0.01),
               Text(
