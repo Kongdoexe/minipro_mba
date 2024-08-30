@@ -1,5 +1,3 @@
-import 'dart:developer';
-import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:minipro_mba/pages/User/CartLotto.dart';
@@ -7,8 +5,6 @@ import 'package:minipro_mba/pages/User/CustomerAppBar.dart';
 import 'package:minipro_mba/pages/User/CustomerNavbar.dart';
 
 class BuylottoPage extends StatefulWidget {
-  // int memberId = 0;
-  // BuylottoPage({super.key, required this.memberId});
   const BuylottoPage({super.key});
   @override
   State<BuylottoPage> createState() => _BuylottoPageState();
@@ -16,7 +12,6 @@ class BuylottoPage extends StatefulWidget {
 
 class _BuylottoPageState extends State<BuylottoPage> {
   int selectedItems = 0;
-  List<bool> results = [true, true, true];
 
   @override
   Widget build(BuildContext context) {
@@ -107,7 +102,11 @@ class _BuylottoPageState extends State<BuylottoPage> {
                 children: [
                   Padding(
                     padding: const EdgeInsets.fromLTRB(30, 10, 30, 0),
-                    child: Card(
+                    child: 
+                    // FutureBuilder(
+                    //   future: loadData, 
+                    //   builder: (context, snapshot ))
+                    Card(
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
@@ -319,12 +318,6 @@ class _BuylottoPageState extends State<BuylottoPage> {
         screenSize: screenSize,
       ),
     );
-  }
-
-  void CheckScreen() {
-    final screenSize = MediaQuery.of(context).size;
-    log("Width :${screenSize.width}");
-    log("Height :${screenSize.height}");
   }
 
   void search() {}
