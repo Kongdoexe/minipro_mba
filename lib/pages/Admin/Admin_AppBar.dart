@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:iconsax/iconsax.dart';
-import 'package:minipro_mba/pages/User/CartLotto.dart';
 import 'package:minipro_mba/pages/login.dart';
 import 'package:minipro_mba/share/Data.dart';
 import 'package:provider/provider.dart';

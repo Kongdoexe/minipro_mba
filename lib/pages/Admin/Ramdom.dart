@@ -57,17 +57,20 @@ class _RandomPageState extends State<RandomPage> {
               color: const Color.fromARGB(255, 255, 255, 255),
               thickness: screenSize.height * 0.003,
             ),
-            Padding(
-              padding: EdgeInsets.only(
-                  top: screenSize.height * 0.01,
-                  left: screenSize.width * 0.04,
-                  right: screenSize.width * 0.04),
-              child: Column(
-                children: [
-                  Text("data")
-                ],
+            Expanded(
+              child: ListView.builder(
+                padding: EdgeInsets.symmetric(
+                  horizontal: screenSize.width * 0.04,
+                ),
+                itemCount: 5,
+                itemBuilder: (context, index) {
+                  return Padding(
+                    padding: EdgeInsets.only(top: screenSize.height * 0.01),
+                    child: buildSetWinnerLotto(context, index + 1),
+                  );
+                },
               ),
-            )
+            ),
           ],
         ),
       ),
@@ -75,6 +78,65 @@ class _RandomPageState extends State<RandomPage> {
         selectedIndex: 1,
         onDestinationSelected: (value) {},
         screenSize: screenSize,
+      ),
+    );
+  }
+
+  Widget buildSetWinnerLotto(BuildContext context, int prizeNumber) {
+    final screenSize = MediaQuery.of(context).size;
+    return Card(
+      child: Padding(
+        padding: EdgeInsets.symmetric(
+          horizontal: screenSize.width * 0.04,
+          vertical: screenSize.height * 0.01,
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  "รางวัลที่ $prizeNumber:",
+                  style: TextStyle(
+                    fontFamily: 'MaliMedium',
+                    fontSize: screenSize.width * 0.05,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                Text(
+                  "XXXXXX",
+                  style: TextStyle(
+                    fontFamily: 'MaliMedium',
+                    fontSize: screenSize.width * 0.05,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.red,
+                  ),
+                ),
+              ],
+            ),
+            Padding(padding: EdgeInsets.only(top: screenSize.height * 0.012)),
+            SizedBox(
+              width: screenSize.width * 0.34,
+              height: screenSize.height * 0.05,
+              child: TextButton(
+                onPressed: () {},
+                style: TextButton.styleFrom(
+                  backgroundColor: const Color.fromRGBO(252, 225, 87, 1),
+                ),
+                child: Text(
+                  "สุ่มออกรางวัล",
+                  style: TextStyle(
+                    fontFamily: 'MaliMedium',
+                    fontSize: screenSize.width * 0.036,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.black,
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
