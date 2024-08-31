@@ -98,7 +98,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   void navigateCartLotto(BuildContext context) {
     Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) => const CartlottoPage()),
+      MaterialPageRoute(builder: (context) => const CartlottoPage(selectedTicketIds:[])),
     );
   }
 
