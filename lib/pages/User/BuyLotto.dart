@@ -8,8 +8,9 @@ import 'package:minipro_mba/pages/User/CustomerNavbar.dart';
 import 'package:http/http.dart' as http;
 
 class BuylottoPage extends StatefulWidget {
-  int memberId = 0;
-  BuylottoPage({Key? key, required this.memberId}) : super(key: key);
+  // int memberId = 0;
+  // BuylottoPage({Key? key, required this.memberId}) : super(key: key);
+  const BuylottoPage({super.key});
   @override
   State<BuylottoPage> createState() => _BuylottoPageState();
 }
@@ -208,180 +209,10 @@ class _BuylottoPageState extends State<BuylottoPage> {
                                 .toList(), // แปลง Iterable<Card> เป็น List<Widget>
                           );
                         }),
-                    // Card(
-                    //   child: Column(
-                    //     crossAxisAlignment: CrossAxisAlignment.start,
-                    //     children: [
-                    //       Row(
-                    //         mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    //         children: [
-                    //           const Column(
-                    //             children: [
-                    //               Padding(
-                    //                   padding: EdgeInsets.all(8.0),
-                    //                   child: SizedBox(
-                    //                     width: 150, // กำหนดความกว้างของ Card
-                    //                     height: 50, // กำหนดความสูงของ Card
-                    //                     child: Card(
-                    //                       color: Color.fromARGB(
-                    //                           255, 186, 186, 186),
-                    //                       child: Center(
-                    //                           child: Text(
-                    //                         '123456',
-                    //                         style: TextStyle(
-                    //                             color: Colors.black,
-                    //                             fontSize: 20,
-                    //                             fontWeight: FontWeight.bold),
-                    //                       )),
-                    //                     ),
-                    //                   )),
-                    //               Text('งวดที่'),
-                    //               Text('64'),
-                    //             ],
-                    //           ),
-                    //           Column(
-                    //             children: [
-                    //               Padding(
-                    //                 padding: const EdgeInsets.all(8.0),
-                    //                 child: OutlinedButton(
-                    //                   onPressed: choose,
-                    //                   child: const Text('เลือก',
-                    //                       style:
-                    //                           TextStyle(color: Colors.black)),
-                    //                   style: OutlinedButton.styleFrom(
-                    //                     side: const BorderSide(
-                    //                         color: Color.fromARGB(255, 231, 84,
-                    //                             81)), // กำหนดสีขอบ
-                    //                   ),
-                    //                 ),
-                    //               ),
-                    //               const Padding(
-                    //                 padding: EdgeInsets.all(8.0),
-                    //                 child: Text('80 บาท'),
-                    //               ),
-                    //             ],
-                    //           )
-                    //         ],
-                    //       )
-                    //     ],
-                    //   ),
-                    // ),
+                    
                   ),
 
-                  // Padding(
-                  //   padding: const EdgeInsets.fromLTRB(30, 10, 30, 0),
-                  //   child: Card(
-                  //     child: Column(
-                  //       crossAxisAlignment: CrossAxisAlignment.start,
-                  //       children: [
-                  //         Row(
-                  //           mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  //           children: [
-                  //             const Column(
-                  //               children: [
-                  //                 Padding(
-                  //                     padding: EdgeInsets.all(8.0),
-                  //                     child: SizedBox(
-                  //                       width: 150, // กำหนดความกว้างของ Card
-                  //                       height: 50, // กำหนดความสูงของ Card
-                  //                       child: Card(
-                  //                         color: Color.fromARGB(255, 186, 186, 186),
-                  //                         child: Center(
-                  //                             child: Text(
-                  //                           '123456',
-                  //                           style: TextStyle(
-                  //                               color: Colors.black,
-                  //                               fontSize: 20,
-                  //                               fontWeight: FontWeight.bold),
-                  //                         )),
-                  //                       ),
-                  //                     )),
-                  //                 Text('งวดที่'),
-                  //                 Text('64'),
-                  //               ],
-                  //             ),
-                  //             Column(
-                  //               children: [
-                  //                 Padding(
-                  //                   padding: const EdgeInsets.all(8.0),
-                  //                   child: OutlinedButton(
-                  //                     onPressed: choose,
-                  //                     child: const Text('เลือก'),
-                  //                     style: OutlinedButton.styleFrom(
-                  //                       side: const BorderSide(
-                  //                           color: Color.fromARGB(255, 231, 84, 81)), // กำหนดสีขอบ
-                  //                     ),
-                  //                   ),
-                  //                 ),
-                  //                 const Padding(
-                  //                   padding: EdgeInsets.all(8.0),
-                  //                   child: Text('80 บาท'),
-                  //                 ),
-                  //               ],
-                  //             )
-                  //           ],
-                  //         )
-                  //       ],
-                  //     ),
-                  //   ),
-                  // ),
-                  // Padding(
-                  //   padding: const EdgeInsets.fromLTRB(30, 10, 30, 0),
-                  //   child: Card(
-                  //     child: Column(
-                  //       crossAxisAlignment: CrossAxisAlignment.start,
-                  //       children: [
-                  //         Row(
-                  //           mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  //           children: [
-                  //             const Column(
-                  //               children: [
-                  //                 Padding(
-                  //                     padding: EdgeInsets.all(8.0),
-                  //                     child: SizedBox(
-                  //                       width: 150, // กำหนดความกว้างของ Card
-                  //                       height: 50, // กำหนดความสูงของ Card
-                  //                       child: Card(
-                  //                         color: Color.fromARGB(255, 186, 186, 186),
-                  //                         child: Center(
-                  //                             child: Text(
-                  //                           '123456',
-                  //                           style: TextStyle(
-                  //                               color: Colors.black,
-                  //                               fontSize: 20,
-                  //                               fontWeight: FontWeight.bold),
-                  //                         )),
-                  //                       ),
-                  //                     )),
-                  //                 Text('งวดที่'),
-                  //                 Text('64'),
-                  //               ],
-                  //             ),
-                  //             Column(
-                  //               children: [
-                  //                 Padding(
-                  //                   padding: const EdgeInsets.all(8.0),
-                  //                   child: OutlinedButton(
-                  //                     onPressed: choose,
-                  //                     child: const Text('เลือก'),
-                  //                     style: OutlinedButton.styleFrom(
-                  //                       side: const BorderSide(
-                  //                           color: Color.fromARGB(255, 231, 84, 81)), // กำหนดสีขอบ
-                  //                     ),
-                  //                   ),
-                  //                 ),
-                  //                 const Padding(
-                  //                   padding: EdgeInsets.all(8.0),
-                  //                   child: Text('80 บาท'),
-                  //                 ),
-                  //               ],
-                  //             )
-                  //           ],
-                  //         )
-                  //       ],
-                  //     ),
-                  //   ),
-                  // ),
+                  
                 ],
               ),
             ),
