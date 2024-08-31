@@ -1,6 +1,9 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:minipro_mba/config/config.dart';
+import 'package:minipro_mba/models/request/insertcart_request_post.dart';
 import 'package:minipro_mba/models/response/selectalllotto_response_get.dart';
 import 'package:minipro_mba/pages/User/CartLotto.dart';
 import 'package:minipro_mba/pages/User/CustomerAppBar.dart';
@@ -19,6 +22,7 @@ class _BuylottoPageState extends State<BuylottoPage> {
   int selectedItems = 0;
   late Future<void> loadData;
   List<SelectalllottoResponseGet> alllotto = [];
+  List<int> selectedTicketIds = [];
 
   @override
   void initState() {
@@ -178,7 +182,9 @@ class _BuylottoPageState extends State<BuylottoPage> {
                                                         const EdgeInsets.all(
                                                             8.0),
                                                     child: OutlinedButton(
-                                                      onPressed: choose,
+                                                      onPressed: () => choose(
+                                                          lotto.ticketId,
+                                                          lotto.memberId),
                                                       child: const Text('เลือก',
                                                           style: TextStyle(
                                                               color: Colors
@@ -197,7 +203,8 @@ class _BuylottoPageState extends State<BuylottoPage> {
                                                   Padding(
                                                     padding:
                                                         EdgeInsets.all(8.0),
-                                                    child: Text('${lotto.price} บาท'),
+                                                    child: Text(
+                                                        '${lotto.price} บาท'),
                                                   ),
                                                 ],
                                               ),
@@ -209,10 +216,7 @@ class _BuylottoPageState extends State<BuylottoPage> {
                                 .toList(), // แปลง Iterable<Card> เป็น List<Widget>
                           );
                         }),
-                    
                   ),
-
-                  
                 ],
               ),
             ),
@@ -229,7 +233,7 @@ class _BuylottoPageState extends State<BuylottoPage> {
                     children: [
                       Text('สลากที่เลือก $selectedItems ใบ'),
                       ElevatedButton(
-                        onPressed: check,
+                        onPressed: check(),
                         child: const Text(
                           'ตรวจสอบสลากของคุณ',
                           style: TextStyle(
@@ -262,19 +266,62 @@ class _BuylottoPageState extends State<BuylottoPage> {
     alllotto = selectalllottoResponseGetFromJson(data.body);
   }
 
-  void search() {}
+  Future<void> insertTicketIntoCart(int ticketId, int memberId) async {
+    try {
+      // Get the config and API endpoint
+      var config = await Configuration.getConfig();
+      var url = config['apiEndpoint'];
 
-  void choose() {
-    setState(() {
-      selectedItems++;
-    });
+      // Create an instance of InsertcartRequestGet
+      var request =
+          InsertcartRequestGet(ticketId: ticketId, memberId: memberId);
+
+      // Make the POST request to insert the ticket
+      var response = await http.post(
+        Uri.parse('$url/lottery/InsertCart'),
+        headers: {"Content-Type": "application/json; charset=utf-8"},
+        body: insertcartRequestGetToJson(request), // Convert to JSON
+      );
+
+      if (response.statusCode == 200) {
+        // Successfully inserted
+        log('Ticket inserted successfully');
+      } else {
+        // Handle the error
+        log('Failed to insert ticket: ${response.body}');
+      }
+    } catch (err) {
+      log('Error inserting ticket: $err');
+    }
   }
 
-  void check() {
+  void search() {}
+
+  void choose(int ticketId, int memberId) {
+    if (mounted) {
+      setState(() {
+        if (selectedTicketIds.contains(ticketId)) {
+          selectedTicketIds.remove(ticketId);
+          selectedItems--;
+        } else {
+          selectedTicketIds.add(ticketId);
+          selectedItems++;
+          insertTicketIntoCart(ticketId, memberId);
+        }
+      });
+    }
+  }
+
+  check() {
+    for (int ticketId in selectedTicketIds) {
+      insertTicketIntoCart(ticketId, memberId);
+    }
+
     Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (context) => const CartlottoPage(),
+          builder: (context) =>
+              CartlottoPage(selectedTicketIds: selectedTicketIds),
         ));
   }
 }
