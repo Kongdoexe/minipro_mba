@@ -10,7 +10,7 @@ import 'package:http/http.dart' as http;
 class BuylottoPage extends StatefulWidget {
   // int memberId = 0;
   // BuylottoPage({Key? key, required this.memberId}) : super(key: key);
-  const BuylottoPage({super.key});
+  const BuylottoPage({super.key, required int memberId});
   @override
   State<BuylottoPage> createState() => _BuylottoPageState();
 }
