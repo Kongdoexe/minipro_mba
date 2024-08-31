@@ -1,7 +1,19 @@
+import 'dart:convert';
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:minipro_mba/config/config.dart';
+import 'package:minipro_mba/models/request/getwinningnumbers_request_get.dart';
+import 'package:minipro_mba/models/response/getuserdrawnumbers_response_get.dart';
+import 'package:minipro_mba/models/response/getwinningnumbers_response_get.dart';
+import 'package:minipro_mba/models/response/response_handler.dart';
 import 'package:minipro_mba/pages/User/CustomerAppBar.dart';
-import 'package:minipro_mba/pages/User/CustomerNavbar.dart'; // Make sure to include this package if you want to use Iconsax icons
+import 'package:minipro_mba/pages/User/CustomerNavbar.dart';
+import 'package:minipro_mba/pages/User/ResultLotto.dart';
+import 'package:minipro_mba/share/Data.dart';
+import 'package:provider/provider.dart';
+import 'package:http/http.dart' as http;
 
 class CheckLottoPage extends StatefulWidget {
   const CheckLottoPage({super.key});
@@ -12,7 +24,19 @@ class CheckLottoPage extends StatefulWidget {
 
 class _CheckLottoPageState extends State<CheckLottoPage> {
   TextEditingController test = TextEditingController(text: "รอบที่ 1");
-  int i = 1;
+  late Future<void> loadData;
+  late List<GetuserdrawnumbersResponseGet> allLotto;
+  late List<GetwinningnumbersResponseGet> Model;
+  late List<TextEditingController> lottoControllers;
+  late AllErrorResponseGet msg;
+  late int i = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    lottoControllers = [];
+    loadData = loadDataAsync();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -89,6 +113,7 @@ class _CheckLottoPageState extends State<CheckLottoPage> {
                                   SizedBox(
                                     width: screenSize.width * 0.45,
                                     child: TextField(
+                                      controller: lottoControllers[index],
                                       keyboardType: TextInputType.number,
                                       maxLength: 6,
                                       inputFormatters: [
@@ -135,7 +160,7 @@ class _CheckLottoPageState extends State<CheckLottoPage> {
                             height: screenSize.height * 0.2,
                             child: Center(
                               child: TextButton(
-                                onPressed: () {},
+                                onPressed: sendLottoNumbers,
                                 style: TextButton.styleFrom(
                                   backgroundColor:
                                       const Color.fromRGBO(255, 209, 128, 1),
@@ -173,9 +198,127 @@ class _CheckLottoPageState extends State<CheckLottoPage> {
     );
   }
 
+  Future<void> loadDataAsync() async {
+    try {
+      var url = await loadUrl();
+      var memberId = 8;
+      var response = await http.get(
+        Uri.parse('$url/lottery/GetUserDrawNumbers/$memberId'),
+        headers: {"Content-Type": "application/json; charset=utf-8"},
+      );
+
+      if (response.statusCode == 200) {
+        var jsonResponse = json.decode(utf8.decode(response.bodyBytes));
+
+        if (jsonResponse is Map<String, dynamic>) {
+          if (jsonResponse.containsKey('msg')) {
+            try {
+              msg =
+                  allErrorResponseGetFromJson(jsonEncode(jsonResponse['msg']));
+              log("Message from server: $msg");
+            } catch (e) {
+              log("Error parsing 'msg': $e");
+            }
+          }
+        } else if (jsonResponse is List) {
+          try {
+            allLotto =
+                getuserdrawnumbersResponseGetFromJson(jsonEncode(jsonResponse));
+            i = allLotto.length;
+            _setLottoControllers();
+          } catch (e) {
+            log("Error parsing list of lotto data: $e");
+          }
+        }
+      } else {
+        var jsonResponse = json.decode(utf8.decode(response.bodyBytes));
+        msg = allErrorResponseGetFromJson(jsonEncode(jsonResponse['msg']));
+        log("Message from server: $msg");
+      }
+    } catch (e) {
+      log("An error occurred: $e");
+    }
+  }
+
+  Future<String> loadUrl() async {
+    var value = await Configuration.getConfig();
+    var url = value['apiEndpoint'];
+    return url;
+  }
+
+  void sendLottoNumbers() async {
+    var url = await loadUrl();
+    List<GetwinningnumbersRequestGet> lottoNumbers = [];
+
+    for (var controller in lottoControllers) {
+      lottoNumbers.add(GetwinningnumbersRequestGet(number: controller.text));
+    }
+
+    String jsonData = getwinningnumbersRequestGetToJson(lottoNumbers);
+
+    var response = await http.post(Uri.parse('$url/lottery/GetWinningNumbers'),
+        headers: {"Content-Type": "application/json; charset=utf-8"},
+        body: jsonData);
+
+    log(jsonData);
+    log(response.body);
+    if (response.statusCode == 200) {
+      var jsonResponse = json.decode(response.body);
+
+      if (jsonResponse is Map<String, dynamic>) {
+        if (jsonResponse.containsKey('msg')) {
+          try {
+            msg = allErrorResponseGetFromJson(jsonEncode(jsonResponse['msg']));
+            log("Message from server: $msg");
+          } catch (e) {
+            log("Error parsing 'msg': $e");
+          }
+        }
+      } else if (jsonResponse is List) {
+        List<GetwinningnumbersResponseGet> checkwinner;
+
+        checkwinner =
+            getwinningnumbersResponseGetFromJson(jsonEncode(jsonResponse));
+
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => ResultLottoPage(result: checkwinner),
+          ),
+        );
+      }
+    } else {
+      var jsonResponse = json.decode(utf8.decode(response.bodyBytes));
+      if (jsonResponse is Map<String, dynamic>) {
+        if (jsonResponse.containsKey('msg')) {
+          try {
+            msg = allErrorResponseGetFromJson(jsonEncode(jsonResponse['msg']));
+            log("Message from server: $msg");
+          } catch (e) {
+            log("Error parsing 'msg': $e");
+          }
+        }
+      }
+    }
+
+    // ส่งข้อมูล jsonData ไปยัง URL ที่ได้จาก loadUrl()
+    // ตัวอย่างเช่น:
+    // await http.post(url, body: jsonData);
+  }
+
+  void _setLottoControllers() {
+    lottoControllers.clear();
+    for (var lotto in allLotto) {
+      var controller = TextEditingController(text: lotto.number);
+      lottoControllers.add(controller);
+    }
+    setState(() {});
+  }
+
   void addRecord() {
     setState(() {
       i += 1;
+      lottoControllers.add(TextEditingController());
     });
   }
 
@@ -183,6 +326,7 @@ class _CheckLottoPageState extends State<CheckLottoPage> {
     setState(() {
       if (i > 1) {
         i -= 1;
+        lottoControllers.removeLast();
       }
     });
   }

@@ -5,6 +5,8 @@ import 'package:minipro_mba/pages/User/CheckLotto.dart';
 import 'package:minipro_mba/pages/User/HomePageuser.dart';
 import 'package:minipro_mba/pages/User/MyLotto.dart';
 import 'package:minipro_mba/pages/User/Profile.dart';
+import 'package:minipro_mba/share/Data.dart';
+import 'package:provider/provider.dart';
 
 class CustomNavigationBar extends StatelessWidget {
   final int selectedIndex;
@@ -98,9 +100,10 @@ class CustomNavigationBar extends StatelessWidget {
   }
 
   void navigateBuyLotto(BuildContext context) {
+    final MemberID = context.read<Data>();
     Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) => const BuylottoPage()),
+      MaterialPageRoute(builder: (context) => BuylottoPage(memberId: MemberID.mid,)),
     );
   }
 
