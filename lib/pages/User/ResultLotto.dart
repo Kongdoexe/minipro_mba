@@ -1,11 +1,13 @@
 import 'dart:developer';
-
 import 'package:flutter/material.dart';
+import 'package:minipro_mba/config/config.dart';
+import 'package:minipro_mba/models/response/getwinningnumbers_response_get.dart';
 import 'package:minipro_mba/pages/User/CustomerAppBar.dart';
 import 'package:minipro_mba/pages/User/CustomerNavbar.dart';
 
 class ResultLottoPage extends StatefulWidget {
-  const ResultLottoPage({super.key});
+  final List<GetwinningnumbersResponseGet> result;
+  const ResultLottoPage({super.key, required this.result});
 
   @override
   State<ResultLottoPage> createState() => _ResultLottoPageState();
@@ -14,11 +16,13 @@ class ResultLottoPage extends StatefulWidget {
 class _ResultLottoPageState extends State<ResultLottoPage> {
   final PageController _pageController = PageController();
   int _currentPage = 0;
-  List<bool> results = [true, true, true];
+  // late Future<void> loadData;
 
   @override
   void initState() {
     super.initState();
+    // loadData = loadDataAsync();
+
     _pageController.addListener(() {
       setState(() {
         _currentPage = _pageController.page?.round() ?? 0;
@@ -31,7 +35,10 @@ class _ResultLottoPageState extends State<ResultLottoPage> {
     final screenSize = MediaQuery.of(context).size;
     return Scaffold(
       backgroundColor: const Color.fromRGBO(255, 138, 128, 1),
-      appBar: CustomAppBar(screenSize: screenSize, namePage: 'ตรวจสลาก',),
+      appBar: CustomAppBar(
+        screenSize: screenSize,
+        namePage: 'ตรวจสลาก',
+      ),
       body: Stack(
         children: [
           Positioned.fill(
@@ -52,10 +59,10 @@ class _ResultLottoPageState extends State<ResultLottoPage> {
                     Expanded(
                       child: PageView(
                         controller: _pageController,
-                        children: results
-                            .map((result) => result
-                                ? buildTrueWidget(screenSize)
-                                : buildFalseWidget(screenSize))
+                        children: widget.result
+                            .map((result) => result.hasWinner
+                                ? buildTrueWidget(screenSize, result)
+                                : buildFalseWidget(screenSize, result))
                             .toList(),
                       ),
                     ),
@@ -64,7 +71,7 @@ class _ResultLottoPageState extends State<ResultLottoPage> {
                           EdgeInsets.only(bottom: screenSize.height * 0.01),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
-                        children: List.generate(results.length, (index) {
+                        children: List.generate(widget.result.length, (index) {
                           return Container(
                             margin: EdgeInsets.symmetric(
                                 horizontal: screenSize.width * 0.014),
@@ -105,7 +112,7 @@ class _ResultLottoPageState extends State<ResultLottoPage> {
                   width: screenSize.width * 0.35,
                   height: screenSize.height * 0.06,
                   child: TextButton(
-                    onPressed: CheckScreen,
+                    onPressed: () {},
                     style: TextButton.styleFrom(
                       backgroundColor: const Color.fromRGBO(255, 209, 128, 1),
                     ),
@@ -134,13 +141,7 @@ class _ResultLottoPageState extends State<ResultLottoPage> {
     );
   }
 
-  void CheckScreen() {
-    final screenSize = MediaQuery.of(context).size;
-    log("Width :${screenSize.width}");
-    log("Height :${screenSize.height}");
-  }
-
-  Widget buildTrueWidget(Size screenSize) {
+  Widget buildTrueWidget(Size screenSize, GetwinningnumbersResponseGet result) {
     return SingleChildScrollView(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
@@ -155,7 +156,7 @@ class _ResultLottoPageState extends State<ResultLottoPage> {
           ),
           SizedBox(height: screenSize.height * 0.005),
           Text(
-            "451238",
+            result.number,
             style: TextStyle(
               fontFamily: 'MaliBold',
               fontSize: screenSize.width * 0.06,
@@ -164,7 +165,7 @@ class _ResultLottoPageState extends State<ResultLottoPage> {
             ),
           ),
           Text(
-            "งวดประจำรอบที่ 1",
+            "งวดประจำรอบที่ ${result.period}",
             style: TextStyle(
               fontFamily: 'MaliMedium',
               fontSize: screenSize.width * 0.036,
@@ -173,7 +174,7 @@ class _ResultLottoPageState extends State<ResultLottoPage> {
           ),
           SizedBox(height: screenSize.height * 0.015),
           Text(
-            "ถูกรางวัลที่ 1",
+            "ถูกรางวัลที่ ${result.rank}",
             style: TextStyle(
               fontFamily: 'MaliBold',
               fontSize: screenSize.width * 0.044,
@@ -191,7 +192,7 @@ class _ResultLottoPageState extends State<ResultLottoPage> {
             ),
           ),
           Text(
-            "6,000,000",
+            "${result.gratuity} บาท",
             style: TextStyle(
               fontFamily: 'MaliBold',
               fontSize: screenSize.width * 0.05,
@@ -199,20 +200,13 @@ class _ResultLottoPageState extends State<ResultLottoPage> {
               fontWeight: FontWeight.normal,
             ),
           ),
-          Text(
-            "บาท",
-            style: TextStyle(
-              fontFamily: 'MaliMedium',
-              fontSize: screenSize.width * 0.036,
-              color: const Color.fromARGB(255, 0, 0, 0),
-            ),
-          ),
         ],
       ),
     );
   }
 
-  Widget buildFalseWidget(Size screenSize) {
+  Widget buildFalseWidget(
+      Size screenSize, GetwinningnumbersResponseGet result) {
     return SingleChildScrollView(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
@@ -227,7 +221,7 @@ class _ResultLottoPageState extends State<ResultLottoPage> {
           ),
           SizedBox(height: screenSize.height * 0.02),
           Text(
-            "451238",
+            result.number,
             style: TextStyle(
               fontFamily: 'MaliBold',
               fontSize: screenSize.width * 0.065,
@@ -237,7 +231,7 @@ class _ResultLottoPageState extends State<ResultLottoPage> {
           ),
           SizedBox(height: screenSize.height * 0.005),
           Text(
-            "งวดประจำรอบที่ 1",
+            "งวดประจำรอบที่ ${result.period}",
             style: TextStyle(
               fontFamily: 'MaliMedium',
               fontSize: screenSize.width * 0.036,
@@ -275,4 +269,21 @@ class _ResultLottoPageState extends State<ResultLottoPage> {
       ),
     );
   }
+
+  // Future<String> loadUrl() async {
+  //   var value = await Configuration.getConfig();
+  //   var url = value['apiEndpoint'];
+  //   return url;
+  // }
+
+  // Future<void> loadDataAsync() async {
+  //   try {
+  //     var url = await loadUrl();
+  //     widget.result.forEach((action) {
+  //       print(action.hasWinner.length.toString());
+  //     });
+  //   } catch (e) {
+  //     log("An error occurred: $e");
+  //   }
+  // }
 }
