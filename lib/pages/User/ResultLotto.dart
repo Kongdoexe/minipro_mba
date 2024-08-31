@@ -16,12 +16,12 @@ class ResultLottoPage extends StatefulWidget {
 class _ResultLottoPageState extends State<ResultLottoPage> {
   final PageController _pageController = PageController();
   int _currentPage = 0;
-  // late Future<void> loadData;
+  late Future<void> loadData;
 
   @override
   void initState() {
     super.initState();
-    // loadData = loadDataAsync();
+    loadData = loadDataAsync();
 
     _pageController.addListener(() {
       setState(() {
@@ -41,57 +41,67 @@ class _ResultLottoPageState extends State<ResultLottoPage> {
       ),
       body: Stack(
         children: [
-          Positioned.fill(
-            child: Padding(
-              padding: EdgeInsets.only(
-                right: screenSize.width * 0.12,
-                left: screenSize.width * 0.12,
-                bottom: screenSize.height * 0.135,
-                top: screenSize.height * 0.06,
-              ),
-              child: Container(
-                decoration: const BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.all(Radius.circular(10)),
-                ),
-                child: Column(
-                  children: [
-                    Expanded(
-                      child: PageView(
-                        controller: _pageController,
-                        children: widget.result
-                            .map((result) => result.hasWinner
-                                ? buildTrueWidget(screenSize, result)
-                                : buildFalseWidget(screenSize, result))
-                            .toList(),
-                      ),
+          FutureBuilder(
+              future: loadData,
+              builder: (context, snapshot) {
+                if (snapshot.connectionState != ConnectionState.done) {
+                  return const Center(
+                    child: CircularProgressIndicator(),
+                  );
+                }
+                return Positioned.fill(
+                  child: Padding(
+                    padding: EdgeInsets.only(
+                      right: screenSize.width * 0.12,
+                      left: screenSize.width * 0.12,
+                      bottom: screenSize.height * 0.135,
+                      top: screenSize.height * 0.06,
                     ),
-                    Padding(
-                      padding:
-                          EdgeInsets.only(bottom: screenSize.height * 0.01),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: List.generate(widget.result.length, (index) {
-                          return Container(
-                            margin: EdgeInsets.symmetric(
-                                horizontal: screenSize.width * 0.014),
-                            width: screenSize.width * 0.025,
-                            height: screenSize.height * 0.025,
-                            decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                              color: _currentPage == index
-                                  ? const Color.fromARGB(255, 0, 0, 0)
-                                  : Colors.grey,
+                    child: Container(
+                      decoration: const BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.all(Radius.circular(10)),
+                      ),
+                      child: Column(
+                        children: [
+                          Expanded(
+                            child: PageView(
+                              controller: _pageController,
+                              children: widget.result
+                                  .map((result) => result.hasWinner
+                                      ? buildTrueWidget(screenSize, result)
+                                      : buildFalseWidget(screenSize, result))
+                                  .toList(),
                             ),
-                          );
-                        }),
+                          ),
+                          Padding(
+                            padding: EdgeInsets.only(
+                                bottom: screenSize.height * 0.01),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children:
+                                  List.generate(widget.result.length, (index) {
+                                return Container(
+                                  margin: EdgeInsets.symmetric(
+                                      horizontal: screenSize.width * 0.014),
+                                  width: screenSize.width * 0.025,
+                                  height: screenSize.height * 0.025,
+                                  decoration: BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    color: _currentPage == index
+                                        ? const Color.fromARGB(255, 0, 0, 0)
+                                        : Colors.grey,
+                                  ),
+                                );
+                              }),
+                            ),
+                          ),
+                        ],
                       ),
                     ),
-                  ],
-                ),
-              ),
-            ),
-          ),
+                  ),
+                );
+              }),
           Positioned.fill(
             child: Column(
               children: [
@@ -276,14 +286,14 @@ class _ResultLottoPageState extends State<ResultLottoPage> {
   //   return url;
   // }
 
-  // Future<void> loadDataAsync() async {
-  //   try {
-  //     var url = await loadUrl();
-  //     widget.result.forEach((action) {
-  //       print(action.hasWinner.length.toString());
-  //     });
-  //   } catch (e) {
-  //     log("An error occurred: $e");
-  //   }
-  // }
+  Future<void> loadDataAsync() async {
+    try {
+      // var url = await loadUrl();
+      if (widget.result.contains(true)) {
+        log("message");
+      }
+    } catch (e) {
+      log("An error occurred: $e");
+    }
+  }
 }
