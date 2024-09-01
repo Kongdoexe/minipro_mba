@@ -1,7 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:minipro_mba/config/config.dart';
+import 'package:minipro_mba/models/response/regsiter_response_post.dart';
 import 'package:minipro_mba/pages/login.dart';
 import 'package:http/http.dart' as http;
+import 'dart:convert';
+
+import 'package:minipro_mba/share/Data.dart';
+import 'package:provider/provider.dart';
 
 class Register extends StatefulWidget {
   const Register({super.key});
@@ -16,30 +21,37 @@ class _RegisterState extends State<Register> {
   TextEditingController password = TextEditingController();
   TextEditingController phone = TextEditingController();
   TextEditingController wallet = TextEditingController();
-  String url ='';
-  
+  String url = '';
+
   @override
   void initState() {
     super.initState();
-    Configuration.getConfig().then((value) {
-      url=value['apiEndpoint'].toString();
+    Configuration.getConfig().then(
+      (value) {
+        url = value['apiEndpoint'].toString();
+      },
+    ).catchError((err) {
+      print('Error in initState: $err');
     });
   }
+
   @override
   Widget build(BuildContext context) {
+    final screenSize = MediaQuery.of(context).size;
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor: const Color.fromRGBO(245, 160, 154, 1),
-        toolbarHeight: 80,
+        toolbarHeight: screenSize.height * 0.1,
         title: Padding(
-          padding: const EdgeInsets.only(left: 30),
+          padding: EdgeInsets.only(left: screenSize.width * 0.08),
           child: Row(
             children: <Widget>[
               Image.asset(
                 'assets/images/ICON.png',
-                height: 60,
+                height: screenSize.height * 0.08,
               ),
-              const SizedBox(width: 5), // เพิ่มระยะห่างระหว่างรูปภาพและข้อความ
+              SizedBox(width: screenSize.width * 0.01),
               const Text(
                 'สมัครสมาชิก',
                 style: TextStyle(
@@ -55,14 +67,17 @@ class _RegisterState extends State<Register> {
         child: Container(
           color: const Color.fromARGB(0, 0, 0, 0),
           child: Padding(
-            padding: const EdgeInsets.only(top: 30, left: 50, right: 50),
+            padding: EdgeInsets.only(
+                top: screenSize.height * 0.04,
+                left: screenSize.width * 0.12,
+                right: screenSize.width * 0.12),
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 const Text('ชื่อ-สกุล : '),
-                const SizedBox(height: 10),
-                 TextField(
+                SizedBox(height: screenSize.height * 0.015),
+                TextField(
                   controller: name,
                   decoration: const InputDecoration(
                     border: OutlineInputBorder(
@@ -77,12 +92,12 @@ class _RegisterState extends State<Register> {
                     ),
                   ),
                 ),
-                const Padding(
-                  padding: EdgeInsets.only(top: 15),
-                  child: Text('อีเมลล์ : '),
+                Padding(
+                  padding: EdgeInsets.only(top: screenSize.height * 0.02),
+                  child: const Text('อีเมลล์ : '),
                 ),
-                const SizedBox(height: 10),
-                 TextField(
+                SizedBox(height: screenSize.height * 0.015),
+                TextField(
                   controller: email,
                   decoration: const InputDecoration(
                     border: OutlineInputBorder(
@@ -97,12 +112,12 @@ class _RegisterState extends State<Register> {
                     ),
                   ),
                 ),
-                const Padding(
-                  padding: EdgeInsets.only(top: 15),
-                  child: Text('เบอร์โทรศัพท์ : '),
+                Padding(
+                  padding: EdgeInsets.only(top: screenSize.height * 0.02),
+                  child: const Text('เบอร์โทรศัพท์ : '),
                 ),
-                const SizedBox(height: 10),
-                 TextField(
+                SizedBox(height: screenSize.height * 0.015),
+                TextField(
                   controller: phone,
                   decoration: const InputDecoration(
                     border: OutlineInputBorder(
@@ -117,32 +132,15 @@ class _RegisterState extends State<Register> {
                     ),
                   ),
                 ),
-                const Padding(
-                  padding: EdgeInsets.only(top: 15),
-                  child: Text('รหัสผ่าน : '),
+                Padding(
+                  padding: EdgeInsets.only(top: screenSize.height * 0.02),
+                  child: const Text('รหัสผ่าน : '),
                 ),
-                const SizedBox(height: 10),
-                const TextField(
-                  decoration: InputDecoration(
-                    border: OutlineInputBorder(
-                      borderSide: BorderSide(
-                        width: 1,
-                      ),
-                    ),
-                    focusedBorder: OutlineInputBorder(
-                      borderSide: BorderSide(
-                          color: Color.fromARGB(255, 247, 127, 118),
-                          width: 2), // เปลี่ยนขอบเป็นสีแดงเมื่อคลิก
-                    ),
-                  ),
-                ),
-                const Padding(
-                  padding: EdgeInsets.only(top: 15),
-                  child: Text('จำนวนเงินในวอลเล็ท : '),
-                ),
-                const SizedBox(height: 10),
-                const TextField(
-                  decoration: InputDecoration(
+                SizedBox(height: screenSize.height * 0.015),
+                TextField(
+                  controller: password,
+                  obscureText: true,
+                  decoration: const InputDecoration(
                     border: OutlineInputBorder(
                       borderSide: BorderSide(
                         width: 1,
@@ -156,26 +154,55 @@ class _RegisterState extends State<Register> {
                   ),
                 ),
                 Padding(
-                  padding: const EdgeInsets.only(top: 30),
-                  child: Center(
-                      child: FilledButton(
-                    onPressed: regissuccess,
-                    style: ButtonStyle(
-                      backgroundColor: WidgetStateProperty.all<Color>(
-                          const Color.fromARGB(255, 230, 92, 87)),
+                  padding: EdgeInsets.only(top: screenSize.height * 0.02),
+                  child: const Text('จำนวนเงินในวอลเล็ท : '),
+                ),
+                SizedBox(height: screenSize.height * 0.015),
+                TextField(
+                  controller: wallet,
+                  decoration: const InputDecoration(
+                    border: OutlineInputBorder(
+                      borderSide: BorderSide(
+                        width: 1,
+                      ),
                     ),
-                    child: const Text('สมัครสมาชิก'),
+                    focusedBorder: OutlineInputBorder(
+                      borderSide: BorderSide(
+                          color: Color.fromARGB(255, 247, 127, 118),
+                          width: 2), // เปลี่ยนขอบเป็นสีแดงเมื่อคลิก
+                    ),
+                  ),
+                ),
+                Padding(
+                  padding: EdgeInsets.only(top: screenSize.height * 0.04),
+                  child: Center(
+                      child: SizedBox(
+                    width: screenSize.width * 0.4,
+                    height: screenSize.height * 0.06,
+                    child: FilledButton(
+                      onPressed: () {
+                        regissuccess(context);
+                      },
+                      style: ButtonStyle(
+                        backgroundColor: MaterialStateProperty.all<Color>(
+                            const Color.fromARGB(255, 230, 92, 87)),
+                      ),
+                      child: Text(
+                        'สมัครสมาชิก',
+                        style: TextStyle(fontSize: screenSize.width * 0.04),
+                      ),
+                    ),
                   )),
                 ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    const Padding(
-                      padding: EdgeInsets.only(top: 10),
-                      child: Text('คุณมีบัญชีอยู่แล้ว ?'),
+                    Padding(
+                      padding: EdgeInsets.only(top: screenSize.height * 0.01),
+                      child: const Text('คุณมีบัญชีอยู่แล้ว ?'),
                     ),
                     Padding(
-                      padding: const EdgeInsets.only(top: 9),
+                      padding: EdgeInsets.only(top: screenSize.height * 0.01),
                       child: TextButton(
                           onPressed: gologin,
                           child: const Text(
@@ -194,59 +221,102 @@ class _RegisterState extends State<Register> {
     );
   }
 
-  void regissuccess() {
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        backgroundColor: const Color.fromARGB(255, 245, 156, 55),
-        title:  Center(
-          child:  Column(
-            children: [
-              Image.asset('assets/images/check.png',
-                width: 70,
-              ),
-              const Text(
-                'สมัครสมาชิก',
-                style: TextStyle(
-                  color: Color.fromRGBO(255, 255, 255, 1),
-                  fontWeight: FontWeight.w800,
-                  fontSize: 30
+// ฟังก์ชันการลงทะเบียน
+  void regissuccess(BuildContext context) {
+    if (name.text.isNotEmpty &&
+        email.text.isNotEmpty &&
+        phone.text.isNotEmpty &&
+        password.text.isNotEmpty &&
+        wallet.text.isNotEmpty) {
+      // สร้างข้อมูลการลงทะเบียน
+      Map<String, dynamic> registrationData = {
+        'name': name.text,
+        'email': email.text,
+        'phone': int.parse(phone.text),
+        'password': password.text,
+        'wallet': int.parse(wallet.text),
+        'isadmin': 0, // กำหนดว่าไม่ใช่แอดมิน
+      };
+
+      // ส่งคำขอ POST พร้อมข้อมูลการลงทะเบียน
+      http
+          .post(
+        Uri.parse('$url/auth/Register'),
+        headers: {"Content-Type": "application/json"},
+        body: json.encode(registrationData),
+      )
+          .then((res) {
+        if (res.statusCode == 200) {
+          // ถ้าการลงทะเบียนสำเร็จ
+          RegsiterResponsePost data = regsiterResponsePostFromJson(res.body);
+
+          // แสดง Dialog เมื่อสำเร็จ
+          showDialog(
+            context: context,
+            builder: (context) => AlertDialog(
+              backgroundColor: const Color.fromARGB(255, 245, 156, 55),
+              title: Center(
+                child: Column(
+                  children: [
+                    Image.asset(
+                      'assets/images/check.png',
+                      width: MediaQuery.of(context).size.width * 0.2,
+                    ),
+                    const Text(
+                      'สมัครสมาชิก',
+                      style: TextStyle(
+                          color: Color.fromRGBO(255, 255, 255, 1),
+                          fontWeight: FontWeight.w800,
+                          fontSize: 30),
+                    ),
+                    const Text(
+                      'สำเร็จ',
+                      style: TextStyle(
+                          color: Color.fromRGBO(255, 255, 255, 1),
+                          fontWeight: FontWeight.w800,
+                          fontSize: 30),
+                    ),
+                  ],
                 ),
               ),
-              const Text(
-                'สำเร็จ',
-                style: TextStyle(
-                  color: Color.fromRGBO(255, 255, 255, 1),
-                  fontWeight: FontWeight.w800,
-                  fontSize: 30
-                ),
-              ),
-            ],
-          ),
-        ),
-        actions: [
-          FilledButton(
-            onPressed: () {
-              Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => const LoginPage()));
-            },
-            style: ButtonStyle(
-              backgroundColor: WidgetStateProperty.all<Color>(
-                  const Color.fromARGB(255, 230, 92, 87)),
+              actions: [
+                FilledButton(
+                  onPressed: () {
+                    Navigator.of(context).pop(); // ปิด Dialog
+                    gologin(); // เรียกฟังก์ชันเปลี่ยนหน้า
+                  },
+                  style: ButtonStyle(
+                    backgroundColor: MaterialStateProperty.all<Color>(
+                        const Color.fromARGB(255, 230, 92, 87)),
+                  ),
+                  child: const Center(
+                      child: Text(
+                    'ตกลง',
+                    style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.w800,
+                    ),
+                  )),
+                )
+              ],
             ),
-            child: const Center(child: Text('ตกลง',
-              style: TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.w800,
-              ),
-            )),
-          )
-        ],
-      ),
-    );
+          );
+        } else {
+          // จัดการข้อผิดพลาดหากการลงทะเบียนล้มเหลว
+          print('ลงทะเบียนไม่สำเร็จ: ${res.statusCode}');
+        }
+      }).catchError((error) {
+        // จัดการข้อผิดพลาดทางเครือข่ายหรือข้อผิดพลาดอื่น ๆ
+        print('เกิดข้อผิดพลาด: $error');
+      });
+    } else {
+      // แสดงข้อความแจ้งเตือนให้กรอกข้อมูลให้ครบ
+      print('กรุณากรอกข้อมูลให้ครบถ้วน.');
+    }
   }
 
   void gologin() {
+    Navigator.of(context).pop();
     Navigator.push(
         context, MaterialPageRoute(builder: (context) => const LoginPage()));
   }
