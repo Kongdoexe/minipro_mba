@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:minipro_mba/config/config.dart';
+import 'package:minipro_mba/models/request/getsearchnumber_request_post.dart';
 import 'package:minipro_mba/models/request/insertcart_request_post.dart';
 import 'package:minipro_mba/models/response/selectalllotto_response_get.dart';
 import 'package:minipro_mba/pages/User/CartLotto.dart';
@@ -326,33 +327,36 @@ class _BuylottoPageState extends State<BuylottoPage> {
   }
 
   void search(String searchQuery) async {
-    try {
-      // Get the configuration and API endpoint
-      var config = await Configuration.getConfig();
-      var url = config['apiEndpoint'];
+  try {
+ 
+    var config = await Configuration.getConfig();
+    var url = config['apiEndpoint'];
 
-      // Send a GET request to the search API with the query
-      var response = await http.post(Uri.parse('$url/lottery/GetSearchNumber?numbers=$searchQuery'));
+    var response = await http.post(Uri.parse('$url/lottery/GetSerachNumber?numbers=$searchQuery'));
 
-      if (response.statusCode == 200) {
-        // Parse the response body into a list of Lotto objects
-        List<SelectalllottoResponseGet> searchResults = selectalllottoResponseGetFromJson(response.body);
+    if (response.statusCode == 200) {
+      
+      GetsearchnumberRequestPost searchResults = getsearchnumberRequestPostFromJson(response.body);
 
-        // Update the UI with the search results
-        if (mounted) {
-          setState(() {
-            alllotto = searchResults;
-            log('First result ticket ID: ${searchResults.first.ticketId}');
-          });
-        }
-      } else {
-        // Handle the error (e.g., show an error message)
-        log('Failed to search lotto numbers: ${response.body}');
+    
+      List<SelectalllottoResponseGet> lottoResults = searchResults.; 
+
+   
+      if (mounted) {
+        setState(() {
+          alllotto = lottoResults;  
+          log('First result ticket ID: ${lottoResults.first.ticketId}');
+        });
       }
-    } catch (err) {
-      log('Error searching lotto numbers: $err');
+    } else {
+     
+      log('Failed to search lotto numbers: ${response.body}');
     }
+  } catch (err) {
+    log('Error searching lotto numbers: $err');
   }
+}
+
 
 
   void choose(int ticketId, int memberId) {
@@ -371,11 +375,12 @@ class _BuylottoPageState extends State<BuylottoPage> {
   }
 
   check() {
-<<<<<<< HEAD
+    
     for (int ticketId in selectedTicketIds) {
       insertTicketIntoCart(ticketId, widget.memberId);
     }
-=======
+    log('$widget.memberId');
+
     // for (int ticketId in selectedTicketIds) {
     //   insertTicketIntoCart(ticketId, memberId);
     // }
