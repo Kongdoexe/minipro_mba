@@ -262,7 +262,7 @@ class _BuylottoPageState extends State<BuylottoPage> {
     var value = await Configuration.getConfig();
     var url = value['apiEndpoint'];
     //Call api /trips
-    var data = await http.get(Uri.parse("$url/lottery/SelectAllLotto"));
+    var data = await http.get(Uri.parse("$url/lottery/GetDrawSchedule"));
     alllotto = selectalllottoResponseGetFromJson(data.body);
   }
 
@@ -313,9 +313,9 @@ class _BuylottoPageState extends State<BuylottoPage> {
   }
 
   check() {
-    for (int ticketId in selectedTicketIds) {
-      insertTicketIntoCart(ticketId, memberId);
-    }
+    // for (int ticketId in selectedTicketIds) {
+    //   insertTicketIntoCart(ticketId, memberId);
+    // }
 
     Navigator.push(
         context,
