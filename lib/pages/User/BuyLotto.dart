@@ -313,15 +313,9 @@ class _BuylottoPageState extends State<BuylottoPage> {
   }
 
   check() {
-<<<<<<< HEAD
-    for (int ticketId in selectedTicketIds) {
-      insertTicketIntoCart(ticketId, widget.memberId);
-    }
-=======
     // for (int ticketId in selectedTicketIds) {
     //   insertTicketIntoCart(ticketId, memberId);
     // }
->>>>>>> Eve
 
     Navigator.push(
         context,
