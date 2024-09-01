@@ -262,7 +262,7 @@ class _BuylottoPageState extends State<BuylottoPage> {
     var value = await Configuration.getConfig();
     var url = value['apiEndpoint'];
     //Call api /trips
-    var data = await http.get(Uri.parse("$url/lottery/GetDrawSchedule"));
+    var data = await http.get(Uri.parse("$url/lottery/SelectAllLotto"));
     alllotto = selectalllottoResponseGetFromJson(data.body);
   }
 
