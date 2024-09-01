@@ -41,12 +41,15 @@ class _LoginPageState extends State<LoginPage> {
 
   @override
   Widget build(BuildContext context) {
+    // ใช้ MediaQuery เพื่อรับขนาดหน้าจอ
+    final screenSize = MediaQuery.of(context).size;
+
     return Scaffold(
       body: SingleChildScrollView(
         child: Container(
           color: Color.fromARGB(0, 255, 255, 255),
           child: Padding(
-            padding: const EdgeInsets.only(top: 100),
+            padding: EdgeInsets.only(top: screenSize.height * 0.1),
             child: Column(
               children: [
                 Row(
@@ -54,32 +57,31 @@ class _LoginPageState extends State<LoginPage> {
                   children: [
                     Image.asset(
                       'assets/images/ICON.png',
-                      width: 180,
+                      width: screenSize.width * 0.4,
                     )
                   ],
                 ),
-                const Padding(
-                  padding: EdgeInsets.only(top: 25),
+                Padding(
+                  padding: EdgeInsets.only(top: screenSize.height * 0.03),
                   child: Text(
                     'LOTTO APP',
                     style: TextStyle(
-                        fontSize: 22,
+                        fontSize: screenSize.width * 0.05,
                         fontWeight: FontWeight.w900,
                         color: Color.fromRGBO(243, 134, 134, 1)),
                   ),
                 ),
-                const Padding(
-                  padding: EdgeInsets.only(right: 230, top: 40),
+                Padding(
+                  padding: EdgeInsets.only(right: screenSize.width * 0.6, top: screenSize.height * 0.03),
                   child: Text(
                     'อีเมลล์',
-                    style: TextStyle(fontWeight: FontWeight.w700, fontSize: 17),
+                    style: TextStyle(fontWeight: FontWeight.w700, fontSize: screenSize.width * 0.04),
                   ),
                 ),
                 Padding(
-                  padding: const EdgeInsets.only(left: 60, right: 60, top: 10),
+                  padding: EdgeInsets.only(left: screenSize.width * 0.15, right: screenSize.width * 0.15, top: screenSize.height * 0.02),
                   child: TextField(
-                    controller:
-                        _emailController, // เชื่อมโยง controller กับ TextField
+                    controller: _emailController, // เชื่อมโยง controller กับ TextField
                     decoration: InputDecoration(
                       border: OutlineInputBorder(
                           borderSide: BorderSide(
@@ -93,20 +95,19 @@ class _LoginPageState extends State<LoginPage> {
                     ),
                   ),
                 ),
-                const Padding(
-                  padding: EdgeInsets.only(right: 220, top: 30),
+                Padding(
+                  padding: EdgeInsets.only(right: 230, top: screenSize.height * 0.03),
                   child: Text(
                     'รหัสผ่าน',
-                    style: TextStyle(fontWeight: FontWeight.w700, fontSize: 17),
+                    style: TextStyle(fontWeight: FontWeight.w700, fontSize: screenSize.width * 0.04),
                   ),
                 ),
                 Padding(
-                  padding: const EdgeInsets.only(left: 60, right: 60, top: 10),
+                  padding: EdgeInsets.only(left: screenSize.width * 0.15, right: screenSize.width * 0.15, top: screenSize.height * 0.02),
                   child: TextField(
-                    controller:
-                        _passwordController, // เชื่อมโยง controller กับ TextField
+                    controller: _passwordController, // เชื่อมโยง controller กับ TextField
                     obscureText: true, // ซ่อนรหัสผ่านเมื่อป้อน
-                    decoration: const InputDecoration(
+                    decoration: InputDecoration(
                       border: OutlineInputBorder(
                           borderSide: BorderSide(
                         width: 1,
@@ -120,17 +121,17 @@ class _LoginPageState extends State<LoginPage> {
                   ),
                 ),
                 Padding(
-                  padding: const EdgeInsets.only(top: 50),
-                  child: Container(
-                    width: 150,
-                    height: 40,
+                  padding: EdgeInsets.only(top: screenSize.height * 0.05),
+                  child: SizedBox(
+                    width: screenSize.width * 0.4, // ใช้ความกว้างของหน้าจอ 40%
+                    height: screenSize.height * 0.06, // ใช้ความสูงของหน้าจอ 6%
                     child: FilledButton(
                       onPressed: () {
                         loginUser();
                       },
                       child: Text(
                         'เข้าสู่ระบบ',
-                        style: TextStyle(fontSize: 16),
+                        style: TextStyle(fontSize: screenSize.width * 0.04),
                       ),
                       style: ButtonStyle(
                         backgroundColor: MaterialStateProperty.all<Color>(
@@ -142,22 +143,22 @@ class _LoginPageState extends State<LoginPage> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    const Padding(
-                      padding: EdgeInsets.only(top: 20),
+                    Padding(
+                      padding: EdgeInsets.only(top: screenSize.height * 0.02),
                       child: Text(
                         'คุณยังไม่มีบัญชีใช่หรือไม่ ?',
-                        style: TextStyle(fontSize: 16),
+                        style: TextStyle(fontSize: screenSize.width * 0.04),
                       ),
                     ),
                     Padding(
-                      padding: EdgeInsets.only(top: 20),
+                      padding: EdgeInsets.only(top: screenSize.height * 0.02),
                       child: TextButton(
                         onPressed: register,
-                        child: const Text(
+                        child: Text(
                           'สมัครสมาชิก',
                           style: TextStyle(
                               color: Color.fromRGBO(221, 86, 76, 1),
-                              fontSize: 16),
+                              fontSize: screenSize.width * 0.04),
                         ),
                       ),
                     )
@@ -181,7 +182,8 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   void loginUser() {
-    final userTest = context.read<Data>();
+    final userTest =
+        Provider.of<Data>(context, listen: false); // ใช้ Provider.of
     log(userTest.mid.toString());
     LoginRequestGet login = LoginRequestGet(
         email: _emailController.text, password: _passwordController.text);
@@ -241,6 +243,10 @@ class _LoginPageState extends State<LoginPage> {
         ScaffoldMessenger.of(context)
             .showSnackBar(SnackBar(content: Text('Login failed')));
       }
-    }).catchError((error) {});
+    }).catchError((error) {
+      print('Error: $error');
+      ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('An error occurred during login')));
+    });
   }
 }
