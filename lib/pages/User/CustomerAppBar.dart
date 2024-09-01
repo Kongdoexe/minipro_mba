@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:iconsax/iconsax.dart';
+import 'package:minipro_mba/models/response/login_response_get.dart';
 import 'package:minipro_mba/pages/User/CartLotto.dart';
 import 'package:minipro_mba/pages/login.dart';
-import 'package:minipro_mba/share/Data.dart';
+import 'package:minipro_mba/share/ShareData.dart';
 import 'package:provider/provider.dart';
 
 class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
@@ -98,14 +99,22 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   void navigateCartLotto(BuildContext context) {
     Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) => const CartlottoPage(selectedTicketIds:[])),
+      MaterialPageRoute(
+          builder: (context) => const CartlottoPage(selectedTicketIds: [])),
     );
   }
 
   void navigateLoginOut(BuildContext context) {
     // ignore: non_constant_identifier_names
     final UserId = context.read<Data>();
-    UserId.setUserId(0);
+    UserId.setDataUser(Member(
+        memberId: 0,
+        name: "",
+        email: "",
+        password: "",
+        phone: 0,
+        wallet: 0,
+        isadmin: 0));
     Navigator.push(
       context,
       MaterialPageRoute(builder: (context) => const LoginPage()),

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:minipro_mba/pages/User/CustomerAppBar.dart';
 import 'package:minipro_mba/pages/User/CustomerNavbar.dart';
-import 'package:minipro_mba/share/Data.dart';
+import 'package:minipro_mba/share/ShareData.dart';
 import 'package:provider/provider.dart'; // Make sure you have this package installed
 
 class Homepageuser extends StatefulWidget {
@@ -27,7 +27,7 @@ class _HomepageuserState extends State<Homepageuser> {
         children: [
           // Add other widgets here for the Stack if needed
           // Example placeholder for content:
-          Center(child: Text(userModel.mid.toString())),
+          Center(child: Text(userModel.datauser.memberId.toString())),
         ],
       ),
       bottomNavigationBar: CustomNavigationBar(

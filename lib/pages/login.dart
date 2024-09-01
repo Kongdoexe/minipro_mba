@@ -6,10 +6,9 @@ import 'package:minipro_mba/pages/Admin/HomePage.dart';
 import 'package:minipro_mba/pages/Register.dart';
 import 'package:http/http.dart' as http;
 import 'package:minipro_mba/pages/User/HomePageuser.dart';
-import 'dart:convert';
-import 'dart:developer';
 
-import 'package:minipro_mba/share/Data.dart';
+import 'package:minipro_mba/share/ShareData.dart';
+import 'package:minipro_mba/share/ShareWidget.dart';
 import 'package:provider/provider.dart';
 
 class LoginPage extends StatefulWidget {
@@ -25,17 +24,18 @@ class _LoginPageState extends State<LoginPage> {
   // สร้าง TextEditingController สำหรับจัดการอินพุตอีเมลและรหัสผ่าน
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
+  final myWidget = MyWidget();
 
   @override
   void initState() {
     super.initState();
     Configuration.getConfig().then(
       (value) {
-        print('Configuration loaded: $value'); // ตรวจสอบค่าที่โหลด
+        // showCustomSnackbar("Message", 'Configuration loaded $value');
         url = value['apiEndpoint'].toString();
       },
     ).catchError((err) {
-      print('Error in initState: $err');
+      myWidget.showCustomSnackbar("Message", 'Error in initState: $err');
     });
   }
 
@@ -47,7 +47,7 @@ class _LoginPageState extends State<LoginPage> {
     return Scaffold(
       body: SingleChildScrollView(
         child: Container(
-          color: Color.fromARGB(0, 255, 255, 255),
+          color: const Color.fromARGB(0, 255, 255, 255),
           child: Padding(
             padding: EdgeInsets.only(top: screenSize.height * 0.1),
             child: Column(
@@ -68,21 +68,29 @@ class _LoginPageState extends State<LoginPage> {
                     style: TextStyle(
                         fontSize: screenSize.width * 0.05,
                         fontWeight: FontWeight.w900,
-                        color: Color.fromRGBO(243, 134, 134, 1)),
+                        color: const Color.fromRGBO(243, 134, 134, 1)),
                   ),
                 ),
                 Padding(
-                  padding: EdgeInsets.only(right: screenSize.width * 0.6, top: screenSize.height * 0.03),
+                  padding: EdgeInsets.only(
+                      right: screenSize.width * 0.6,
+                      top: screenSize.height * 0.03),
                   child: Text(
                     'อีเมลล์',
-                    style: TextStyle(fontWeight: FontWeight.w700, fontSize: screenSize.width * 0.04),
+                    style: TextStyle(
+                        fontWeight: FontWeight.w700,
+                        fontSize: screenSize.width * 0.04),
                   ),
                 ),
                 Padding(
-                  padding: EdgeInsets.only(left: screenSize.width * 0.15, right: screenSize.width * 0.15, top: screenSize.height * 0.02),
+                  padding: EdgeInsets.only(
+                      left: screenSize.width * 0.15,
+                      right: screenSize.width * 0.15,
+                      top: screenSize.height * 0.02),
                   child: TextField(
-                    controller: _emailController, // เชื่อมโยง controller กับ TextField
-                    decoration: InputDecoration(
+                    controller:
+                        _emailController, // เชื่อมโยง controller กับ TextField
+                    decoration: const InputDecoration(
                       border: OutlineInputBorder(
                           borderSide: BorderSide(
                         width: 1,
@@ -96,18 +104,25 @@ class _LoginPageState extends State<LoginPage> {
                   ),
                 ),
                 Padding(
-                  padding: EdgeInsets.only(right: 230, top: screenSize.height * 0.03),
+                  padding: EdgeInsets.only(
+                      right: 230, top: screenSize.height * 0.03),
                   child: Text(
                     'รหัสผ่าน',
-                    style: TextStyle(fontWeight: FontWeight.w700, fontSize: screenSize.width * 0.04),
+                    style: TextStyle(
+                        fontWeight: FontWeight.w700,
+                        fontSize: screenSize.width * 0.04),
                   ),
                 ),
                 Padding(
-                  padding: EdgeInsets.only(left: screenSize.width * 0.15, right: screenSize.width * 0.15, top: screenSize.height * 0.02),
+                  padding: EdgeInsets.only(
+                      left: screenSize.width * 0.15,
+                      right: screenSize.width * 0.15,
+                      top: screenSize.height * 0.02),
                   child: TextField(
-                    controller: _passwordController, // เชื่อมโยง controller กับ TextField
+                    controller:
+                        _passwordController, // เชื่อมโยง controller กับ TextField
                     obscureText: true, // ซ่อนรหัสผ่านเมื่อป้อน
-                    decoration: InputDecoration(
+                    decoration: const InputDecoration(
                       border: OutlineInputBorder(
                           borderSide: BorderSide(
                         width: 1,
@@ -129,13 +144,13 @@ class _LoginPageState extends State<LoginPage> {
                       onPressed: () {
                         loginUser();
                       },
+                      style: ButtonStyle(
+                        backgroundColor: WidgetStateProperty.all<Color>(
+                            const Color.fromARGB(255, 230, 92, 87)),
+                      ),
                       child: Text(
                         'เข้าสู่ระบบ',
                         style: TextStyle(fontSize: screenSize.width * 0.04),
-                      ),
-                      style: ButtonStyle(
-                        backgroundColor: MaterialStateProperty.all<Color>(
-                            const Color.fromARGB(255, 230, 92, 87)),
                       ),
                     ),
                   ),
@@ -157,7 +172,7 @@ class _LoginPageState extends State<LoginPage> {
                         child: Text(
                           'สมัครสมาชิก',
                           style: TextStyle(
-                              color: Color.fromRGBO(221, 86, 76, 1),
+                              color: const Color.fromRGBO(221, 86, 76, 1),
                               fontSize: screenSize.width * 0.04),
                         ),
                       ),
@@ -182,14 +197,12 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   void loginUser() {
-    final userTest =
-        Provider.of<Data>(context, listen: false); // ใช้ Provider.of
-    log(userTest.mid.toString());
+    final userTest = context.read<Data>();
     LoginRequestGet login = LoginRequestGet(
         email: _emailController.text, password: _passwordController.text);
 
     if (url.isEmpty) {
-      print('Error: API URL is empty');
+      myWidget.showCustomSnackbar('Message', 'Error: API URL is empty');
       return;
     }
 
@@ -202,51 +215,40 @@ class _LoginPageState extends State<LoginPage> {
         .then((response) {
       if (response.statusCode == 200 && response.body.isNotEmpty) {
         try {
-          Map<String, dynamic> responseData = jsonDecode(response.body);
-
           LoginResponseGet memberlogin =
-              LoginResponseGet.fromJson(responseData);
-
-          userTest.setUserId(memberlogin.memberId);
-
-          log(userTest.mid.toString());
+              loginResponseGetFromJson(response.body);
+          userTest.setDataUser(memberlogin.member);
+          userTest.setPeriod(memberlogin.periodLotto);
 
           // ตรวจสอบค่า isadmin
-          if (memberlogin.isadmin == 0) {
+          if (memberlogin.member.isadmin == 0) {
             Navigator.push(
               context,
               MaterialPageRoute(
                 builder: (context) => const Homepageuser(),
               ),
             );
-            print('id=${memberlogin.memberId}');
-          } else if (memberlogin.isadmin == 1) {
+            // print('id=${memberlogin.memberId}');
+          } else if (memberlogin.member.isadmin == 1) {
             Navigator.push(
               context,
               MaterialPageRoute(
-                builder: (context) => HomePage(),
+                builder: (context) => const HomePage(),
               ),
             );
           } else {
-            print('Error: Unexpected isadmin value');
-            ScaffoldMessenger.of(context).showSnackBar(
-                SnackBar(content: Text('Unexpected isadmin value')));
+            myWidget.showCustomSnackbar("Message", "Unexpected isadmin value");
           }
         } catch (e) {
-          print('Error parsing JSON: $e');
-          ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text('Failed to parse server response')));
+          myWidget.showCustomSnackbar(
+              "Message", "Failed to parse server response $e");
         }
       } else {
-        // กรณีที่การตอบสนองไม่ถูกต้อง
-        print('Error: Login failed with status code ${response.statusCode}');
-        ScaffoldMessenger.of(context)
-            .showSnackBar(SnackBar(content: Text('Login failed')));
+        myWidget.showCustomSnackbar("Message", "Login failed $response");
       }
     }).catchError((error) {
-      print('Error: $error');
-      ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('An error occurred during login')));
+      myWidget.showCustomSnackbar(
+          "Message", "An error occurred during login $error");
     });
   }
 }

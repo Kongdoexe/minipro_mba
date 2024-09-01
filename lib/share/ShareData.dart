@@ -1,0 +1,26 @@
+import 'package:flutter/material.dart';
+import 'package:minipro_mba/models/response/login_response_get.dart';
+
+class Data with ChangeNotifier {
+  int _period = 0;
+  Member _datauser = Member(
+      memberId: 0,
+      name: "",
+      email: "",
+      password: "",
+      phone: 0,
+      wallet: 0,
+      isadmin: 0);
+
+  Member get datauser => _datauser;
+  int get period => _period;
+  void setDataUser(Member user) {
+    _datauser = user;
+    notifyListeners();
+  }
+
+  void setPeriod(int period) {
+    _period = period;
+    notifyListeners();
+  }
+}

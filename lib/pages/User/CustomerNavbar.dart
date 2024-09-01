@@ -5,7 +5,7 @@ import 'package:minipro_mba/pages/User/CheckLotto.dart';
 import 'package:minipro_mba/pages/User/HomePageuser.dart';
 import 'package:minipro_mba/pages/User/MyLotto.dart';
 import 'package:minipro_mba/pages/User/Profile.dart';
-import 'package:minipro_mba/share/Data.dart';
+import 'package:minipro_mba/share/ShareData.dart';
 import 'package:provider/provider.dart';
 
 class CustomNavigationBar extends StatelessWidget {
@@ -103,12 +103,9 @@ class CustomNavigationBar extends StatelessWidget {
     final MemberID = context.read<Data>();
     Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) => BuylottoPage(memberId: MemberID.mid,)),
+      MaterialPageRoute(builder: (context) => BuylottoPage(memberId: MemberID.datauser.memberId,)),
     );
   }
-
-  
-
 
   void navigateProfile(BuildContext context) {
     Navigator.push(

@@ -1,12 +1,11 @@
-import 'package:flutter/material.dart';
-import 'package:minipro_mba/config/config.dart';
-import 'package:minipro_mba/models/response/regsiter_response_post.dart';
-import 'package:minipro_mba/pages/login.dart';
-import 'package:http/http.dart' as http;
 import 'dart:convert';
 
-import 'package:minipro_mba/share/Data.dart';
-import 'package:provider/provider.dart';
+import 'package:flutter/material.dart';
+import 'package:minipro_mba/config/config.dart';
+import 'package:minipro_mba/models/request/regsiter_request_post.dart';
+import 'package:minipro_mba/pages/login.dart';
+import 'package:http/http.dart' as http;
+import 'package:minipro_mba/share/ShareWidget.dart';
 
 class Register extends StatefulWidget {
   const Register({super.key});
@@ -22,6 +21,7 @@ class _RegisterState extends State<Register> {
   TextEditingController phone = TextEditingController();
   TextEditingController wallet = TextEditingController();
   String url = '';
+  final myWidget = MyWidget();
 
   @override
   void initState() {
@@ -118,6 +118,7 @@ class _RegisterState extends State<Register> {
                 ),
                 SizedBox(height: screenSize.height * 0.015),
                 TextField(
+                  maxLength: 10,
                   controller: phone,
                   decoration: const InputDecoration(
                     border: OutlineInputBorder(
@@ -229,27 +230,26 @@ class _RegisterState extends State<Register> {
         password.text.isNotEmpty &&
         wallet.text.isNotEmpty) {
       // สร้างข้อมูลการลงทะเบียน
-      Map<String, dynamic> registrationData = {
-        'name': name.text,
-        'email': email.text,
-        'phone': int.parse(phone.text),
-        'password': password.text,
-        'wallet': int.parse(wallet.text),
-        'isadmin': 0, // กำหนดว่าไม่ใช่แอดมิน
-      };
+      RegsiterRequestPost registrationData = RegsiterRequestPost(
+          name: name.text,
+          email: email.text,
+          password: password.text,
+          phone: int.parse(phone.text),
+          wallet: int.parse(wallet.text),
+          isadmin: 0);
 
+      var datauser = regsiterRequestPostToJson(registrationData);
       // ส่งคำขอ POST พร้อมข้อมูลการลงทะเบียน
       http
           .post(
         Uri.parse('$url/auth/Register'),
-        headers: {"Content-Type": "application/json"},
-        body: json.encode(registrationData),
+        headers: {"Content-Type": "application/json; charset=utf-8"},
+        body: datauser,
       )
           .then((res) {
+        final jsonResponse = json.decode(utf8.decode(res.bodyBytes));
         if (res.statusCode == 200) {
           // ถ้าการลงทะเบียนสำเร็จ
-          RegsiterResponsePost data = regsiterResponsePostFromJson(res.body);
-
           // แสดง Dialog เมื่อสำเร็จ
           showDialog(
             context: context,
@@ -303,15 +303,17 @@ class _RegisterState extends State<Register> {
           );
         } else {
           // จัดการข้อผิดพลาดหากการลงทะเบียนล้มเหลว
-          print('ลงทะเบียนไม่สำเร็จ: ${res.statusCode}');
+          final msgValue = jsonResponse['msg'];
+          myWidget.showCustomSnackbar(
+              'Message', 'ลงทะเบียนไม่สำเร็จ: $msgValue');
         }
       }).catchError((error) {
         // จัดการข้อผิดพลาดทางเครือข่ายหรือข้อผิดพลาดอื่น ๆ
-        print('เกิดข้อผิดพลาด: $error');
+        myWidget.showCustomSnackbar('Message', 'เกิดข้อผิดพลาด: $error');
       });
     } else {
       // แสดงข้อความแจ้งเตือนให้กรอกข้อมูลให้ครบ
-      print('กรุณากรอกข้อมูลให้ครบถ้วน.');
+      myWidget.showCustomSnackbar('Message', 'กรุณากรอกข้อมูลให้ครบถ้วน.');
     }
   }
 

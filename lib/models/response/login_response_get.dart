@@ -9,6 +9,26 @@ LoginResponseGet loginResponseGetFromJson(String str) => LoginResponseGet.fromJs
 String loginResponseGetToJson(LoginResponseGet data) => json.encode(data.toJson());
 
 class LoginResponseGet {
+    Member member;
+    int periodLotto;
+
+    LoginResponseGet({
+        required this.member,
+        required this.periodLotto,
+    });
+
+    factory LoginResponseGet.fromJson(Map<String, dynamic> json) => LoginResponseGet(
+        member: Member.fromJson(json["member"]),
+        periodLotto: json["periodLotto"],
+    );
+
+    Map<String, dynamic> toJson() => {
+        "member": member.toJson(),
+        "periodLotto": periodLotto,
+    };
+}
+
+class Member {
     int memberId;
     String name;
     String email;
@@ -17,7 +37,7 @@ class LoginResponseGet {
     int wallet;
     int isadmin;
 
-    LoginResponseGet({
+    Member({
         required this.memberId,
         required this.name,
         required this.email,
@@ -27,7 +47,7 @@ class LoginResponseGet {
         required this.isadmin,
     });
 
-    factory LoginResponseGet.fromJson(Map<String, dynamic> json) => LoginResponseGet(
+    factory Member.fromJson(Map<String, dynamic> json) => Member(
         memberId: json["MemberID"],
         name: json["name"],
         email: json["email"],

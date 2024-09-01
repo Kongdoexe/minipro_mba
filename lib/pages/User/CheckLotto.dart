@@ -12,36 +12,38 @@ import 'package:minipro_mba/models/response/getwinningnumbers_response_get.dart'
 import 'package:minipro_mba/pages/User/CustomerAppBar.dart';
 import 'package:minipro_mba/pages/User/CustomerNavbar.dart';
 import 'package:minipro_mba/pages/User/ResultLotto.dart';
-import 'package:minipro_mba/share/Data.dart';
+import 'package:minipro_mba/share/ShareData.dart';
+import 'package:minipro_mba/share/ShareWidget.dart';
 import 'package:provider/provider.dart';
-import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 
 class CheckLottoPage extends StatefulWidget {
-  const CheckLottoPage({super.key});
+  const CheckLottoPage({Key? key}) : super(key: key);
 
   @override
   State<CheckLottoPage> createState() => _CheckLottoPageState();
 }
 
 class _CheckLottoPageState extends State<CheckLottoPage> {
-  TextEditingController test = TextEditingController(text: "รอบที่ 1");
+  TextEditingController test = TextEditingController();
+  final myWidget = MyWidget();
+  String _text = '';
   late Future<void> loadData;
-  late List<GetuserdrawnumbersResponseGet> allLotto = [];
-  late List<TextEditingController> lottoControllers = [];
+  List<GetuserdrawnumbersResponseGet> allLotto = [];
+  List<TextEditingController> lottoControllers = [];
   late Allerrorresponseget msg;
-  late int i = 1;
 
   @override
   void initState() {
     super.initState();
-    lottoControllers = [TextEditingController()];
+    lottoControllers.add(TextEditingController());
     loadData = loadDataAsync();
   }
 
   @override
   Widget build(BuildContext context) {
     final screenSize = MediaQuery.of(context).size;
+
     return Scaffold(
       backgroundColor: const Color.fromRGBO(255, 138, 128, 1),
       appBar: CustomAppBar(
@@ -68,111 +70,169 @@ class _CheckLottoPageState extends State<CheckLottoPage> {
             top: screenSize.height * 0.076,
             child: SingleChildScrollView(
               child: Padding(
-                padding: EdgeInsets.only(
-                    top: screenSize.height * 0.01,
-                    left: screenSize.width * 0.2,
-                    right: screenSize.width * 0.2),
+                padding: EdgeInsets.symmetric(
+                  vertical: screenSize.height * 0.01,
+                  horizontal: screenSize.width * 0.2,
+                ),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
                       "เลือกรอบที่ออกรางวัล",
                       style: TextStyle(
-                          fontFamily: 'MaliMedium',
-                          fontSize: screenSize.width * 0.05),
-                    ),
-                    TextField(
-                      controller: test,
-                      decoration: InputDecoration(
-                        fillColor: const Color.fromARGB(255, 255, 255, 255),
-                        filled: true,
-                        suffixIcon: IconButton(
-                          icon: const Icon(Icons.calendar_month),
-                          onPressed: () {},
-                        ),
-                        border: const OutlineInputBorder(),
+                        fontFamily: 'MaliMedium',
+                        fontSize: screenSize.width * 0.05,
                       ),
                     ),
-                    FutureBuilder(
-                      future: loadData,
-                      builder: (context, snapshot) {
-                        if (snapshot.connectionState != ConnectionState.done) {
-                          return const Center(
-                            child: CircularProgressIndicator(),
-                          );
-                        }
-
-                        return Padding(
-                          padding:
-                              EdgeInsets.only(top: screenSize.height * 0.06),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Container(
+                          decoration: BoxDecoration(
+                            color: const Color.fromARGB(255, 255, 255, 255),
+                            border: Border.all(color: Colors.grey),
+                            borderRadius: BorderRadius.circular(4.0),
+                          ),
+                          child: Row(
+                            children: [
+                              Expanded(
+                                child: Padding(
+                                  padding: EdgeInsets.symmetric(
+                                    horizontal: screenSize.width * 0.012,
+                                    vertical: screenSize.height * 0.016,
+                                  ),
+                                  child: Padding(
+                                    padding: EdgeInsets.only(
+                                      left: screenSize.width * 0.04,
+                                    ),
+                                    child: Text(
+                                      _text,
+                                      style: TextStyle(
+                                        fontFamily: 'MaliMedium',
+                                        fontSize: screenSize.width * 0.047,
+                                        color: Colors.black,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              IconButton(
+                                icon: const Icon(Icons.calendar_month),
+                                onPressed: () => showDialogg(context),
+                              ),
+                            ],
+                          ),
+                        ),
+                        Padding(
+                          padding: EdgeInsets.only(
+                            top: screenSize.height * 0.06,
+                          ),
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Text("กรอกหมายเลขสลาก",
-                                  style: TextStyle(
-                                      fontFamily: 'MaliMedium',
-                                      fontSize: screenSize.width * 0.045)),
-                              Padding(
-                                  padding: EdgeInsets.only(
-                                      top: screenSize.height * 0.01)),
-                              ...List.generate(lottoControllers.length,
-                                  (index) {
-                                return Padding(
-                                  padding: EdgeInsets.only(
-                                      bottom: screenSize.height * 0.01),
-                                  child: Row(
+                              Text(
+                                "กรอกหมายเลขสลาก",
+                                style: TextStyle(
+                                  fontFamily: 'MaliMedium',
+                                  fontSize: screenSize.width * 0.045,
+                                ),
+                              ),
+                              FutureBuilder<void>(
+                                future: loadData,
+                                builder: (context, snapshot) {
+                                  if (snapshot.connectionState !=
+                                      ConnectionState.done) {
+                                    return const Center(
+                                        child: CircularProgressIndicator());
+                                  }
+
+                                  if (snapshot.hasError) {
+                                    return Center(
+                                        child:
+                                            Text('Error: ${snapshot.error}'));
+                                  }
+
+                                  return Column(
                                     children: [
-                                      SizedBox(
-                                        width: screenSize.width * 0.45,
-                                        child: TextField(
-                                          controller: lottoControllers[index],
-                                          keyboardType: TextInputType.number,
-                                          maxLength: 6,
-                                          inputFormatters: [
-                                            FilteringTextInputFormatter
-                                                .digitsOnly,
-                                            LengthLimitingTextInputFormatter(6),
-                                          ],
-                                          decoration: InputDecoration(
-                                            fillColor: Colors.white,
-                                            filled: true,
-                                            hintText: 'กรอกหมายเลขสลาก',
-                                            suffixIcon: IconButton(
-                                              icon: const Icon(
-                                                  Icons.close_outlined),
-                                              onPressed: () =>
-                                                  deleteRecord(index),
-                                            ),
-                                            border: const OutlineInputBorder(),
-                                            counterText: '',
-                                          ),
+                                      Padding(
+                                        padding: EdgeInsets.only(
+                                          top: screenSize.height * 0.01,
                                         ),
                                       ),
-                                      Padding(
-                                          padding: EdgeInsets.only(
-                                              left: screenSize.width * 0.024)),
-                                      if (index ==
-                                          lottoControllers.length - 1) ...[
-                                        IconButton(
-                                          icon: Icon(
-                                            Icons.add,
-                                            color: Colors.white,
-                                            size: screenSize.width * 0.06,
-                                          ),
-                                          style: IconButton.styleFrom(
-                                            backgroundColor:
-                                                const Color.fromRGBO(
-                                                    255, 59, 48, 1),
-                                          ),
-                                          onPressed: addRecord,
-                                        )
-                                      ]
+                                      ...List.generate(
+                                        lottoControllers.length,
+                                        (index) {
+                                          return Padding(
+                                            padding: EdgeInsets.only(
+                                              bottom: screenSize.height * 0.01,
+                                            ),
+                                            child: Row(
+                                              children: [
+                                                SizedBox(
+                                                  width:
+                                                      screenSize.width * 0.45,
+                                                  child: TextField(
+                                                    controller:
+                                                        lottoControllers[index],
+                                                    keyboardType:
+                                                        TextInputType.number,
+                                                    maxLength: 6,
+                                                    inputFormatters: [
+                                                      FilteringTextInputFormatter
+                                                          .digitsOnly,
+                                                      LengthLimitingTextInputFormatter(
+                                                          6),
+                                                    ],
+                                                    decoration: InputDecoration(
+                                                      fillColor: Colors.white,
+                                                      filled: true,
+                                                      hintText:
+                                                          'กรอกหมายเลขสลาก',
+                                                      suffixIcon: IconButton(
+                                                        icon: const Icon(Icons
+                                                            .close_outlined),
+                                                        onPressed: () =>
+                                                            deleteRecord(index),
+                                                      ),
+                                                      border:
+                                                          const OutlineInputBorder(),
+                                                      counterText: '',
+                                                    ),
+                                                  ),
+                                                ),
+                                                Padding(
+                                                  padding: EdgeInsets.only(
+                                                    left: screenSize.width *
+                                                        0.024,
+                                                  ),
+                                                ),
+                                                if (index ==
+                                                    lottoControllers.length - 1)
+                                                  IconButton(
+                                                    icon: Icon(
+                                                      Icons.add,
+                                                      color: Colors.white,
+                                                      size: screenSize.width *
+                                                          0.06,
+                                                    ),
+                                                    style: IconButton.styleFrom(
+                                                      backgroundColor:
+                                                          const Color.fromRGBO(
+                                                              255, 59, 48, 1),
+                                                    ),
+                                                    onPressed: addRecord,
+                                                  ),
+                                              ],
+                                            ),
+                                          );
+                                        },
+                                      ),
                                     ],
-                                  ),
-                                );
-                              }),
+                                  );
+                                },
+                              ),
                               SizedBox(
-                                width: screenSize.width * 1,
+                                width: screenSize.width,
                                 height: screenSize.height * 0.2,
                                 child: Center(
                                   child: TextButton(
@@ -181,27 +241,27 @@ class _CheckLottoPageState extends State<CheckLottoPage> {
                                       backgroundColor: const Color.fromRGBO(
                                           255, 209, 128, 1),
                                       padding: EdgeInsets.symmetric(
-                                          vertical: screenSize.height * 0.015,
-                                          horizontal: screenSize.width * 0.08),
+                                        vertical: screenSize.height * 0.015,
+                                        horizontal: screenSize.width * 0.08,
+                                      ),
                                     ),
                                     child: Text(
                                       "ตรวจสลาก",
                                       style: TextStyle(
                                         fontFamily: 'MaliMedium',
                                         fontSize: screenSize.width * 0.04,
-                                        color:
-                                            const Color.fromARGB(255, 0, 0, 0),
+                                        color: Colors.black,
                                         fontWeight: FontWeight.bold,
                                       ),
                                     ),
                                   ),
                                 ),
-                              )
+                              ),
                             ],
                           ),
-                        );
-                      },
-                    )
+                        ),
+                      ],
+                    ),
                   ],
                 ),
               ),
@@ -217,84 +277,115 @@ class _CheckLottoPageState extends State<CheckLottoPage> {
     );
   }
 
+  void showDialogg(BuildContext context) {
+    final screenSize = MediaQuery.of(context).size;
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        backgroundColor: Colors.transparent,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(10),
+        ),
+        title: Container(
+          decoration: BoxDecoration(
+            color: const Color.fromRGBO(255, 149, 0, 0.8),
+            borderRadius: BorderRadius.circular(10),
+          ),
+          padding: const EdgeInsets.all(10.0),
+          child: Container(
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(10),
+            ),
+            padding: const EdgeInsets.all(10.0),
+            child: Column(
+              children: [
+                Text(
+                  _text, // ข้อความหัวเรื่อง
+                  style: TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.w800,
+                  ),
+                ),
+                Padding(
+                  padding: EdgeInsets.symmetric(
+                      horizontal: MediaQuery.of(context).size.width * 0.1),
+                  child: FilledButton(
+                    onPressed: () {
+                      Navigator.of(context).pop(); // ปิด Dialog
+                    },
+                    style: ButtonStyle(
+                      backgroundColor: WidgetStateProperty.all<Color>(
+                          const Color.fromRGBO(255, 34, 34, 1)),
+                    ),
+                    child: const Center(
+                      child: Text(
+                        'เลือก',
+                        style: TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.w800,
+                        ),
+                      ),
+                    ),
+                  ),
+                )
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
   Future<void> loadDataAsync() async {
     try {
-      var url = await loadUrl();
-      var member = context.read<Data>();
-      var memberId = member.mid;
-      var response = await http.get(
+      final url = await loadUrl();
+      final member = context.read<Data>();
+      setState(() {
+        _text = "รอบที่ ${member.period}";
+      });
+      final memberId = member.datauser.memberId;
+      final response = await http.get(
         Uri.parse('$url/lottery/GetUserDrawNumbers/$memberId'),
         headers: {"Content-Type": "application/json; charset=utf-8"},
       );
 
       if (response.statusCode == 200) {
-        var jsonResponse = json.decode(utf8.decode(response.bodyBytes));
+        final jsonResponse = json.decode(utf8.decode(response.bodyBytes));
 
-        if (jsonResponse is Map<String, dynamic>) {
-          if (jsonResponse.containsKey('msg')) {
-            var msgValue = jsonResponse['msg'];
-            if (msgValue is String) {
-              log("Message from server: $msgValue");
-              Get.snackbar('Message', msgValue);
-            } else if (msgValue is Map<String, dynamic>) {
-              try {
-                msg = allerrorresponsegetFromJson(
-                    jsonEncode(msgValue)); // Convert to String
-                log("Message from server: $msg");
-              } catch (e) {
-                Get.snackbar(
-                  'เกิดข้อผิดพลาด',
-                  'Error parsing "msg": $e',
-                );
-              }
-            }
-          }
+        if (jsonResponse is Map<String, dynamic> || jsonResponse is String) {
+          _handleError(response);
         } else if (jsonResponse is List) {
           try {
             allLotto =
                 getuserdrawnumbersResponseGetFromJson(jsonEncode(jsonResponse));
             _setLottoControllers();
           } catch (e) {
-            log("Error parsing list of lotto data: $e");
+            myWidget.showCustomSnackbar(
+                "Message", "Error parsing list of lotto data: $e");
           }
         }
       } else {
-        var jsonResponse = json.decode(utf8.decode(response.bodyBytes));
-        if (jsonResponse is Map<String, dynamic> &&
-            jsonResponse.containsKey('msg')) {
-          var msgValue = jsonResponse['msg'];
-          if (msgValue is String) {
-            log("Message from server: $msgValue");
-            Get.snackbar('Message', msgValue);
-          } else if (msgValue is Map<String, dynamic>) {
-            try {
-              msg = allerrorresponsegetFromJson(
-                  jsonEncode(msgValue)); // Convert to String
-              log("Message from server: $msg");
-            } catch (e) {
-              log("Error parsing 'msg': $e");
-            }
-          }
-        }
+        _handleError(response);
       }
     } catch (e) {
-      log("An error occurred: $e");
-      Get.snackbar('เกิดข้อผิดพลาด', 'An error occurred: $e');
+      myWidget.showCustomSnackbar('Error', 'An error occurred: $e');
     }
   }
 
   Future<String> loadUrl() async {
-    var value = await Configuration.getConfig();
-    var url = value['apiEndpoint'];
-    return url;
+    final value = await Configuration.getConfig();
+    return value['apiEndpoint'];
   }
 
   Future<void> sendLottoNumbers() async {
     final url = await loadUrl();
+    final userData = context.read<Data>();
     final datanum = lottoControllers
         .map((controller) => Datanum(number: controller.text))
         .toList();
-    final lotto = GetwinningnumbersRequestGet(period: 2, datanum: datanum);
+    final lotto =
+        GetwinningnumbersRequestGet(period: userData.period, datanum: datanum);
     final jsonData = getwinningnumbersRequestGetToJson(lotto);
 
     try {
@@ -304,23 +395,11 @@ class _CheckLottoPageState extends State<CheckLottoPage> {
         body: jsonData,
       );
 
-      final responseBody = utf8.decode(response.bodyBytes);
-      final jsonResponse = json.decode(responseBody);
+      final jsonResponse = json.decode(utf8.decode(response.bodyBytes));
 
       if (response.statusCode == 200) {
-        if (jsonResponse is Map<String, dynamic>) {
-          final msgValue = jsonResponse['msg'];
-          if (msgValue is String) {
-            log("Message from server2: $msgValue");
-            showCustomSnackbar('Message', msgValue);
-          } else if (msgValue is Map<String, dynamic>) {
-            try {
-              final msg = allerrorresponsegetFromJson(jsonEncode(msgValue));
-              log("Message from server: $msg");
-            } catch (e) {
-              Get.snackbar('Error', 'Error parsing "msg": $e');
-            }
-          }
+        if (jsonResponse is Map<String, dynamic> || jsonResponse is String) {
+          _handleError(response);
         } else if (jsonResponse is List) {
           final checkwinner =
               getwinningnumbersResponseGetFromJson(jsonEncode(jsonResponse));
@@ -332,37 +411,42 @@ class _CheckLottoPageState extends State<CheckLottoPage> {
           );
         }
       } else {
-        if (jsonResponse is Map<String, dynamic>) {
-          final msgValue = jsonResponse['msg'];
-          if (msgValue is String) {
-            log("Message from server: $msgValue");
-            showCustomSnackbar('Message', msgValue);
-          } else if (msgValue is Map<String, dynamic>) {
-            try {
-              final msg = allerrorresponsegetFromJson(jsonEncode(msgValue));
-              log("Message from server: $msg");
-            } catch (e) {
-              log("Error parsing 'msg': $e");
-            }
-          }
-        }
+        _handleError(response);
       }
     } catch (e) {
-      Get.snackbar('Error', 'Network request failed: $e');
+      myWidget.showCustomSnackbar('Error', 'Network request failed: $e');
+    }
+  }
+
+  void _handleError(http.Response response) {
+    final jsonResponse = json.decode(utf8.decode(response.bodyBytes));
+    if (jsonResponse is Map<String, dynamic>) {
+      final msgValue = jsonResponse['msg'];
+      if (msgValue is String) {
+        myWidget.showCustomSnackbar('Message', msgValue);
+      } else if (msgValue is Map<String, dynamic>) {
+        try {
+          final msg = allerrorresponsegetFromJson(jsonEncode(msgValue));
+          myWidget.showCustomSnackbar('Message', msg.toString());
+        } catch (e) {
+          myWidget.showCustomSnackbar('Message', 'Error parsing "msg": $e');
+        }
+      }
+    } else {
+      myWidget.showCustomSnackbar('Error', 'Unexpected response format');
     }
   }
 
   void _setLottoControllers() {
     List<TextEditingController> tempControllers = [];
 
-    if (allLotto.isNotEmpty) {
-      for (var lotto in allLotto) {
-        var controller = TextEditingController(text: lotto.number);
-        tempControllers.add(controller);
-      }
-    } else {
-      var controller = TextEditingController(text: "");
+    for (var lotto in allLotto) {
+      var controller = TextEditingController(text: lotto.number);
       tempControllers.add(controller);
+    }
+
+    if (tempControllers.isEmpty) {
+      tempControllers.add(TextEditingController(text: ""));
     }
 
     SchedulerBinding.instance.addPostFrameCallback((_) {
@@ -372,31 +456,6 @@ class _CheckLottoPageState extends State<CheckLottoPage> {
         });
       }
     });
-  }
-
-  void showCustomSnackbar(String title, String msgValue) {
-    Get.snackbar(
-      title,
-      '',
-      titleText: Text(
-        title,
-        style: const TextStyle(
-          fontSize: 16, // ขนาดฟอนต์ของ title
-          fontWeight: FontWeight.bold, // ความหนาของฟอนต์
-          color: Colors.white, // สีฟอนต์
-        ),
-      ),
-      messageText: Text(
-        msgValue,
-        style: const TextStyle(
-          fontSize: 14, // ขนาดฟอนต์ของข้อความ
-          color: Colors.white, // สีฟอนต์
-        ),
-      ),
-      backgroundColor: const Color.fromARGB(255, 0, 0, 0), // สีพื้นหลังของ Snackbar
-      // snackPosition: SnackPosition.BOTTOM, // ตำแหน่งของ Snackbar
-      duration: const Duration(seconds: 3), // เวลาที่ Snackbar แสดง
-    );
   }
 
   void addRecord() {
