@@ -1,14 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:get/get_navigation/src/root/get_material_app.dart';
 import 'package:minipro_mba/pages/Admin/HomePage.dart';
 import 'package:minipro_mba/pages/login.dart';
 import 'package:minipro_mba/share/Data.dart';
 import 'package:provider/provider.dart';
 
 void main() {
-  runApp(ChangeNotifierProvider(
-      create: (context) => Data(),
-      child: const MyApp(),
-    ),);
+  runApp(
+    GetMaterialApp(
+    home: ChangeNotifierProvider(
+        create: (context) => Data(),
+        child: const MyApp(),
+      ),
+  ),);
 }
 
 class MyApp extends StatelessWidget {

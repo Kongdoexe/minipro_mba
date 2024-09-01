@@ -8,12 +8,13 @@ import 'package:minipro_mba/config/config.dart';
 import 'package:minipro_mba/models/request/getwinningnumbers_request_get.dart';
 import 'package:minipro_mba/models/response/getuserdrawnumbers_response_get.dart';
 import 'package:minipro_mba/models/response/getwinningnumbers_response_get.dart';
-import 'package:minipro_mba/models/response/response_handler.dart';
+import 'package:minipro_mba/models/response/allerrorresponseget.dart';
 import 'package:minipro_mba/pages/User/CustomerAppBar.dart';
 import 'package:minipro_mba/pages/User/CustomerNavbar.dart';
 import 'package:minipro_mba/pages/User/ResultLotto.dart';
 import 'package:minipro_mba/share/Data.dart';
 import 'package:provider/provider.dart';
+import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 
 class CheckLottoPage extends StatefulWidget {
@@ -28,7 +29,7 @@ class _CheckLottoPageState extends State<CheckLottoPage> {
   late Future<void> loadData;
   late List<GetuserdrawnumbersResponseGet> allLotto = [];
   late List<TextEditingController> lottoControllers = [];
-  late AllErrorResponseGet msg;
+  late Allerrorresponseget msg;
   late int i = 1;
 
   @override
@@ -102,7 +103,8 @@ class _CheckLottoPageState extends State<CheckLottoPage> {
                         }
 
                         return Padding(
-                          padding: EdgeInsets.only(top: screenSize.height * 0.06),
+                          padding:
+                              EdgeInsets.only(top: screenSize.height * 0.06),
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
@@ -113,7 +115,8 @@ class _CheckLottoPageState extends State<CheckLottoPage> {
                               Padding(
                                   padding: EdgeInsets.only(
                                       top: screenSize.height * 0.01)),
-                              ...List.generate(lottoControllers.length, (index) {
+                              ...List.generate(lottoControllers.length,
+                                  (index) {
                                 return Padding(
                                   padding: EdgeInsets.only(
                                       bottom: screenSize.height * 0.01),
@@ -128,8 +131,7 @@ class _CheckLottoPageState extends State<CheckLottoPage> {
                                           inputFormatters: [
                                             FilteringTextInputFormatter
                                                 .digitsOnly,
-                                            LengthLimitingTextInputFormatter(
-                                                6),
+                                            LengthLimitingTextInputFormatter(6),
                                           ],
                                           decoration: InputDecoration(
                                             fillColor: Colors.white,
@@ -138,19 +140,19 @@ class _CheckLottoPageState extends State<CheckLottoPage> {
                                             suffixIcon: IconButton(
                                               icon: const Icon(
                                                   Icons.close_outlined),
-                                              onPressed: () => deleteRecord(index),
+                                              onPressed: () =>
+                                                  deleteRecord(index),
                                             ),
-                                            border:
-                                                const OutlineInputBorder(),
+                                            border: const OutlineInputBorder(),
                                             counterText: '',
                                           ),
                                         ),
                                       ),
                                       Padding(
                                           padding: EdgeInsets.only(
-                                              left:
-                                                  screenSize.width * 0.024)),
-                                      if (index == lottoControllers.length - 1) ...[
+                                              left: screenSize.width * 0.024)),
+                                      if (index ==
+                                          lottoControllers.length - 1) ...[
                                         IconButton(
                                           icon: Icon(
                                             Icons.add,
@@ -180,16 +182,15 @@ class _CheckLottoPageState extends State<CheckLottoPage> {
                                           255, 209, 128, 1),
                                       padding: EdgeInsets.symmetric(
                                           vertical: screenSize.height * 0.015,
-                                          horizontal:
-                                              screenSize.width * 0.08),
+                                          horizontal: screenSize.width * 0.08),
                                     ),
                                     child: Text(
                                       "ตรวจสลาก",
                                       style: TextStyle(
                                         fontFamily: 'MaliMedium',
                                         fontSize: screenSize.width * 0.04,
-                                        color: const Color.fromARGB(
-                                            255, 0, 0, 0),
+                                        color:
+                                            const Color.fromARGB(255, 0, 0, 0),
                                         fontWeight: FontWeight.bold,
                                       ),
                                     ),
@@ -231,11 +232,21 @@ class _CheckLottoPageState extends State<CheckLottoPage> {
 
         if (jsonResponse is Map<String, dynamic>) {
           if (jsonResponse.containsKey('msg')) {
-            try {
-              msg = allErrorResponseGetFromJson(jsonResponse['msg']);
-              log("Message from server: $msg");
-            } catch (e) {
-              log("Error parsing 'msg': $e");
+            var msgValue = jsonResponse['msg'];
+            if (msgValue is String) {
+              log("Message from server: $msgValue");
+              Get.snackbar('Message', msgValue);
+            } else if (msgValue is Map<String, dynamic>) {
+              try {
+                msg = allerrorresponsegetFromJson(
+                    jsonEncode(msgValue)); // Convert to String
+                log("Message from server: $msg");
+              } catch (e) {
+                Get.snackbar(
+                  'เกิดข้อผิดพลาด',
+                  'Error parsing "msg": $e',
+                );
+              }
             }
           }
         } else if (jsonResponse is List) {
@@ -249,11 +260,26 @@ class _CheckLottoPageState extends State<CheckLottoPage> {
         }
       } else {
         var jsonResponse = json.decode(utf8.decode(response.bodyBytes));
-        msg = allErrorResponseGetFromJson(jsonResponse['msg']);
-        log("Message from server: $msg");
+        if (jsonResponse is Map<String, dynamic> &&
+            jsonResponse.containsKey('msg')) {
+          var msgValue = jsonResponse['msg'];
+          if (msgValue is String) {
+            log("Message from server: $msgValue");
+            Get.snackbar('Message', msgValue);
+          } else if (msgValue is Map<String, dynamic>) {
+            try {
+              msg = allerrorresponsegetFromJson(
+                  jsonEncode(msgValue)); // Convert to String
+              log("Message from server: $msg");
+            } catch (e) {
+              log("Error parsing 'msg': $e");
+            }
+          }
+        }
       }
     } catch (e) {
       log("An error occurred: $e");
+      Get.snackbar('เกิดข้อผิดพลาด', 'An error occurred: $e');
     }
   }
 
@@ -273,20 +299,29 @@ class _CheckLottoPageState extends State<CheckLottoPage> {
 
     String jsonData = getwinningnumbersRequestGetToJson(lottoNumbers);
 
-    var response = await http.post(Uri.parse('$url/lottery/GetWinningNumbers'),
-        headers: {"Content-Type": "application/json; charset=utf-8"},
-        body: jsonData);
+    var response = await http.post(
+      Uri.parse('$url/lottery/GetWinningNumbers'),
+      headers: {"Content-Type": "application/json; charset=utf-8"},
+      body: jsonData,
+    );
 
     if (response.statusCode == 200) {
       var jsonResponse = json.decode(response.body);
 
       if (jsonResponse is Map<String, dynamic>) {
         if (jsonResponse.containsKey('msg')) {
-          try {
-            msg = allErrorResponseGetFromJson(jsonEncode(jsonResponse['msg']));
-            log("Message from server: $msg");
-          } catch (e) {
-            log("Error parsing 'msg': $e");
+          var msgValue = jsonResponse['msg'];
+          if (msgValue is String) {
+            log("Message from server: $msgValue");
+            Get.snackbar('Message', msgValue);
+          } else if (msgValue is Map<String, dynamic>) {
+            try {
+              msg = allerrorresponsegetFromJson(
+                  jsonEncode(msgValue)); // Convert to String
+              log("Message from server: $msg");
+            } catch (e) {
+              Get.snackbar('Error', 'Error parsing "msg": $e');
+            }
           }
         }
       } else if (jsonResponse is List) {
@@ -306,11 +341,18 @@ class _CheckLottoPageState extends State<CheckLottoPage> {
       var jsonResponse = json.decode(utf8.decode(response.bodyBytes));
       if (jsonResponse is Map<String, dynamic>) {
         if (jsonResponse.containsKey('msg')) {
-          try {
-            msg = allErrorResponseGetFromJson(jsonEncode(jsonResponse['msg']));
-            log("Message from server: $msg");
-          } catch (e) {
-            log("Error parsing 'msg': $e");
+          var msgValue = jsonResponse['msg'];
+          if (msgValue is String) {
+            log("Message from server: $msgValue");
+            Get.snackbar('Message', msgValue);
+          } else if (msgValue is Map<String, dynamic>) {
+            try {
+              msg = allerrorresponsegetFromJson(
+                  jsonEncode(msgValue)); // Convert to String
+              log("Message from server: $msg");
+            } catch (e) {
+              log("Error parsing 'msg': $e");
+            }
           }
         }
       }
