@@ -44,14 +44,13 @@ class _BuylottoPageState extends State<BuylottoPage> {
   }
 
   void _loadMemberId() async {
-  int? memberId = await getMemberId();
-  if (memberId != null) {
-    setState(() {
-      widget.memberId = memberId;
-    });
+    int? memberId = await getMemberId();
+    if (memberId != null) {
+      setState(() {
+        widget.memberId = memberId;
+      });
+    }
   }
-}
-
 
   @override
   Widget build(BuildContext context) {
@@ -89,7 +88,7 @@ class _BuylottoPageState extends State<BuylottoPage> {
                       Padding(
                           padding: const EdgeInsets.all(10.0),
                           child: TextField(
-                            controller: _searchController,
+                              controller: _searchController,
                               decoration: const InputDecoration(
                                   border: OutlineInputBorder(
                                       borderSide: BorderSide(width: 1))))),
@@ -100,9 +99,9 @@ class _BuylottoPageState extends State<BuylottoPage> {
                             padding: const EdgeInsets.all(8.0),
                             child: FilledButton(
                               onPressed: () {
-                                  // Call search when button is pressed
-                                  search(_searchController.text);
-                                },
+                                // Call search when button is pressed
+                                search(_searchController.text);
+                              },
                               child: const Text('ค้นหาเลข'),
                               style: ButtonStyle(
                                 backgroundColor:
@@ -173,14 +172,16 @@ class _BuylottoPageState extends State<BuylottoPage> {
                                                 children: [
                                                   Padding(
                                                     padding:
-                                                        const EdgeInsets.all(8.0),
+                                                        const EdgeInsets.all(
+                                                            8.0),
                                                     child: SizedBox(
                                                       width:
                                                           150, // กำหนดความกว้างของ Card
                                                       height:
                                                           50, // กำหนดความสูงของ Card
                                                       child: Card(
-                                                        color: const Color.fromARGB(
+                                                        color: const Color
+                                                            .fromARGB(
                                                             255, 186, 186, 186),
                                                         child: Center(
                                                           child: Text(
@@ -228,7 +229,8 @@ class _BuylottoPageState extends State<BuylottoPage> {
                                                   ),
                                                   Padding(
                                                     padding:
-                                                        const EdgeInsets.all(8.0),
+                                                        const EdgeInsets.all(
+                                                            8.0),
                                                     child: Text(
                                                         '${lotto.price} บาท'),
                                                   ),
@@ -327,37 +329,33 @@ class _BuylottoPageState extends State<BuylottoPage> {
   }
 
   void search(String searchQuery) async {
-  try {
- 
-    var config = await Configuration.getConfig();
-    var url = config['apiEndpoint'];
+    try {
+      var config = await Configuration.getConfig();
+      var url = config['apiEndpoint'];
+      GetsearchnumberRequestPost body =
+          GetsearchnumberRequestPost(numbers: searchQuery);
+      var jsonData = getsearchnumberRequestPostToJson(body);
+      var response = await http.post(Uri.parse('$url/lottery/GetSearchNumber'),
+          headers: {"Content-Type": "application/json; charset=utf-8"},
+          body: jsonData);
 
-    var response = await http.post(Uri.parse('$url/lottery/GetSerachNumber?numbers=$searchQuery'));
+      if (response.statusCode == 200) {
+        List<SelectalllottoResponseGet> lottoResults =
+            selectalllottoResponseGetFromJson(response.body);
 
-    if (response.statusCode == 200) {
-      
-      GetsearchnumberRequestPost searchResults = getsearchnumberRequestPostFromJson(response.body);
-
-    
-      List<SelectalllottoResponseGet> lottoResults = searchResults.; 
-
-   
-      if (mounted) {
-        setState(() {
-          alllotto = lottoResults;  
-          log('First result ticket ID: ${lottoResults.first.ticketId}');
-        });
+        if (mounted) {
+          setState(() {
+            alllotto = lottoResults;
+            log('First result ticket ID: ${lottoResults.first.ticketId}');
+          });
+        }
+      } else {
+        log('Failed to search lotto numbers: ${response.body}');
       }
-    } else {
-     
-      log('Failed to search lotto numbers: ${response.body}');
+    } catch (err) {
+      log('Error searching lotto numbers: $err');
     }
-  } catch (err) {
-    log('Error searching lotto numbers: $err');
   }
-}
-
-
 
   void choose(int ticketId, int memberId) {
     if (mounted) {
@@ -374,22 +372,35 @@ class _BuylottoPageState extends State<BuylottoPage> {
     }
   }
 
-  check() {
-<<<<<<< HEAD
-    for (int ticketId in selectedTicketIds) {
-      insertTicketIntoCart(ticketId, widget.memberId);
-    }
-=======
-    // for (int ticketId in selectedTicketIds) {
-    //   insertTicketIntoCart(ticketId, memberId);
-    // }
+  // check() {
 
-    Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) =>
-              CartlottoPage(selectedTicketIds: selectedTicketIds),
-        ));
+  //   for (int ticketId in selectedTicketIds) {
+  //     insertTicketIntoCart(ticketId, widget.memberId);
+  //   }
+
+  //   // for (int ticketId in selectedTicketIds) {
+  //   //   insertTicketIntoCart(ticketId, memberId);
+  //   // }
+
+  //   Navigator.push(
+  //       context,
+  //       MaterialPageRoute(
+  //         builder: (context) =>
+  //             CartlottoPage(selectedTicketIds: selectedTicketIds),
+  //       ));
+  // }
+
+  check() {
+    if (memberId != null) {
+      for (int ticketId in selectedTicketIds) {
+        insertTicketIntoCart(ticketId, memberId!);
+      }
+      Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) =>
+                CartlottoPage(selectedTicketIds: selectedTicketIds),
+          ));
+    }
   }
 }
-
