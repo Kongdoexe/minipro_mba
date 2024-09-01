@@ -9,6 +9,7 @@ import 'package:minipro_mba/pages/User/CartLotto.dart';
 import 'package:minipro_mba/pages/User/CustomerAppBar.dart';
 import 'package:minipro_mba/pages/User/CustomerNavbar.dart';
 import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
 
 class BuylottoPage extends StatefulWidget {
   int memberId = 0;
@@ -23,13 +24,33 @@ class _BuylottoPageState extends State<BuylottoPage> {
   late Future<void> loadData;
   List<SelectalllottoResponseGet> alllotto = [];
   List<int> selectedTicketIds = [];
+  final TextEditingController _searchController = TextEditingController();
+  int? memberId;
 
   @override
   void initState() {
     super.initState();
     // 4. Asssing loadData
     loadData = loadDataAsync();
+    _loadMemberId();
   }
+
+  @override
+  void dispose() {
+    // Dispose of the controller when the widget is disposed
+    _searchController.dispose();
+    super.dispose();
+  }
+
+  void _loadMemberId() async {
+  int? memberId = await getMemberId();
+  if (memberId != null) {
+    setState(() {
+      widget.memberId = memberId;
+    });
+  }
+}
+
 
   @override
   Widget build(BuildContext context) {
@@ -64,10 +85,11 @@ class _BuylottoPageState extends State<BuylottoPage> {
                         padding: EdgeInsets.only(left: 8.0),
                         child: Text('งวดวันที่ 1 กันยายน 2567'),
                       ),
-                      const Padding(
-                          padding: EdgeInsets.all(10.0),
+                      Padding(
+                          padding: const EdgeInsets.all(10.0),
                           child: TextField(
-                              decoration: InputDecoration(
+                            controller: _searchController,
+                              decoration: const InputDecoration(
                                   border: OutlineInputBorder(
                                       borderSide: BorderSide(width: 1))))),
                       Row(
@@ -76,12 +98,15 @@ class _BuylottoPageState extends State<BuylottoPage> {
                           Padding(
                             padding: const EdgeInsets.all(8.0),
                             child: FilledButton(
-                              onPressed: search,
+                              onPressed: () {
+                                  // Call search when button is pressed
+                                  search(_searchController.text);
+                                },
                               child: const Text('ค้นหาเลข'),
                               style: ButtonStyle(
                                 backgroundColor:
                                     MaterialStateProperty.all<Color>(
-                                        Color.fromRGBO(230, 92, 87, 1)),
+                                        const Color.fromRGBO(230, 92, 87, 1)),
                               ),
                             ),
                           ),
@@ -147,19 +172,19 @@ class _BuylottoPageState extends State<BuylottoPage> {
                                                 children: [
                                                   Padding(
                                                     padding:
-                                                        EdgeInsets.all(8.0),
+                                                        const EdgeInsets.all(8.0),
                                                     child: SizedBox(
                                                       width:
                                                           150, // กำหนดความกว้างของ Card
                                                       height:
                                                           50, // กำหนดความสูงของ Card
                                                       child: Card(
-                                                        color: Color.fromARGB(
+                                                        color: const Color.fromARGB(
                                                             255, 186, 186, 186),
                                                         child: Center(
                                                           child: Text(
                                                             '${lotto.number}',
-                                                            style: TextStyle(
+                                                            style: const TextStyle(
                                                                 color: Colors
                                                                     .black,
                                                                 fontSize: 20,
@@ -171,7 +196,7 @@ class _BuylottoPageState extends State<BuylottoPage> {
                                                       ),
                                                     ),
                                                   ),
-                                                  Text('งวดที่'),
+                                                  const Text('งวดที่'),
                                                   Text('${lotto.period}'),
                                                 ],
                                               ),
@@ -202,7 +227,7 @@ class _BuylottoPageState extends State<BuylottoPage> {
                                                   ),
                                                   Padding(
                                                     padding:
-                                                        EdgeInsets.all(8.0),
+                                                        const EdgeInsets.all(8.0),
                                                     child: Text(
                                                         '${lotto.price} บาท'),
                                                   ),
@@ -257,6 +282,11 @@ class _BuylottoPageState extends State<BuylottoPage> {
     );
   }
 
+  Future<int?> getMemberId() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    return prefs.getInt('memberId');
+  }
+
   Future<void> loadDataAsync() async {
     //Get url endpoint from config
     var value = await Configuration.getConfig();
@@ -295,7 +325,35 @@ class _BuylottoPageState extends State<BuylottoPage> {
     }
   }
 
-  void search() {}
+  void search(String searchQuery) async {
+    try {
+      // Get the configuration and API endpoint
+      var config = await Configuration.getConfig();
+      var url = config['apiEndpoint'];
+
+      // Send a GET request to the search API with the query
+      var response = await http.post(Uri.parse('$url/lottery/GetSearchNumber?numbers=$searchQuery'));
+
+      if (response.statusCode == 200) {
+        // Parse the response body into a list of Lotto objects
+        List<SelectalllottoResponseGet> searchResults = selectalllottoResponseGetFromJson(response.body);
+
+        // Update the UI with the search results
+        if (mounted) {
+          setState(() {
+            alllotto = searchResults;
+            log('First result ticket ID: ${searchResults.first.ticketId}');
+          });
+        }
+      } else {
+        // Handle the error (e.g., show an error message)
+        log('Failed to search lotto numbers: ${response.body}');
+      }
+    } catch (err) {
+      log('Error searching lotto numbers: $err');
+    }
+  }
+
 
   void choose(int ticketId, int memberId) {
     if (mounted) {
@@ -314,10 +372,9 @@ class _BuylottoPageState extends State<BuylottoPage> {
 
   check() {
 
-    // for (int ticketId in selectedTicketIds) {
-    //   insertTicketIntoCart(ticketId, memberId);
+    //  for (int ticketId in selectedTicketIds) {
+    //    insertTicketIntoCart(ticketId, memberId);
     // }
-
 
     Navigator.push(
         context,
@@ -327,3 +384,4 @@ class _BuylottoPageState extends State<BuylottoPage> {
         ));
   }
 }
+
