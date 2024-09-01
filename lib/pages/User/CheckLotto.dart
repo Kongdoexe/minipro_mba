@@ -7,8 +7,8 @@ import 'package:flutter/services.dart';
 import 'package:minipro_mba/config/config.dart';
 import 'package:minipro_mba/models/request/getwinningnumbers_request_get.dart';
 import 'package:minipro_mba/models/response/getuserdrawnumbers_response_get.dart';
-import 'package:minipro_mba/models/response/getwinningnumbers_response_get.dart';
 import 'package:minipro_mba/models/response/allerrorresponseget.dart';
+import 'package:minipro_mba/models/response/getwinningnumbers_response_get.dart';
 import 'package:minipro_mba/pages/User/CustomerAppBar.dart';
 import 'package:minipro_mba/pages/User/CustomerNavbar.dart';
 import 'package:minipro_mba/pages/User/ResultLotto.dart';
@@ -289,66 +289,57 @@ class _CheckLottoPageState extends State<CheckLottoPage> {
     return url;
   }
 
-  void sendLottoNumbers() async {
-    var url = await loadUrl();
-    List<GetwinningnumbersRequestGet> lottoNumbers = [];
+  Future<void> sendLottoNumbers() async {
+    final url = await loadUrl();
+    final datanum = lottoControllers
+        .map((controller) => Datanum(number: controller.text))
+        .toList();
+    final lotto = GetwinningnumbersRequestGet(period: 2, datanum: datanum);
+    final jsonData = getwinningnumbersRequestGetToJson(lotto);
 
-    for (var controller in lottoControllers) {
-      lottoNumbers.add(GetwinningnumbersRequestGet(number: controller.text));
-    }
+    try {
+      final response = await http.post(
+        Uri.parse('$url/lottery/GetWinningNumbers'),
+        headers: {"Content-Type": "application/json; charset=utf-8"},
+        body: jsonData,
+      );
 
-    String jsonData = getwinningnumbersRequestGetToJson(lottoNumbers);
+      final responseBody = utf8.decode(response.bodyBytes);
+      final jsonResponse = json.decode(responseBody);
 
-    var response = await http.post(
-      Uri.parse('$url/lottery/GetWinningNumbers'),
-      headers: {"Content-Type": "application/json; charset=utf-8"},
-      body: jsonData,
-    );
-
-    if (response.statusCode == 200) {
-      var jsonResponse = json.decode(response.body);
-
-      if (jsonResponse is Map<String, dynamic>) {
-        if (jsonResponse.containsKey('msg')) {
-          var msgValue = jsonResponse['msg'];
+      if (response.statusCode == 200) {
+        if (jsonResponse is Map<String, dynamic>) {
+          final msgValue = jsonResponse['msg'];
           if (msgValue is String) {
-            log("Message from server: $msgValue");
-            Get.snackbar('Message', msgValue);
+            log("Message from server2: $msgValue");
+            showCustomSnackbar('Message', msgValue);
           } else if (msgValue is Map<String, dynamic>) {
             try {
-              msg = allerrorresponsegetFromJson(
-                  jsonEncode(msgValue)); // Convert to String
+              final msg = allerrorresponsegetFromJson(jsonEncode(msgValue));
               log("Message from server: $msg");
             } catch (e) {
               Get.snackbar('Error', 'Error parsing "msg": $e');
             }
           }
+        } else if (jsonResponse is List) {
+          final checkwinner =
+              getwinningnumbersResponseGetFromJson(jsonEncode(jsonResponse));
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => ResultLottoPage(result: checkwinner),
+            ),
+          );
         }
-      } else if (jsonResponse is List) {
-        List<GetwinningnumbersResponseGet> checkwinner;
-
-        checkwinner =
-            getwinningnumbersResponseGetFromJson(jsonEncode(jsonResponse));
-
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => ResultLottoPage(result: checkwinner),
-          ),
-        );
-      }
-    } else {
-      var jsonResponse = json.decode(utf8.decode(response.bodyBytes));
-      if (jsonResponse is Map<String, dynamic>) {
-        if (jsonResponse.containsKey('msg')) {
-          var msgValue = jsonResponse['msg'];
+      } else {
+        if (jsonResponse is Map<String, dynamic>) {
+          final msgValue = jsonResponse['msg'];
           if (msgValue is String) {
             log("Message from server: $msgValue");
-            Get.snackbar('Message', msgValue);
+            showCustomSnackbar('Message', msgValue);
           } else if (msgValue is Map<String, dynamic>) {
             try {
-              msg = allerrorresponsegetFromJson(
-                  jsonEncode(msgValue)); // Convert to String
+              final msg = allerrorresponsegetFromJson(jsonEncode(msgValue));
               log("Message from server: $msg");
             } catch (e) {
               log("Error parsing 'msg': $e");
@@ -356,6 +347,8 @@ class _CheckLottoPageState extends State<CheckLottoPage> {
           }
         }
       }
+    } catch (e) {
+      Get.snackbar('Error', 'Network request failed: $e');
     }
   }
 
@@ -379,6 +372,31 @@ class _CheckLottoPageState extends State<CheckLottoPage> {
         });
       }
     });
+  }
+
+  void showCustomSnackbar(String title, String msgValue) {
+    Get.snackbar(
+      title,
+      '',
+      titleText: Text(
+        title,
+        style: const TextStyle(
+          fontSize: 16, // ขนาดฟอนต์ของ title
+          fontWeight: FontWeight.bold, // ความหนาของฟอนต์
+          color: Colors.white, // สีฟอนต์
+        ),
+      ),
+      messageText: Text(
+        msgValue,
+        style: const TextStyle(
+          fontSize: 14, // ขนาดฟอนต์ของข้อความ
+          color: Colors.white, // สีฟอนต์
+        ),
+      ),
+      backgroundColor: const Color.fromARGB(255, 0, 0, 0), // สีพื้นหลังของ Snackbar
+      // snackPosition: SnackPosition.BOTTOM, // ตำแหน่งของ Snackbar
+      duration: const Duration(seconds: 3), // เวลาที่ Snackbar แสดง
+    );
   }
 
   void addRecord() {

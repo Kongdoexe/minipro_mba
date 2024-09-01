@@ -4,18 +4,38 @@
 
 import 'dart:convert';
 
-List<GetwinningnumbersRequestGet> getwinningnumbersRequestGetFromJson(String str) => List<GetwinningnumbersRequestGet>.from(json.decode(str).map((x) => GetwinningnumbersRequestGet.fromJson(x)));
+GetwinningnumbersRequestGet getwinningnumbersRequestGetFromJson(String str) => GetwinningnumbersRequestGet.fromJson(json.decode(str));
 
-String getwinningnumbersRequestGetToJson(List<GetwinningnumbersRequestGet> data) => json.encode(List<dynamic>.from(data.map((x) => x.toJson())));
+String getwinningnumbersRequestGetToJson(GetwinningnumbersRequestGet data) => json.encode(data.toJson());
 
 class GetwinningnumbersRequestGet {
-    String number;
+    int period;
+    List<Datanum> datanum;
 
     GetwinningnumbersRequestGet({
-        required this.number,
+        required this.period,
+        required this.datanum,
     });
 
     factory GetwinningnumbersRequestGet.fromJson(Map<String, dynamic> json) => GetwinningnumbersRequestGet(
+        period: json["period"],
+        datanum: List<Datanum>.from(json["datanum"].map((x) => Datanum.fromJson(x))),
+    );
+
+    Map<String, dynamic> toJson() => {
+        "period": period,
+        "datanum": List<dynamic>.from(datanum.map((x) => x.toJson())),
+    };
+}
+
+class Datanum {
+    String number;
+
+    Datanum({
+        required this.number,
+    });
+
+    factory Datanum.fromJson(Map<String, dynamic> json) => Datanum(
         number: json["number"],
     );
 
