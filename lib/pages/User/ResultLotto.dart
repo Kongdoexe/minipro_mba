@@ -280,11 +280,11 @@ class _ResultLottoPageState extends State<ResultLottoPage> {
     );
   }
 
-  // Future<String> loadUrl() async {
-  //   var value = await Configuration.getConfig();
-  //   var url = value['apiEndpoint'];
-  //   return url;
-  // }
+  Future<String> loadUrl() async {
+    var value = await Configuration.getConfig();
+    var url = value['apiEndpoint'];
+    return url;
+  }
 
   Future<void> loadDataAsync() async {
     try {
