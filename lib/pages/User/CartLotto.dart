@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:minipro_mba/config/config.dart';
+import 'package:minipro_mba/models/response/selectalllotto_response_get.dart';
 import 'package:minipro_mba/pages/User/CustomerAppBar.dart';
 import 'package:minipro_mba/pages/User/CustomerNavbar.dart';
 import 'package:minipro_mba/pages/User/PayLotto.dart';
@@ -22,13 +23,26 @@ class CartlottoPage extends StatefulWidget {
 }
 
 class _CartlottoPageState extends State<CartlottoPage> {
+  late Future<void> loadData;
+  List<SelectalllottoResponseGet> alllotto = [];
+
+  @override
+  void initState() {
+    super.initState();
+    // 4. Asssing loadData
+    loadData = loadDataAsync();
+  }
+
   @override
   Widget build(BuildContext context) {
     final screenSize = MediaQuery.of(context).size;
 
     return Scaffold(
       backgroundColor: const Color.fromRGBO(255, 138, 128, 1),
-      appBar: CustomAppBar(screenSize: screenSize, namePage: 'ตรวจสลาก',),
+      appBar: CustomAppBar(
+        screenSize: screenSize,
+        namePage: 'ตรวจสลาก',
+      ),
       body: Stack(
         children: [
           // Main content
@@ -72,129 +86,135 @@ class _CartlottoPageState extends State<CartlottoPage> {
               Expanded(
                 child: SizedBox(
                   width: screenSize.width,
-                  // child: FutureBuilder(future: loadData,
-                  //       builder: (context, snapshot) {
-                  //         // ถ้ายังไม่เจอข้อมูลให้แสดงหมุนๆ รอการโหลด
-                  //         if (snapshot.connectionState !=
-                  //             ConnectionState.done) {
-                  //           return const Center(
-                  //               child: CircularProgressIndicator());
-                  //         }
-                  //         return)
-                  
-                  // Card(
-                  //   child: Column(
-                  //     children: [
-                  //       Padding(
-                  //         padding: const EdgeInsets.only(right: 10),
-                  //         child: Row(
-                  //           mainAxisAlignment: MainAxisAlignment.end,
-                  //           children: [
-                  //             TextButton(
-                  //                 onPressed: choosemore,
-                  //                 child: const Text(
-                  //                   'เลือกเลขเพิ่ม',
-                  //                   style: TextStyle(
-                  //                       color: Color.fromRGBO(221, 86, 76, 1)),
-                  //                 )),
-                  //           ],
-                  //         ),
-                  //       ),
-                  //       Padding(
-                  //         padding: const EdgeInsets.only(top: 5),
-                  //         child: Expanded(
-                  //           child: SingleChildScrollView(
-                  //             child: Padding(
-                  //               padding:
-                  //                   const EdgeInsets.fromLTRB(30, 10, 30, 0),
-                  //               child: Column(
-                  //                 children: [
-                  //                   Card.outlined(
-                  //                     child: Column(
-                  //                       crossAxisAlignment:
-                  //                           CrossAxisAlignment.start,
-                  //                       children: [
-                  //                         Row(
-                  //                           mainAxisAlignment:
-                  //                               MainAxisAlignment.spaceBetween,
-                  //                           children: [
-                  //                             const Column(
-                  //                               children: [
-                  //                                 Padding(
-                  //                                     padding:
-                  //                                         EdgeInsets.all(8.0),
-                  //                                     child: SizedBox(
-                  //                                       width:
-                  //                                           150, // Card width
-                  //                                       height:
-                  //                                           50, // Card height
-                  //                                       child: Card(
-                  //                                         color: Color.fromARGB(
-                  //                                             255,
-                  //                                             186,
-                  //                                             186,
-                  //                                             186),
-                  //                                         child: Center(
-                  //                                             child: Text(
-                  //                                           '123456',
-                  //                                           style: TextStyle(
-                  //                                               color: Colors
-                  //                                                   .black,
-                  //                                               fontSize: 20,
-                  //                                               fontWeight:
-                  //                                                   FontWeight
-                  //                                                       .bold),
-                  //                                         )),
-                  //                                       ),
-                  //                                     )),
-                  //                                 Text('งวดที่'),
-                  //                                 Text('64'),
-                  //                               ],
-                  //                             ),
-                  //                             Column(
-                  //                               children: [
-                  //                                 Padding(
-                  //                                   padding:
-                  //                                       const EdgeInsets.all(
-                  //                                           8.0),
-                  //                                   child: OutlinedButton(
-                  //                                     onPressed: delete,
-                  //                                     child: const Text('เอาออก',
-                  //                                         style: TextStyle(
-                  //                                             color: Colors
-                  //                                                 .black)),
-                  //                                     style: OutlinedButton
-                  //                                         .styleFrom(
-                  //                                       side: const BorderSide(
-                  //                                           color: Color.fromARGB(
-                  //                                               255,
-                  //                                               240,
-                  //                                               8,
-                  //                                               8)), // Border color
-                  //                                     ),
-                  //                                   ),
-                  //                                 ),
-                  //                                 const Padding(
-                  //                                   padding:
-                  //                                       EdgeInsets.all(8.0),
-                  //                                   child: Text('80 บาท'),
-                  //                                 ),
-                  //                               ],
-                  //                             )
-                  //                           ],
-                  //                         )
-                  //                       ],
-                  //                     ),
-                  //                   ),
-                  //                 ],
-                  //               ),
-                  //             ),
-                  //           ),
-                  //         ),
-                  //       ),
-                  //     ],
-                  //   ),
-                  // ),
+                  child: FutureBuilder(
+                    future: loadData,
+                    builder: (context, snapshot) {
+                      // ถ้ายังไม่เจอข้อมูลให้แสดงหมุนๆ รอการโหลด
+                      if (snapshot.connectionState != ConnectionState.done) {
+                        return const Center(child: CircularProgressIndicator());
+                      }
+                      return Card(
+                        child: Column(
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.only(right: 10),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.end,
+                                children: [
+                                  TextButton(
+                                      onPressed: choosemore,
+                                      child: const Text(
+                                        'เลือกเลขเพิ่ม',
+                                        style: TextStyle(
+                                            color:
+                                                Color.fromRGBO(221, 86, 76, 1)),
+                                      )),
+                                ],
+                              ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.only(top: 5),
+                              child: Expanded(
+                                child: SingleChildScrollView(
+                                  child: Padding(
+                                    padding: const EdgeInsets.fromLTRB(
+                                        30, 10, 30, 0),
+                                    child: Column(
+                                      children: [
+                                        Card.outlined(
+                                          child: Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment
+                                                        .spaceBetween,
+                                                children: [
+                                                  const Column(
+                                                    children: [
+                                                      Padding(
+                                                          padding:
+                                                              EdgeInsets.all(
+                                                                  8.0),
+                                                          child: SizedBox(
+                                                            width:
+                                                                150, // Card width
+                                                            height:
+                                                                50, // Card height
+                                                            child: Card(
+                                                              color: Color
+                                                                  .fromARGB(
+                                                                      255,
+                                                                      186,
+                                                                      186,
+                                                                      186),
+                                                              child: Center(
+                                                                  child: Text(
+                                                                'lotto',
+                                                                style: TextStyle(
+                                                                    color: Colors
+                                                                        .black,
+                                                                    fontSize:
+                                                                        20,
+                                                                    fontWeight:
+                                                                        FontWeight
+                                                                            .bold),
+                                                              )),
+                                                            ),
+                                                          )),
+                                                      Text('งวดที่'),
+                                                      Text('64'),
+                                                    ],
+                                                  ),
+                                                  Column(
+                                                    children: [
+                                                      Padding(
+                                                        padding:
+                                                            const EdgeInsets
+                                                                .all(8.0),
+                                                        child: OutlinedButton(
+                                                          onPressed: delete,
+                                                          child: const Text(
+                                                              'เอาออก',
+                                                              style: TextStyle(
+                                                                  color: Colors
+                                                                      .black)),
+                                                          style: OutlinedButton
+                                                              .styleFrom(
+                                                            side: const BorderSide(
+                                                                color: Color
+                                                                    .fromARGB(
+                                                                        255,
+                                                                        240,
+                                                                        8,
+                                                                        8)), // Border color
+                                                          ),
+                                                        ),
+                                                      ),
+                                                      const Padding(
+                                                        padding:
+                                                            EdgeInsets.all(8.0),
+                                                        child: Text('80 บาท'),
+                                                      ),
+                                                    ],
+                                                  )
+                                                ],
+                                              )
+                                            ],
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      );
+                    },
+                  ),
                 ),
               ),
             ],
@@ -267,7 +287,7 @@ class _CartlottoPageState extends State<CartlottoPage> {
     //       content: const Text('ลบ lotto เรียบร้อย'),
     //       actions: [
     //         FilledButton(
-    //             onPressed: () { 
+    //             onPressed: () {
     //               Navigator.popUntil(
     //                 context,
     //                 (route) => route.isFirst,
@@ -280,21 +300,21 @@ class _CartlottoPageState extends State<CartlottoPage> {
     // } catch (err) {}
   }
 
-  void choosemore() {
-  }
-
+  void choosemore() {}
 
   Future<void> loadDataAsync() async {
     //Get url endpoint from config
     var value = await Configuration.getConfig();
     var url = value['apiEndpoint'];
     //Call api /trips
-    var data = await http.get(Uri.parse("$url/lottery/SelectAllLotto"));
+    var data = await http.get(Uri.parse("$url/lottery/GetDrawSchedule"));
   }
 
   void pay() {
-     Navigator.push(context,
-    MaterialPageRoute(builder: (context) => const PaylottoPage(),
-    ));
+    Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => const PaylottoPage(),
+        ));
   }
 }
