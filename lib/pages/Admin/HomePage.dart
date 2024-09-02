@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:minipro_mba/config/config.dart';
 import 'package:minipro_mba/pages/Admin/Admin_AppBar.dart';
 import 'package:minipro_mba/pages/Admin/Admin_NavBar.dart';
+import 'package:http/http.dart' as http;
+import 'dart:developer'; // Add this at the top with other imports
+import 'dart:convert';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -56,8 +60,8 @@ class _HomePageState extends State<HomePage> {
                         ],
                       ),
                       Padding(
-                          padding:
-                              EdgeInsets.only(bottom: screenSize.height * 0.018)),
+                          padding: EdgeInsets.only(
+                              bottom: screenSize.height * 0.018)),
                       Row(
                         children: [
                           Text(
@@ -78,8 +82,8 @@ class _HomePageState extends State<HomePage> {
                         ],
                       ),
                       Padding(
-                          padding:
-                              EdgeInsets.only(bottom: screenSize.height * 0.018)),
+                          padding: EdgeInsets.only(
+                              bottom: screenSize.height * 0.018)),
                       Row(
                         children: [
                           Text("จำนวนลอตโต้ที่เหลือ(ใบ): ",
@@ -102,7 +106,7 @@ class _HomePageState extends State<HomePage> {
                 ),
               ),
             ),
-            Padding(padding: EdgeInsets.only(top: screenSize.height*0.01)),
+            Padding(padding: EdgeInsets.only(top: screenSize.height * 0.01)),
             SizedBox(
               width: screenSize.width * 0.3,
               height: screenSize.height * 0.072,
@@ -122,12 +126,12 @@ class _HomePageState extends State<HomePage> {
                     ),
                   )),
             ),
-            Padding(padding: EdgeInsets.only(top: screenSize.height*0.01)),
+            Padding(padding: EdgeInsets.only(top: screenSize.height * 0.01)),
             SizedBox(
               width: screenSize.width * 0.3,
               height: screenSize.height * 0.072,
               child: TextButton(
-                  onPressed: resetLotto,
+                  onPressed: insertlotto,
                   style: TextButton.styleFrom(
                       backgroundColor: const Color.fromRGBO(199, 28, 16, 1)),
                   child: Padding(
@@ -153,5 +157,185 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  resetLotto() {}
+  resetLotto() {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        backgroundColor: const Color.fromARGB(255, 255, 255, 255),
+        title: const Center(
+          child: Column(
+            children: [
+              Text(
+                'ต้องการ Reset ระบบหรือไม่',
+                style: TextStyle(
+                    color: Color.fromRGBO(0, 0, 0, 1),
+                    fontWeight: FontWeight.w800,
+                    fontSize: 30),
+              ),
+            ],
+          ),
+        ),
+        actions: [
+          FilledButton(
+            onPressed: () {
+                  Navigator.of(context).pop();
+                  reset(); // ปิด Dialog
+                },
+            style: ButtonStyle(
+              backgroundColor: MaterialStateProperty.all<Color>(
+                  const Color.fromARGB(255, 230, 92, 87)),
+            ),
+            child: const Center(
+                child: Text(
+              'ตกลง',
+              style: TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.w800,
+              ),
+            )),
+          )
+        ],
+      ),
+    );
+  }
+
+  insertlotto() async {
+    try {
+      var config = await Configuration.getConfig();
+      var url = config['apiEndpoint'];
+
+      var response = await http.post(Uri.parse('$url/lottery/insertLottery'));
+
+      if (response.statusCode == 200) {
+        // Assuming `data` contains the lotto results.
+        setState(() {
+          var data = jsonDecode(response.body);
+          log(jsonEncode(data));
+        });
+        showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+            backgroundColor: const Color.fromARGB(255, 245, 156, 55),
+            title: Center(
+              child: Column(
+                children: [
+                  Image.asset(
+                    'assets/images/check.png',
+                    width: MediaQuery.of(context).size.width * 0.2,
+                  ),
+                  const Text(
+                    'เพิ่ม lotto 100 ชุด',
+                    style: TextStyle(
+                        color: Color.fromRGBO(255, 255, 255, 1),
+                        fontWeight: FontWeight.w800,
+                        fontSize: 30),
+                  ),
+                  const Text(
+                    'สำเร็จ',
+                    style: TextStyle(
+                        color: Color.fromRGBO(255, 255, 255, 1),
+                        fontWeight: FontWeight.w800,
+                        fontSize: 30),
+                  ),
+                ],
+              ),
+            ),
+            actions: [
+              FilledButton(
+                onPressed: () {
+                  Navigator.of(context).pop(); // ปิด Dialog
+                },
+                style: ButtonStyle(
+                  backgroundColor: MaterialStateProperty.all<Color>(
+                      const Color.fromARGB(255, 230, 92, 87)),
+                ),
+                child: const Center(
+                    child: Text(
+                  'ตกลง',
+                  style: TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.w800,
+                  ),
+                )),
+              )
+            ],
+          ),
+        );
+      } else {
+        log('Failed to insert lotto: ${response.body}');
+      }
+    } catch (err) {
+      log('Error inserting lotto: $err');
+    }
+  }
+
+  Future<void> reset() async {
+    try {
+      var config = await Configuration.getConfig();
+      var url = config['apiEndpoint'];
+
+      var response = await http.delete(Uri.parse('$url/draw/ResetSystem'));
+
+      if (response.statusCode == 200) {
+        // Assuming `data` contains the lotto results.
+        setState(() {
+          var data = jsonDecode(response.body);
+          log(jsonEncode(data));
+        });
+        showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+            backgroundColor: const Color.fromARGB(255, 245, 156, 55),
+            title: Center(
+              child: Column(
+                children: [
+                  Image.asset(
+                    'assets/images/check.png',
+                    width: MediaQuery.of(context).size.width * 0.2,
+                  ),
+                  const Text(
+                    'Reset Success',
+                    style: TextStyle(
+                        color: Color.fromRGBO(255, 255, 255, 1),
+                        fontWeight: FontWeight.w800,
+                        fontSize: 30),
+                  ),
+                  const Text(
+                    'สำเร็จ',
+                    style: TextStyle(
+                        color: Color.fromRGBO(255, 255, 255, 1),
+                        fontWeight: FontWeight.w800,
+                        fontSize: 30),
+                  ),
+                ],
+              ),
+            ),
+            actions: [
+              FilledButton(
+                onPressed: () {
+                  Navigator.of(context).pop(); // ปิด Dialog
+                },
+                style: ButtonStyle(
+                  backgroundColor: MaterialStateProperty.all<Color>(
+                      const Color.fromARGB(255, 230, 92, 87)),
+                ),
+                child: const Center(
+                    child: Text(
+                  'ตกลง',
+                  style: TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.w800,
+                  ),
+                )),
+              )
+            ],
+          ),
+        );
+      } else {
+        log('Failed to insert lotto: ${response.body}');
+      }
+    } catch (err) {
+      log('Error inserting lotto: $err');
+    }
+  }
 }

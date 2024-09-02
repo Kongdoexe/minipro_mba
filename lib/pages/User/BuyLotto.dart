@@ -88,6 +88,7 @@ class _BuylottoPageState extends State<BuylottoPage> {
                       Padding(
                           padding: const EdgeInsets.all(10.0),
                           child: TextField(
+                              keyboardType: TextInputType.phone,
                               controller: _searchController,
                               decoration: const InputDecoration(
                                   border: OutlineInputBorder(
@@ -210,8 +211,8 @@ class _BuylottoPageState extends State<BuylottoPage> {
                                                             8.0),
                                                     child: OutlinedButton(
                                                       onPressed: () => choose(
-                                                          lotto.ticketId,
-                                                          lotto.memberId),
+                                                        lotto.ticketId,
+                                                      ),
                                                       child: const Text('เลือก',
                                                           style: TextStyle(
                                                               color: Colors
@@ -261,7 +262,7 @@ class _BuylottoPageState extends State<BuylottoPage> {
                     children: [
                       Text('สลากที่เลือก $selectedItems ใบ'),
                       ElevatedButton(
-                        onPressed: check(),
+                        onPressed: check,
                         child: const Text(
                           'ตรวจสอบสลากของคุณ',
                           style: TextStyle(
@@ -305,15 +306,13 @@ class _BuylottoPageState extends State<BuylottoPage> {
       var config = await Configuration.getConfig();
       var url = config['apiEndpoint'];
 
-      // Create an instance of InsertcartRequestGet
-      var request =
+      InsertcartRequestGet body =
           InsertcartRequestGet(ticketId: ticketId, memberId: memberId);
-
-      // Make the POST request to insert the ticket
+      var jsonData = insertcartRequestGetToJson(body);
       var response = await http.post(
         Uri.parse('$url/lottery/InsertCart'),
         headers: {"Content-Type": "application/json; charset=utf-8"},
-        body: insertcartRequestGetToJson(request), // Convert to JSON
+        body: jsonData, // Convert to JSON
       );
 
       if (response.statusCode == 200) {
@@ -335,7 +334,7 @@ class _BuylottoPageState extends State<BuylottoPage> {
       GetsearchnumberRequestPost body =
           GetsearchnumberRequestPost(numbers: searchQuery);
       var jsonData = getsearchnumberRequestPostToJson(body);
-      var response = await http.post(Uri.parse('$url/lottery/GetSearchNumber'),
+      var response = await http.post(Uri.parse('$url/lottery/GetSerachNumber'),
           headers: {"Content-Type": "application/json; charset=utf-8"},
           body: jsonData);
 
@@ -347,17 +346,19 @@ class _BuylottoPageState extends State<BuylottoPage> {
           setState(() {
             alllotto = lottoResults;
             log('First result ticket ID: ${lottoResults.first.ticketId}');
+            log('Response body: ${response.body}');
           });
         }
       } else {
         log('Failed to search lotto numbers: ${response.body}');
+        log('Response body: ${response.body}');
       }
     } catch (err) {
       log('Error searching lotto numbers: $err');
     }
   }
 
-  void choose(int ticketId, int memberId) {
+  void choose(int ticketId) {
     if (mounted) {
       setState(() {
         if (selectedTicketIds.contains(ticketId)) {
@@ -366,41 +367,26 @@ class _BuylottoPageState extends State<BuylottoPage> {
         } else {
           selectedTicketIds.add(ticketId);
           selectedItems++;
-          insertTicketIntoCart(ticketId, memberId);
         }
       });
     }
   }
 
-  // check() {
-
-  //   for (int ticketId in selectedTicketIds) {
-  //     insertTicketIntoCart(ticketId, widget.memberId);
-  //   }
-
-  //   // for (int ticketId in selectedTicketIds) {
-  //   //   insertTicketIntoCart(ticketId, memberId);
-  //   // }
-
-  //   Navigator.push(
-  //       context,
-  //       MaterialPageRoute(
-  //         builder: (context) =>
-  //             CartlottoPage(selectedTicketIds: selectedTicketIds),
-  //       ));
-  // }
-
   check() {
     if (memberId != null) {
       for (int ticketId in selectedTicketIds) {
         insertTicketIntoCart(ticketId, memberId!);
+        log('Inserting ticket ID: $ticketId');
       }
       Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) =>
-                CartlottoPage(selectedTicketIds: selectedTicketIds),
-          ));
+        context,
+        MaterialPageRoute(
+          builder: (context) =>
+              CartlottoPage(selectedTicketIds: selectedTicketIds),
+        ),
+      );
+    } else {
+      log('Member ID is null');
     }
   }
 }
