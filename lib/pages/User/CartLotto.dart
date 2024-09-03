@@ -114,98 +114,96 @@ class _CartlottoPageState extends State<CartlottoPage> {
                             ),
                             Padding(
                               padding: const EdgeInsets.only(top: 5),
-                              child: Expanded(
-                                child: SingleChildScrollView(
-                                  child: Padding(
-                                    padding: const EdgeInsets.fromLTRB(
-                                        30, 10, 30, 0),
-                                    child: Column(
-                                      children: [
-                                        Card.outlined(
-                                          child: Column(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.start,
-                                            children: [
-                                              Row(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment
-                                                        .spaceBetween,
-                                                children: [
-                                                  const Column(
-                                                    children: [
-                                                      Padding(
-                                                          padding:
-                                                              EdgeInsets.all(
-                                                                  8.0),
-                                                          child: SizedBox(
-                                                            width:
-                                                                150, // Card width
-                                                            height:
-                                                                50, // Card height
-                                                            child: Card(
+                              child: SingleChildScrollView(
+                                child: Padding(
+                                  padding: const EdgeInsets.fromLTRB(
+                                      30, 10, 30, 0),
+                                  child: Column(
+                                    children: [
+                                      Card.outlined(
+                                        child: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment
+                                                      .spaceBetween,
+                                              children: [
+                                                const Column(
+                                                  children: [
+                                                    Padding(
+                                                        padding:
+                                                            EdgeInsets.all(
+                                                                8.0),
+                                                        child: SizedBox(
+                                                          width:
+                                                              150, // Card width
+                                                          height:
+                                                              50, // Card height
+                                                          child: Card(
+                                                            color: Color
+                                                                .fromARGB(
+                                                                    255,
+                                                                    186,
+                                                                    186,
+                                                                    186),
+                                                            child: Center(
+                                                                child: Text(
+                                                              'lotto',
+                                                              style: TextStyle(
+                                                                  color: Colors
+                                                                      .black,
+                                                                  fontSize:
+                                                                      20,
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .bold),
+                                                            )),
+                                                          ),
+                                                        )),
+                                                    Text('งวดที่'),
+                                                    Text('64'),
+                                                  ],
+                                                ),
+                                                Column(
+                                                  children: [
+                                                    Padding(
+                                                      padding:
+                                                          const EdgeInsets
+                                                              .all(8.0),
+                                                      child: OutlinedButton(
+                                                        onPressed: delete,
+                                                        child: const Text(
+                                                            'เอาออก',
+                                                            style: TextStyle(
+                                                                color: Colors
+                                                                    .black)),
+                                                        style: OutlinedButton
+                                                            .styleFrom(
+                                                          side: const BorderSide(
                                                               color: Color
                                                                   .fromARGB(
                                                                       255,
-                                                                      186,
-                                                                      186,
-                                                                      186),
-                                                              child: Center(
-                                                                  child: Text(
-                                                                'lotto',
-                                                                style: TextStyle(
-                                                                    color: Colors
-                                                                        .black,
-                                                                    fontSize:
-                                                                        20,
-                                                                    fontWeight:
-                                                                        FontWeight
-                                                                            .bold),
-                                                              )),
-                                                            ),
-                                                          )),
-                                                      Text('งวดที่'),
-                                                      Text('64'),
-                                                    ],
-                                                  ),
-                                                  Column(
-                                                    children: [
-                                                      Padding(
-                                                        padding:
-                                                            const EdgeInsets
-                                                                .all(8.0),
-                                                        child: OutlinedButton(
-                                                          onPressed: delete,
-                                                          child: const Text(
-                                                              'เอาออก',
-                                                              style: TextStyle(
-                                                                  color: Colors
-                                                                      .black)),
-                                                          style: OutlinedButton
-                                                              .styleFrom(
-                                                            side: const BorderSide(
-                                                                color: Color
-                                                                    .fromARGB(
-                                                                        255,
-                                                                        240,
-                                                                        8,
-                                                                        8)), // Border color
-                                                          ),
+                                                                      240,
+                                                                      8,
+                                                                      8)), // Border color
                                                         ),
                                                       ),
-                                                      const Padding(
-                                                        padding:
-                                                            EdgeInsets.all(8.0),
-                                                        child: Text('80 บาท'),
-                                                      ),
-                                                    ],
-                                                  )
-                                                ],
-                                              )
-                                            ],
-                                          ),
+                                                    ),
+                                                    const Padding(
+                                                      padding:
+                                                          EdgeInsets.all(8.0),
+                                                      child: Text('80 บาท'),
+                                                    ),
+                                                  ],
+                                                )
+                                              ],
+                                            )
+                                          ],
                                         ),
-                                      ],
-                                    ),
+                                      ),
+                                    ],
                                   ),
                                 ),
                               ),

@@ -105,7 +105,7 @@ class CustomNavigationBar extends StatelessWidget {
     final memberId = dataProvider.datauser.memberId;
     Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) => BuylottoPage(memberId)),
+      MaterialPageRoute(builder: (context) => const BuylottoPage()),
     );
   }
 
