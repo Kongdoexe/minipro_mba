@@ -10,12 +10,15 @@ import 'package:minipro_mba/pages/User/CartLotto.dart';
 import 'package:minipro_mba/pages/User/CustomerAppBar.dart';
 import 'package:minipro_mba/pages/User/CustomerNavbar.dart';
 import 'package:http/http.dart' as http;
+import 'package:minipro_mba/share/ShareData.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:provider/provider.dart';
 
 class BuylottoPage extends StatefulWidget {
-  int memberId = 0;
+ 
   // BuylottoPage({Key? key, required this.memberId}) : super(key: key);
-  BuylottoPage({super.key, required this.memberId});
+  final int memberId;
+  const BuylottoPage(this.memberId, {Key? key}) : super(key: key);
   @override
   State<BuylottoPage> createState() => _BuylottoPageState();
 }
@@ -26,14 +29,14 @@ class _BuylottoPageState extends State<BuylottoPage> {
   List<SelectalllottoResponseGet> alllotto = [];
   List<int> selectedTicketIds = [];
   final TextEditingController _searchController = TextEditingController();
-  int? memberId;
+  late int memberId;
 
   @override
   void initState() {
     super.initState();
     // 4. Asssing loadData
+    memberId = widget.memberId;
     loadData = loadDataAsync();
-    _loadMemberId();
   }
 
   @override
@@ -43,17 +46,13 @@ class _BuylottoPageState extends State<BuylottoPage> {
     super.dispose();
   }
 
-  void _loadMemberId() async {
-    int? memberId = await getMemberId();
-    if (memberId != null) {
-      setState(() {
-        widget.memberId = memberId;
-      });
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
+
+    final dataProvider = Provider.of<Data>(context);
+    final memberId = dataProvider.datauser.memberId;
+
     final screenSize = MediaQuery.of(context).size;
     return Scaffold(
       backgroundColor: const Color.fromRGBO(255, 138, 128, 1),
@@ -375,8 +374,9 @@ class _BuylottoPageState extends State<BuylottoPage> {
   check() {
     if (memberId != null) {
       for (int ticketId in selectedTicketIds) {
-        insertTicketIntoCart(ticketId, memberId!);
+        insertTicketIntoCart(ticketId, memberId);
         log('Inserting ticket ID: $ticketId');
+        log('memberId $memberId');
       }
       Navigator.push(
         context,

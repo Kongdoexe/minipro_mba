@@ -22,6 +22,7 @@ class CustomNavigationBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
     return Padding(
       padding: const EdgeInsets.only(top: 1),
       child: NavigationBarTheme(
@@ -100,10 +101,11 @@ class CustomNavigationBar extends StatelessWidget {
   }
 
   void navigateBuyLotto(BuildContext context) {
-    final MemberID = context.read<Data>();
+    final dataProvider = context.read<Data>(); 
+    final memberId = dataProvider.datauser.memberId;
     Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) => BuylottoPage(memberId: MemberID.datauser.memberId,)),
+      MaterialPageRoute(builder: (context) => BuylottoPage(memberId)),
     );
   }
 
