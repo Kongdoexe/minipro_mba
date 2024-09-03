@@ -8,6 +8,8 @@ import 'package:minipro_mba/pages/User/CustomerAppBar.dart';
 import 'package:minipro_mba/pages/User/CustomerNavbar.dart';
 import 'package:minipro_mba/pages/User/PayLotto.dart';
 import 'package:http/http.dart' as http;
+import 'package:minipro_mba/share/ShareData.dart';
+import 'package:provider/provider.dart';
 
 class CartlottoPage extends StatefulWidget {
   // int memberId = 0;
@@ -301,11 +303,13 @@ class _CartlottoPageState extends State<CartlottoPage> {
   void choosemore() {}
 
   Future<void> loadDataAsync() async {
+    var memberId = context.read<Data>();
     //Get url endpoint from config
     var value = await Configuration.getConfig();
     var url = value['apiEndpoint'];
     //Call api /trips
-    var data = await http.get(Uri.parse("$url/lottery/GetDrawSchedule"));
+    var data = await http.get(Uri.parse("$url/lottery/GetNumbersInCart/mid?$memberId"));
+    log(data.toString());
   }
 
   void pay() {
