@@ -173,7 +173,7 @@ class _ChooselottoPageState extends State<ChooselottoPage> {
                                                               186),
                                                       child: Center(
                                                         child: Text(
-                                                          lotto.number,
+                                                          formatNumber(lotto.number),
                                                           style:
                                                               const TextStyle(
                                                             color: Colors.black,
@@ -274,18 +274,19 @@ class _ChooselottoPageState extends State<ChooselottoPage> {
     var value = await Configuration.getConfig();
     var url = value['apiEndpoint'];
     //Call api /trips
-    var data = await http.get(Uri.parse("$url/lottery/SelectAllLotto"));
+    var data = await http.get(Uri.parse("$url/lottery/GetDrawSchedule"));
     alllotto = selectalllottoResponseGetFromJson(data.body);
   }
 
-  Future<void> insertTicketIntoCart(int ticketId, int memberId) async {
+  Future<void> insertTicketIntoCart(int ticketId) async {
     try {
       // Get the config and API endpoint
       var config = await Configuration.getConfig();
       var url = config['apiEndpoint'];
+      var member = context.read<Data>().datauser;
 
       InsertcartRequestGet body =
-          InsertcartRequestGet(ticketId: ticketId, memberId: memberId);
+          InsertcartRequestGet(ticketId: ticketId, memberId: member.memberId);
       var jsonData = insertcartRequestGetToJson(body);
       var response = await http.post(
         Uri.parse('$url/lottery/InsertCart'),
@@ -336,6 +337,10 @@ class _ChooselottoPageState extends State<ChooselottoPage> {
     }
   }
 
+  String formatNumber(String number) {
+    return number.split('').join('  ');
+  }
+
   void choose(int ticketId, int price) {
     if (mounted) {
       setState(() {
@@ -355,11 +360,11 @@ class _ChooselottoPageState extends State<ChooselottoPage> {
   check() {
     var memberId = context.read<Data>();
     if (memberId.datauser.memberId != null) {
-      for (int ticketId in selectedTicketIds) {
-        insertTicketIntoCart(ticketId, memberId.datauser.memberId);
-        log('Inserting ticket ID: $ticketId');
-        log('memberId ${memberId.datauser.memberId}');
-      }
+      // for (int ticketId in selectedTicketIds) {
+      //   insertTicketIntoCart(ticketId);
+      //   log('Inserting ticket ID: $ticketId');
+      //   log('memberId ${memberId.datauser.memberId}');
+      // }
       Navigator.push(
         context,
         MaterialPageRoute(

@@ -10,6 +10,15 @@ class MyLottoPage extends StatefulWidget {
 }
 
 class _MyLottoPageState extends State<MyLottoPage> {
+
+  late Future<void> loadData;
+
+  @override
+  void initState() {
+    loadData = loadDataAsync();
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     final screenSize = MediaQuery.of(context).size;
@@ -123,5 +132,9 @@ class _MyLottoPageState extends State<MyLottoPage> {
 
   String formatNumber(String number) {
     return number.split('').join('   ');
+  }
+  
+  Future<void> loadDataAsync() async {
+    
   }
 }

@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
@@ -28,12 +29,11 @@ class CartlottoPage extends StatefulWidget {
 
 class _CartlottoPageState extends State<CartlottoPage> {
   late Future<void> loadData;
-  List<GetnumbersincartResponseGet> lottoinCart = [];
+  late GetnumbersincartResponseGet lottoinCart; // Changed to a List
 
   @override
   void initState() {
     super.initState();
-    // 4. Asssing loadData
     loadData = loadDataAsync(context);
   }
 
@@ -50,7 +50,6 @@ class _CartlottoPageState extends State<CartlottoPage> {
       ),
       body: Stack(
         children: [
-          // Main content
           Column(
             children: [
               const Padding(
@@ -98,9 +97,9 @@ class _CartlottoPageState extends State<CartlottoPage> {
                         return const Center(child: CircularProgressIndicator());
                       } else if (snapshot.hasError) {
                         return Center(child: Text('Error: ${snapshot.error}'));
-                      } else if (lottoinCart.isNotEmpty) {
+                      } else if (lottoinCart.data.isNotEmpty) {
                         return Column(
-                          children: lottoinCart
+                          children: lottoinCart.data
                               .map((lottocart) => Card(
                                     child: Column(
                                       children: [
@@ -166,8 +165,8 @@ class _CartlottoPageState extends State<CartlottoPage> {
                                                                           Center(
                                                                         child:
                                                                             Text(
-                                                                          lottocart
-                                                                              .numLotto,
+                                                                          formatNumber(
+                                                                              lottocart.numLotto),
                                                                           style:
                                                                               const TextStyle(
                                                                             color:
@@ -247,14 +246,11 @@ class _CartlottoPageState extends State<CartlottoPage> {
               )
             ],
           ),
-
-          // Positioned card over the navigation bar
           Positioned(
-            bottom: 0, // Adjust as needed
+            bottom: 0,
             left: 0,
             right: 0,
             child: Card.outlined(
-              // margin: const EdgeInsets.symmetric(horizontal: 20),
               child: Padding(
                 padding: const EdgeInsets.only(top: 5),
                 child: Column(
@@ -330,11 +326,14 @@ class _CartlottoPageState extends State<CartlottoPage> {
 
   void choosemore() {}
 
+  String formatNumber(String number) {
+    return number.split('').join('  ');
+  }
+
   Future<void> loadDataAsync(BuildContext context) async {
     final dataProvider = context.read<Data>();
     final memberId = dataProvider.datauser.memberId;
 
-    // Get URL endpoint from config
     var value = await Configuration.getConfig();
     var url = value['apiEndpoint'];
 
@@ -348,14 +347,15 @@ class _CartlottoPageState extends State<CartlottoPage> {
         log('Response: ${response.body}');
         lottoinCart = getnumbersincartResponseGetFromJson(response.body);
         log('LottoinCart: $lottoinCart');
-        // setState(() {
-        //   log(memberId.toString());
-        // });
       } else {
         log('Error: Status code ${response.statusCode}');
+        lottoinCart = GetnumbersincartResponseGet(
+            data: [], allprice: 0); // Initialize with an empty list
       }
     } catch (e) {
       log('Error: $e');
+      lottoinCart = GetnumbersincartResponseGet(
+          data: [], allprice: 0); // Initialize with an empty list
     }
   }
 
