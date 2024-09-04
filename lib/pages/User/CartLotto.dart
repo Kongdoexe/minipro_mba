@@ -98,7 +98,7 @@ class _CartlottoPageState extends State<CartlottoPage> {
                         return const Center(child: CircularProgressIndicator());
                       } else if (snapshot.hasError) {
                         return Center(child: Text('Error: ${snapshot.error}'));
-                      } else if (snapshot.hasData) {
+                      } else if (lottoinCart.isNotEmpty) {
                         return Column(
                           children: lottoinCart
                               .map((lottocart) => Card(
@@ -346,10 +346,11 @@ class _CartlottoPageState extends State<CartlottoPage> {
 
       if (response.statusCode == 200) {
         log('Response: ${response.body}');
-        setState(() {
-          lottoinCart = getnumbersincartResponseGetFromJson(response.body);
-          log(memberId.toString());
-        });
+        lottoinCart = getnumbersincartResponseGetFromJson(response.body);
+        log('LottoinCart: $lottoinCart');
+        // setState(() {
+        //   log(memberId.toString());
+        // });
       } else {
         log('Error: Status code ${response.statusCode}');
       }

@@ -141,7 +141,7 @@ class _ChooselottoPageState extends State<ChooselottoPage> {
                   builder: (context, snapshot) {
                     if (snapshot.connectionState != ConnectionState.done) {
                       return const Center(child: CircularProgressIndicator());
-                    } else if (!snapshot.hasData || alllotto.isEmpty) {
+                    } else if (alllotto.isEmpty) {
                       return const Center(child: Text('No data available'));
                     } else {
                       return SingleChildScrollView(
