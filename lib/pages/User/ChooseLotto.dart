@@ -12,14 +12,14 @@ import 'package:http/http.dart' as http;
 import 'package:minipro_mba/share/ShareData.dart';
 import 'package:provider/provider.dart';
 
-class BuylottoPage extends StatefulWidget {
-  // BuylottoPage({Key? key, required this.memberId}) : super(key: key);
-  const BuylottoPage({super.key});
+class ChooselottoPage extends StatefulWidget {
+  // ChooselottoPage({Key? key, required this.memberId}) : super(key: key);
+  const ChooselottoPage({super.key});
   @override
-  State<BuylottoPage> createState() => _BuylottoPageState();
+  State<ChooselottoPage> createState() => _ChooselottoPageState();
 }
 
-class _BuylottoPageState extends State<BuylottoPage> {
+class _ChooselottoPageState extends State<ChooselottoPage> {
   int selectedItems = 0;
   late Future<void> loadData;
   List<SelectalllottoResponseGet> alllotto = [];

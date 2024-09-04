@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:iconsax/iconsax.dart';
-import 'package:minipro_mba/pages/User/BuyLotto.dart';
+import 'package:minipro_mba/pages/User/ChooseLotto.dart';
 import 'package:minipro_mba/pages/User/CheckLotto.dart';
 import 'package:minipro_mba/pages/User/HomePageuser.dart';
 import 'package:minipro_mba/pages/User/MyLotto.dart';
@@ -105,7 +105,7 @@ class CustomNavigationBar extends StatelessWidget {
     final memberId = dataProvider.datauser.memberId;
     Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) => const BuylottoPage()),
+      MaterialPageRoute(builder: (context) => const ChooselottoPage()),
     );
   }
 
