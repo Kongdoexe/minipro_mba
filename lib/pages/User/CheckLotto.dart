@@ -49,6 +49,7 @@ class _CheckLottoPageState extends State<CheckLottoPage> {
       appBar: CustomAppBar(
         screenSize: screenSize,
         namePage: 'ตรวจสลาก',
+        allPrice: 0,
       ),
       body: Stack(
         children: [

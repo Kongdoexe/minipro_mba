@@ -21,6 +21,7 @@ class ChooselottoPage extends StatefulWidget {
 
 class _ChooselottoPageState extends State<ChooselottoPage> {
   int selectedItems = 0;
+  int allPrice = 0;
   late Future<void> loadData;
   List<SelectalllottoResponseGet> alllotto = [];
   List<int> selectedTicketIds = [];
@@ -48,6 +49,7 @@ class _ChooselottoPageState extends State<ChooselottoPage> {
       appBar: CustomAppBar(
         screenSize: screenSize,
         namePage: 'ซื้อสลาก',
+        allPrice: 0,
       ),
       body: Container(
           child: Column(
@@ -135,89 +137,100 @@ class _ChooselottoPageState extends State<ChooselottoPage> {
             child: Padding(
               padding: const EdgeInsets.fromLTRB(30, 10, 30, 0),
               child: FutureBuilder(
-                future: loadData,
-                builder: (context, snapshot) {
-                  if (snapshot.connectionState != ConnectionState.done) {
-                    return const Center(child: CircularProgressIndicator());
-                  }
-                  return SingleChildScrollView(
-                    child: Column(
-                      children: alllotto
-                          .map((lotto) => Card(
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Row(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.spaceBetween,
+                  future: loadData,
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState != ConnectionState.done) {
+                      return const Center(child: CircularProgressIndicator());
+                    } else if (!snapshot.hasData || alllotto.isEmpty) {
+                      return const Center(child: Text('No data available'));
+                    } else {
+                      return SingleChildScrollView(
+                        child: Column(
+                          children: alllotto
+                              .map((lotto) => Card(
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
                                       children: [
-                                        Column(
+                                        Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.spaceBetween,
                                           children: [
-                                            Padding(
-                                              padding:
-                                                  const EdgeInsets.all(8.0),
-                                              child: SizedBox(
-                                                width: 150,
-                                                height: 50,
-                                                child: Card(
-                                                  color: const Color.fromARGB(
-                                                      255, 186, 186, 186),
-                                                  child: Center(
-                                                    child: Text(
-                                                      lotto.number,
-                                                      style: const TextStyle(
-                                                        color: Colors.black,
-                                                        fontSize: 20,
-                                                        fontWeight:
-                                                            FontWeight.bold,
+                                            Column(
+                                              children: [
+                                                Padding(
+                                                  padding:
+                                                      const EdgeInsets.all(8.0),
+                                                  child: SizedBox(
+                                                    width: 150,
+                                                    height: 50,
+                                                    child: Card(
+                                                      color:
+                                                          const Color.fromARGB(
+                                                              255,
+                                                              186,
+                                                              186,
+                                                              186),
+                                                      child: Center(
+                                                        child: Text(
+                                                          lotto.number,
+                                                          style:
+                                                              const TextStyle(
+                                                            color: Colors.black,
+                                                            fontSize: 20,
+                                                            fontWeight:
+                                                                FontWeight.bold,
+                                                          ),
+                                                        ),
                                                       ),
                                                     ),
                                                   ),
                                                 ),
-                                              ),
+                                                const Text('งวดที่'),
+                                                Text('${lotto.period}'),
+                                              ],
                                             ),
-                                            const Text('งวดที่'),
-                                            Text('${lotto.period}'),
-                                          ],
-                                        ),
-                                        Column(
-                                          children: [
-                                            Padding(
-                                              padding:
-                                                  const EdgeInsets.all(8.0),
-                                              child: OutlinedButton(
-                                                onPressed: () =>
-                                                    choose(lotto.ticketId),
-                                                child: const Text(
-                                                  'เลือก',
-                                                  style: TextStyle(
-                                                      color: Colors.black),
-                                                ),
-                                                style: OutlinedButton.styleFrom(
-                                                  side: const BorderSide(
-                                                    color: Color.fromARGB(
-                                                        255, 231, 84, 81),
+                                            Column(
+                                              children: [
+                                                Padding(
+                                                  padding:
+                                                      const EdgeInsets.all(8.0),
+                                                  child: OutlinedButton(
+                                                    onPressed: () => choose(
+                                                        lotto.ticketId,
+                                                        lotto.price),
+                                                    child: const Text(
+                                                      'เลือก',
+                                                      style: TextStyle(
+                                                          color: Colors.black),
+                                                    ),
+                                                    style: OutlinedButton
+                                                        .styleFrom(
+                                                      side: const BorderSide(
+                                                        color: Color.fromARGB(
+                                                            255, 231, 84, 81),
+                                                      ),
+                                                    ),
                                                   ),
                                                 ),
-                                              ),
-                                            ),
-                                            Padding(
-                                              padding:
-                                                  const EdgeInsets.all(8.0),
-                                              child: Text('${lotto.price} บาท'),
+                                                Padding(
+                                                  padding:
+                                                      const EdgeInsets.all(8.0),
+                                                  child: Text(
+                                                      '${lotto.price} บาท'),
+                                                ),
+                                              ],
                                             ),
                                           ],
                                         ),
                                       ],
                                     ),
-                                  ],
-                                ),
-                              ))
-                          .toList(),
-                    ),
-                  );
-                },
-              ),
+                                  ))
+                              .toList(),
+                        ),
+                      );
+                    }
+                  }),
             ),
           ),
           if (selectedItems > 0) ...[
@@ -323,15 +336,17 @@ class _ChooselottoPageState extends State<ChooselottoPage> {
     }
   }
 
-  void choose(int ticketId) {
+  void choose(int ticketId, int price) {
     if (mounted) {
       setState(() {
         if (selectedTicketIds.contains(ticketId)) {
           selectedTicketIds.remove(ticketId);
           selectedItems--;
+          allPrice -= price;
         } else {
           selectedTicketIds.add(ticketId);
           selectedItems++;
+          allPrice += price;
         }
       });
     }
@@ -348,8 +363,8 @@ class _ChooselottoPageState extends State<ChooselottoPage> {
       Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (context) =>
-              CartlottoPage(selectedTicketIds: selectedTicketIds),
+          builder: (context) => CartlottoPage(
+              selectedTicketIds: selectedTicketIds, allPrice: allPrice),
         ),
       );
     } else {
