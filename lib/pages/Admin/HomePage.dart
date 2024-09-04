@@ -161,38 +161,66 @@ class _HomePageState extends State<HomePage> {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        backgroundColor: const Color.fromARGB(255, 255, 255, 255),
-        title: const Center(
+        backgroundColor: const Color.fromARGB(255, 247, 31, 31),
+        title: Center(
           child: Column(
             children: [
-              Text(
-                'ต้องการ Reset ระบบหรือไม่',
-                style: TextStyle(
-                    color: Color.fromRGBO(0, 0, 0, 1),
-                    fontWeight: FontWeight.w800,
-                    fontSize: 30),
+              Image.asset(
+                    'assets/images/sign.png',
+                    width: MediaQuery.of(context).size.width * 0.2,
+                  ),
+              const Center(
+                child: Text(
+                  'คุณต้องการรีข้อมูลทั้งระบบจริงหรือ',
+                  style: TextStyle(
+                      color: Color.fromRGBO(255, 255, 255, 1),
+                      fontWeight: FontWeight.w800,
+                      fontSize: 24),
+                ),
               ),
             ],
           ),
         ),
         actions: [
-          FilledButton(
-            onPressed: () {
-                  Navigator.of(context).pop();
-                  reset(); // ปิด Dialog
-                },
-            style: ButtonStyle(
-              backgroundColor: MaterialStateProperty.all<Color>(
-                  const Color.fromARGB(255, 230, 92, 87)),
-            ),
-            child: const Center(
-                child: Text(
-              'ตกลง',
-              style: TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.w800,
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              FilledButton(
+                onPressed: () {
+                      Navigator.of(context).pop();
+                    },
+                style: ButtonStyle(
+                  backgroundColor: MaterialStateProperty.all<Color>(
+                      const Color.fromARGB(255, 240, 192, 48)),
+                ),
+                child: const Center(
+                    child: Text(
+                  'ปิด',
+                  style: TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.w800,
+                  ),
+                )),
               ),
-            )),
+              FilledButton(
+                onPressed: () {
+                      Navigator.of(context).pop();
+                      reset(); // ปิด Dialog
+                    },
+                style: ButtonStyle(
+                  backgroundColor: MaterialStateProperty.all<Color>(
+                      const Color.fromARGB(255, 240, 192, 48)),
+                ),
+                child: const Center(
+                    child: Text(
+                  'ตกลง',
+                  style: TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.w800,
+                  ),
+                )),
+              ),
+            ],
           )
         ],
       ),
@@ -215,7 +243,7 @@ class _HomePageState extends State<HomePage> {
         showDialog(
           context: context,
           builder: (context) => AlertDialog(
-            backgroundColor: const Color.fromARGB(255, 245, 156, 55),
+            backgroundColor: const Color.fromARGB(255, 247, 31, 31),
             title: Center(
               child: Column(
                 children: [
@@ -294,14 +322,14 @@ class _HomePageState extends State<HomePage> {
                     width: MediaQuery.of(context).size.width * 0.2,
                   ),
                   const Text(
-                    'Reset Success',
+                    'ลบข้อมูลทั้งระบบ',
                     style: TextStyle(
                         color: Color.fromRGBO(255, 255, 255, 1),
                         fontWeight: FontWeight.w800,
                         fontSize: 30),
                   ),
                   const Text(
-                    'สำเร็จ',
+                    'เสร็จสิ้น',
                     style: TextStyle(
                         color: Color.fromRGBO(255, 255, 255, 1),
                         fontWeight: FontWeight.w800,
@@ -317,7 +345,7 @@ class _HomePageState extends State<HomePage> {
                 },
                 style: ButtonStyle(
                   backgroundColor: MaterialStateProperty.all<Color>(
-                      const Color.fromARGB(255, 230, 92, 87)),
+                      const Color.fromARGB(255, 240, 192, 48)),
                 ),
                 child: const Center(
                     child: Text(
