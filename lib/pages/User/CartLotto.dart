@@ -99,9 +99,6 @@ class _CartlottoPageState extends State<CartlottoPage> {
                       } else if (snapshot.hasError) {
                         return Center(child: Text('Error: ${snapshot.error}'));
                       } else if (snapshot.hasData) {
-                        if (lottoinCart.isEmpty) {
-                          return const Center(child: Text('No data available'));
-                        }
                         return Column(
                           children: lottoinCart
                               .map((lottocart) => Card(
