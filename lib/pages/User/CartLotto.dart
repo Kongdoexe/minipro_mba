@@ -90,158 +90,164 @@ class _CartlottoPageState extends State<CartlottoPage> {
               ),
               Expanded(
                 child: SizedBox(
-                    width: screenSize.width,
-                    child: FutureBuilder(
-                      future: loadData,
-                      builder: (context, snapshot) {
-                        if (snapshot.connectionState ==
-                            ConnectionState.waiting) {
-                          return const Center(
-                              child: CircularProgressIndicator());
-                        } else if (snapshot.hasError) {
-                          return Center(
-                              child: Text('Error: ${snapshot.error}'));
-                        } else if (!snapshot.hasData || lottoinCart.isEmpty) {
+                  width: screenSize.width,
+                  child: FutureBuilder<void>(
+                    future: loadData,
+                    builder: (context, snapshot) {
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        return const Center(child: CircularProgressIndicator());
+                      } else if (snapshot.hasError) {
+                        return Center(child: Text('Error: ${snapshot.error}'));
+                      } else if (snapshot.hasData) {
+                        if (lottoinCart.isEmpty) {
                           return const Center(child: Text('No data available'));
-                        } else {
-                          return Column(
-                            children: lottoinCart
-                                .map((lottocart) => Card(
-                                      child: Column(
-                                        children: [
-                                          Padding(
-                                            padding: const EdgeInsets.only(
-                                                right: 10),
-                                            child: Row(
-                                              mainAxisAlignment:
-                                                  MainAxisAlignment.end,
-                                              children: [
-                                                TextButton(
-                                                  onPressed: choosemore,
-                                                  child: const Text(
-                                                    'เลือกเลขเพิ่ม',
-                                                    style: TextStyle(
-                                                        color: Color.fromRGBO(
-                                                            221, 86, 76, 1)),
-                                                  ),
+                        }
+                        return Column(
+                          children: lottoinCart
+                              .map((lottocart) => Card(
+                                    child: Column(
+                                      children: [
+                                        Padding(
+                                          padding:
+                                              const EdgeInsets.only(right: 10),
+                                          child: Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.end,
+                                            children: [
+                                              TextButton(
+                                                onPressed: choosemore,
+                                                child: const Text(
+                                                  'เลือกเลขเพิ่ม',
+                                                  style: TextStyle(
+                                                      color: Color.fromRGBO(
+                                                          221, 86, 76, 1)),
                                                 ),
-                                              ],
-                                            ),
+                                              ),
+                                            ],
                                           ),
-                                          Padding(
-                                            padding:
-                                                const EdgeInsets.only(top: 5),
-                                            child: SingleChildScrollView(
-                                              child: Padding(
-                                                padding:
-                                                    const EdgeInsets.fromLTRB(
-                                                        30, 10, 30, 0),
-                                                child: Column(
-                                                  children: [
-                                                    Card.outlined(
-                                                      child: Column(
-                                                        crossAxisAlignment:
-                                                            CrossAxisAlignment
-                                                                .start,
-                                                        children: [
-                                                          Row(
-                                                            mainAxisAlignment:
-                                                                MainAxisAlignment
-                                                                    .spaceBetween,
-                                                            children: [
-                                                              Column(
-                                                                children: [
-                                                                  Padding(
-                                                                    padding:
-                                                                        const EdgeInsets
-                                                                            .all(
-                                                                            8.0),
-                                                                    child:
-                                                                        SizedBox(
-                                                                      width:
-                                                                          150,
-                                                                      height:
-                                                                          50,
+                                        ),
+                                        Padding(
+                                          padding:
+                                              const EdgeInsets.only(top: 5),
+                                          child: SingleChildScrollView(
+                                            child: Padding(
+                                              padding:
+                                                  const EdgeInsets.fromLTRB(
+                                                      30, 10, 30, 0),
+                                              child: Column(
+                                                children: [
+                                                  Card.outlined(
+                                                    child: Column(
+                                                      crossAxisAlignment:
+                                                          CrossAxisAlignment
+                                                              .start,
+                                                      children: [
+                                                        Row(
+                                                          mainAxisAlignment:
+                                                              MainAxisAlignment
+                                                                  .spaceBetween,
+                                                          children: [
+                                                            Column(
+                                                              children: [
+                                                                Padding(
+                                                                  padding:
+                                                                      const EdgeInsets
+                                                                          .all(
+                                                                          8.0),
+                                                                  child:
+                                                                      SizedBox(
+                                                                    width: 150,
+                                                                    height: 50,
+                                                                    child: Card(
+                                                                      color: const Color
+                                                                          .fromARGB(
+                                                                          255,
+                                                                          186,
+                                                                          186,
+                                                                          186),
                                                                       child:
-                                                                          Card(
-                                                                        color: const Color
-                                                                            .fromARGB(
-                                                                            255,
-                                                                            186,
-                                                                            186,
-                                                                            186),
+                                                                          Center(
                                                                         child:
-                                                                            Center(
-                                                                          child:
-                                                                              Text(
-                                                                            lottocart.numLotto,
-                                                                            style:
-                                                                                const TextStyle(
-                                                                              color: Colors.black,
-                                                                              fontSize: 20,
-                                                                              fontWeight: FontWeight.bold,
-                                                                            ),
+                                                                            Text(
+                                                                          lottocart
+                                                                              .numLotto,
+                                                                          style:
+                                                                              const TextStyle(
+                                                                            color:
+                                                                                Colors.black,
+                                                                            fontSize:
+                                                                                20,
+                                                                            fontWeight:
+                                                                                FontWeight.bold,
                                                                           ),
                                                                         ),
                                                                       ),
                                                                     ),
                                                                   ),
-                                                                ],
-                                                              ),
-                                                              Column(
-                                                                children: [
-                                                                  Padding(
-                                                                    padding:
-                                                                        const EdgeInsets
-                                                                            .all(
-                                                                            8.0),
+                                                                ),
+                                                              ],
+                                                            ),
+                                                            Column(
+                                                              children: [
+                                                                Padding(
+                                                                  padding:
+                                                                      const EdgeInsets
+                                                                          .all(
+                                                                          8.0),
+                                                                  child:
+                                                                      OutlinedButton(
+                                                                    onPressed:
+                                                                        delete,
                                                                     child:
-                                                                        OutlinedButton(
-                                                                      onPressed:
-                                                                          delete,
-                                                                      child: const Text(
-                                                                          'เอาออก',
-                                                                          style:
-                                                                              TextStyle(color: Colors.black)),
-                                                                      style: OutlinedButton
-                                                                          .styleFrom(
-                                                                        side: const BorderSide(
-                                                                            color: Color.fromARGB(
-                                                                                255,
-                                                                                240,
-                                                                                8,
-                                                                                8)),
-                                                                      ),
+                                                                        const Text(
+                                                                      'เอาออก',
+                                                                      style: TextStyle(
+                                                                          color:
+                                                                              Colors.black),
+                                                                    ),
+                                                                    style: OutlinedButton
+                                                                        .styleFrom(
+                                                                      side: const BorderSide(
+                                                                          color: Color.fromARGB(
+                                                                              255,
+                                                                              240,
+                                                                              8,
+                                                                              8)),
                                                                     ),
                                                                   ),
-                                                                  const Padding(
-                                                                    padding:
-                                                                        EdgeInsets.all(
-                                                                            8.0),
-                                                                    child: Text(
-                                                                        '80 บาท'),
-                                                                  ),
-                                                                ],
-                                                              ),
-                                                            ],
-                                                          ),
-                                                        ],
-                                                      ),
+                                                                ),
+                                                                const Padding(
+                                                                  padding:
+                                                                      EdgeInsets
+                                                                          .all(
+                                                                              8.0),
+                                                                  child: Text(
+                                                                      '80 บาท'),
+                                                                ),
+                                                              ],
+                                                            ),
+                                                          ],
+                                                        ),
+                                                      ],
                                                     ),
-                                                  ],
-                                                ),
+                                                  ),
+                                                ],
                                               ),
                                             ),
                                           ),
-                                        ],
-                                      ),
-                                    ))
-                                .toList(),
-                          );
-                        }
-                      },
-                    )),
-              ),
+                                        ),
+                                      ],
+                                    ),
+                                  ))
+                              .toList(),
+                        );
+                      } else {
+                        return const Center(child: Text('No data available'));
+                      }
+                    },
+                  ),
+                ),
+              )
             ],
           ),
 
