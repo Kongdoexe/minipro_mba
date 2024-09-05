@@ -9,21 +9,21 @@ RemovenumberfromcartRequestDelete removenumberfromcartRequestDeleteFromJson(Stri
 String removenumberfromcartRequestDeleteToJson(RemovenumberfromcartRequestDelete data) => json.encode(data.toJson());
 
 class RemovenumberfromcartRequestDelete {
-    int ticketId;
+    int cartId;
     int memberId;
 
     RemovenumberfromcartRequestDelete({
-        required this.ticketId,
+        required this.cartId,
         required this.memberId,
     });
 
     factory RemovenumberfromcartRequestDelete.fromJson(Map<String, dynamic> json) => RemovenumberfromcartRequestDelete(
-        ticketId: json["ticketID"],
-        memberId: json["MemberID"],
+        cartId: json["cartID"],
+        memberId: json["memberID"],
     );
 
     Map<String, dynamic> toJson() => {
-        "ticketID": ticketId,
-        "MemberID": memberId,
+        "cartID": cartId,
+        "memberID": memberId,
     };
 }
