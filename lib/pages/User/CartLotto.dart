@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:developer';
-
+import 'package:minipro_mba/models/response/allerrorresponseget.dart';
+import 'package:minipro_mba/share/ShareWidget.dart';
 import 'package:flutter/material.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:minipro_mba/config/config.dart';
@@ -30,6 +31,7 @@ class _CartlottoPageState extends State<CartlottoPage> {
   late GetnumbersincartResponseGet lottoinCart;
   int totalPrice = 0;
   int totalData = 0;
+  final myWidget = MyWidget();
 
   @override
   void initState() {
@@ -187,7 +189,9 @@ class _CartlottoPageState extends State<CartlottoPage> {
                                                                     .all(8.0),
                                                             child:
                                                                 OutlinedButton(
-                                                              onPressed: () => delete(lottocart.cartId),
+                                                              onPressed: () =>
+                                                                  daleteDialog(lottocart
+                                                                      .cartId),
                                                               child: const Text(
                                                                 'เอาออก',
                                                                 style: TextStyle(
@@ -295,35 +299,77 @@ class _CartlottoPageState extends State<CartlottoPage> {
   }
 
   delete(int cartId) async {
-    // try {
-    //   final dataProvider = context.read<Data>();
-    //   final memberId = dataProvider.datauser.memberId;
+    try {
+      final dataProvider = context.read<Data>();
+      final memberId = dataProvider.datauser.memberId;
 
-    //   var value = await Configuration.getConfig();
-    //   var url = value['apiEndpoint'];
-    //   RemovenumberfromcartRequestDelete body =
-    //       RemovenumberfromcartRequestDelete(cartId: cartId, memberId: memberId);
-    //   var requestUrl = await http.delete(
-    //       Uri.parse('$url/lottery/GetSerachNumber'),
-    //       headers: {"Content-Type": "application/json; charset=utf-8"},
-    //       body: jsonData);
+      var value = await Configuration.getConfig();
+      var url = value['apiEndpoint'];
+      RemovenumberfromcartRequestDelete body =
+          RemovenumberfromcartRequestDelete(cartId: cartId, memberId: memberId);
+      var jsonData = removenumberfromcartRequestDeleteToJson(body);
+      var requestUrl = await http.delete(
+          Uri.parse('$url/lottery/RemoveNumberFromCart'),
+          headers: {"Content-Type": "application/json; charset=utf-8"},
+          body: jsonData);
 
-    //   if (requestUrl.statusCode == 200) {
-    //     log('Response: ${requestUrl.body}');
-    //     setState(() {
-    //       lottoinCart = GetnumbersincartResponseGet(data: [], allprice: 0);
-    //     }); // Initialize with an empty list
-    //   } else {
-    //     log('Error: Status code ${requestUrl.statusCode}');
-    //     // setState(() {
-    //     //   lottoinCart = GetnumbersincartResponseGet(data: [], allprice: 0);
-    //     //   totalPrice = 0;
-    //     //   totalData = 0;
-    //     // }); // Initialize with an empty list
-    //   }
-    // } catch (e) {
-    //   log('Error: $e');
-    // }
+      if (requestUrl.statusCode == 200) {
+        log('Response: ${requestUrl.body}');
+        setState(() {
+          lottoinCart = GetnumbersincartResponseGet(data: [], allprice: 0);
+          totalPrice = lottoinCart.allprice;
+          totalData = lottoinCart.data.length;
+          // _handleError(requestUrl);
+        });
+        showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+            backgroundColor: const Color.fromARGB(255, 255, 255, 255),
+            title: Center(
+              child: Column(
+                children: [
+                  Image.asset(
+                      'assets/images/check.png',
+                      width: MediaQuery.of(context).size.width * 0.2,
+                    ),
+                  const Text(
+                    'เอาออกสำเร็จ',
+                    style: TextStyle(
+                        color: Color.fromRGBO(0, 0, 0, 1),
+                        fontWeight: FontWeight.w800,
+                        fontSize: 30),
+                  ),
+                  
+                ],
+              ),
+            ),
+            actions: [
+              FilledButton(
+                onPressed: () {
+                  Navigator.of(context).pop(); // ปิด Dialog
+                },
+                style: ButtonStyle(
+                  backgroundColor: MaterialStateProperty.all<Color>(
+                      const Color.fromARGB(255, 102, 102, 102)),
+                ),
+                child: const Center(
+                    child: Text(
+                  'ปิด',
+                  style: TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.w800,
+                  ),
+                )),
+              ),
+            ],
+          ),
+        );
+      } else {
+        log('Error: Status code ${requestUrl.statusCode}');
+      }
+    } catch (e) {
+      log('Error: $e');
+    }
   }
 
   void choosemore() {
@@ -378,6 +424,96 @@ class _CartlottoPageState extends State<CartlottoPage> {
       context,
       MaterialPageRoute(
         builder: (context) => const PaylottoPage(),
+      ),
+    );
+  }
+
+  void _handleError(http.Response response) {
+    final jsonResponse = json.decode(utf8.decode(response.bodyBytes));
+    if (jsonResponse is Map<String, dynamic>) {
+      final msgValue = jsonResponse['msg'];
+      if (msgValue is String) {
+        myWidget.showCustomSnackbar('Message', msgValue);
+      } else if (msgValue is Map<String, dynamic>) {
+        try {
+          final msg = allerrorresponsegetFromJson(jsonEncode(msgValue));
+          myWidget.showCustomSnackbar('Message', msg.toString());
+        } catch (e) {
+          myWidget.showCustomSnackbar('Message', 'Error parsing "msg": $e');
+        }
+      }
+    } else {
+      myWidget.showCustomSnackbar('Error', 'Unexpected response format');
+    }
+  }
+
+  void daleteDialog(int cartId) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        backgroundColor: const Color.fromARGB(255, 255, 255, 255),
+        title: const Center(
+          child: Column(
+            children: [
+              Text(
+                'ยืนยันการเอา',
+                style: TextStyle(
+                    color: Color.fromRGBO(0, 0, 0, 1),
+                    fontWeight: FontWeight.w800,
+                    fontSize: 30),
+              ),
+              Text(
+                'เลขออก',
+                style: TextStyle(
+                    color: Color.fromRGBO(0, 0, 0, 1),
+                    fontWeight: FontWeight.w800,
+                    fontSize: 30),
+              ),
+            ],
+          ),
+        ),
+        actions: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              FilledButton(
+                onPressed: () {
+                  Navigator.of(context).pop(); // ปิด Dialog
+                },
+                style: ButtonStyle(
+                  backgroundColor: MaterialStateProperty.all<Color>(
+                      const Color.fromARGB(255, 102, 102, 102)),
+                ),
+                child: const Center(
+                    child: Text(
+                  'ปิด',
+                  style: TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.w800,
+                  ),
+                )),
+              ),
+              FilledButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                  delete(cartId); // ปิด Dialog
+                },
+                style: ButtonStyle(
+                  backgroundColor: MaterialStateProperty.all<Color>(
+                      const Color.fromARGB(255, 206, 52, 52)),
+                ),
+                child: const Center(
+                    child: Text(
+                  'ลบ',
+                  style: TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.w800,
+                  ),
+                )),
+              ),
+            ],
+          )
+        ],
       ),
     );
   }

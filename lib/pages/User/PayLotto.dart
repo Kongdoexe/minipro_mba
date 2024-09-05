@@ -1,7 +1,15 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:iconsax/iconsax.dart';
+import 'package:minipro_mba/config/config.dart';
+import 'package:minipro_mba/models/response/regsiter_response_post.dart';
 import 'package:minipro_mba/pages/User/CustomerAppBar.dart';
 import 'package:minipro_mba/pages/User/CustomerNavbar.dart';
+import 'package:minipro_mba/share/ShareData.dart';
+import 'package:minipro_mba/share/ShareWidget.dart';
+import 'package:provider/provider.dart';
+import 'package:http/http.dart' as http;
 
 class PaylottoPage extends StatefulWidget {
   const PaylottoPage({super.key});
@@ -11,6 +19,19 @@ class PaylottoPage extends StatefulWidget {
 }
 
 class _PaylottoPageState extends State<PaylottoPage> {
+
+  late Future<void> loadData;
+  late RegsiterResponsePost money ;
+
+  final myWidget = MyWidget();
+
+  @override
+  void initState() {
+    super.initState();
+    loadData = loadDataAsync();
+  }
+
+
   @override
   Widget build(BuildContext context) {
     final screenSize = MediaQuery.of(context).size;
@@ -41,7 +62,12 @@ class _PaylottoPageState extends State<PaylottoPage> {
                         child: SizedBox(
                           width: 1000,
                           height: 120,
-                          child: Card.outlined(
+                          child: 
+                          // FutureBuilder(
+                          //   future: loadData, builder: (context, snapshot){
+                              
+                          //   })
+                          Card.outlined(
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
@@ -144,5 +170,38 @@ class _PaylottoPageState extends State<PaylottoPage> {
         );
       },
     );
+  }
+
+  Future<void> loadDataAsync() async {
+    final dataProvider = context.read<Data>();
+    final memberId = dataProvider.datauser.memberId;
+
+    var value = await Configuration.getConfig();
+    var url = value['apiEndpoint'];
+
+    try {
+      final requestUrl = "$url/lottery/GetNumbersInCart/$memberId";
+      log('Request URL: $requestUrl');
+
+      var response = await http.get(Uri.parse(requestUrl));
+
+      if (response.statusCode == 200) {
+        log('Response: ${response.body}');
+        setState(() {
+          
+        });
+        log('LottoinCart: ');
+      } else {
+        log('Error: Status code ${response.statusCode}');
+        setState(() {
+         
+        }); // Initialize with an empty list
+      }
+    } catch (e) {
+      log('Error: $e');
+      setState(() {
+        
+      }); // Initialize with an empty list
+    }
   }
 }

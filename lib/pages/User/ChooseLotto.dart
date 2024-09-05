@@ -1,5 +1,7 @@
+import 'dart:convert';
 import 'dart:developer';
-
+import 'package:minipro_mba/models/response/allerrorresponseget.dart';
+import 'package:minipro_mba/share/ShareWidget.dart';
 import 'package:flutter/material.dart';
 import 'package:minipro_mba/config/config.dart';
 import 'package:minipro_mba/models/request/getsearchnumber_request_post.dart';
@@ -26,6 +28,8 @@ class _ChooselottoPageState extends State<ChooselottoPage> {
   List<SelectalllottoResponseGet> alllotto = [];
   List<int> selectedTicketIds = [];
   final TextEditingController _searchController = TextEditingController();
+  final myWidget = MyWidget();
+  
 
   @override
   void initState() {
@@ -331,6 +335,9 @@ class _ChooselottoPageState extends State<ChooselottoPage> {
       } else {
         log('Failed to search lotto numbers: ${response.body}');
         log('Response body: ${response.body}');
+        setState(() {
+          _handleError(response);
+        });
       }
     } catch (err) {
       log('Error searching lotto numbers: $err');
@@ -374,6 +381,25 @@ class _ChooselottoPageState extends State<ChooselottoPage> {
       );
     } else {
       log('Member ID is null');
+    }
+  }
+
+  void _handleError(http.Response response) {
+    final jsonResponse = json.decode(utf8.decode(response.bodyBytes));
+    if (jsonResponse is Map<String, dynamic>) {
+      final msgValue = jsonResponse['msg'];
+      if (msgValue is String) {
+        myWidget.showCustomSnackbar('Message', msgValue);
+      } else if (msgValue is Map<String, dynamic>) {
+        try {
+          final msg = allerrorresponsegetFromJson(jsonEncode(msgValue));
+          myWidget.showCustomSnackbar('Message', msg.toString());
+        } catch (e) {
+          myWidget.showCustomSnackbar('Message', 'Error parsing "msg": $e');
+        }
+      }
+    } else {
+      myWidget.showCustomSnackbar('Error', 'Unexpected response format');
     }
   }
 }

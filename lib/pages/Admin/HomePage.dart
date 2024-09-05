@@ -171,7 +171,16 @@ class _HomePageState extends State<HomePage> {
                   ),
               const Center(
                 child: Text(
-                  'คุณต้องการรีข้อมูลทั้งระบบจริงหรือ',
+                  'คุณต้องการรีข้อมูล',
+                  style: TextStyle(
+                      color: Color.fromRGBO(255, 255, 255, 1),
+                      fontWeight: FontWeight.w800,
+                      fontSize: 24),
+                ),
+              ),
+              const Center(
+                child: Text(
+                  'ทั้งระบบจริงหรือ',
                   style: TextStyle(
                       color: Color.fromRGBO(255, 255, 255, 1),
                       fontWeight: FontWeight.w800,
