@@ -187,7 +187,7 @@ class _CartlottoPageState extends State<CartlottoPage> {
                                                                     .all(8.0),
                                                             child:
                                                                 OutlinedButton(
-                                                              onPressed: delete(lottocart.cartId),
+                                                              onPressed: () => delete(lottocart.cartId),
                                                               child: const Text(
                                                                 'เอาออก',
                                                                 style: TextStyle(
