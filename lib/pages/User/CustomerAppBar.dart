@@ -9,13 +9,13 @@ import 'package:provider/provider.dart';
 class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
   final Size screenSize;
   final String namePage;
-  final  int allPrice;
+
 
   const CustomAppBar({
     super.key,
     required this.screenSize,
     required this.namePage,
-    required this.allPrice,
+
   });
 
   @override
@@ -102,7 +102,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
     Navigator.push(
       context,
       MaterialPageRoute(
-          builder: (context) => CartlottoPage(selectedTicketIds: [], allPrice: allPrice,)),
+          builder: (context) => CartlottoPage(selectedTicketIds: [])),
     );
   }
 

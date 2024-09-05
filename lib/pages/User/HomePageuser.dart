@@ -22,7 +22,7 @@ class _HomepageuserState extends State<Homepageuser> {
       appBar: CustomAppBar(
         screenSize: screenSize,
         namePage: 'หน้าหลัก',
-        allPrice: 0,
+
       ),
       body: Stack(
         children: [

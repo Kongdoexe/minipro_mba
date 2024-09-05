@@ -49,7 +49,7 @@ class _ChooselottoPageState extends State<ChooselottoPage> {
       appBar: CustomAppBar(
         screenSize: screenSize,
         namePage: 'ซื้อสลาก',
-        allPrice: 0,
+
       ),
       body: Container(
           child: Column(
@@ -360,16 +360,16 @@ class _ChooselottoPageState extends State<ChooselottoPage> {
   check() {
     var memberId = context.read<Data>();
     if (memberId.datauser.memberId != null) {
-      // for (int ticketId in selectedTicketIds) {
-      //   insertTicketIntoCart(ticketId);
-      //   log('Inserting ticket ID: $ticketId');
-      //   log('memberId ${memberId.datauser.memberId}');
-      // }
+      for (int ticketId in selectedTicketIds) {
+        insertTicketIntoCart(ticketId);
+        log('Inserting ticket ID: $ticketId');
+        log('memberId ${memberId.datauser.memberId}');
+      }
       Navigator.push(
         context,
         MaterialPageRoute(
           builder: (context) => CartlottoPage(
-              selectedTicketIds: selectedTicketIds, allPrice: allPrice),
+              selectedTicketIds: selectedTicketIds),
         ),
       );
     } else {

@@ -4,6 +4,7 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:minipro_mba/config/config.dart';
+import 'package:minipro_mba/models/request/removenumberfromcart_request_delete.dart';
 import 'package:minipro_mba/models/response/getnumbersincart_response_get.dart';
 import 'package:minipro_mba/pages/User/CustomerAppBar.dart';
 import 'package:minipro_mba/pages/User/CustomerNavbar.dart';
@@ -13,15 +14,12 @@ import 'package:minipro_mba/share/ShareData.dart';
 import 'package:provider/provider.dart';
 
 class CartlottoPage extends StatefulWidget {
-  // int memberId = 0;
-  // const CartlottoPage({super.key, required List<int> selectedTicketIds});
-
   final List<int> selectedTicketIds;
-  int allPrice = 0;
 
-  CartlottoPage(
-      {Key? key, required this.selectedTicketIds, required this.allPrice})
-      : super(key: key);
+  CartlottoPage({
+    Key? key,
+    required this.selectedTicketIds,
+  }) : super(key: key);
 
   @override
   State<CartlottoPage> createState() => _CartlottoPageState();
@@ -29,7 +27,9 @@ class CartlottoPage extends StatefulWidget {
 
 class _CartlottoPageState extends State<CartlottoPage> {
   late Future<void> loadData;
-  late GetnumbersincartResponseGet lottoinCart; // Changed to a List
+  late GetnumbersincartResponseGet lottoinCart;
+  int totalPrice = 0;
+  int totalData = 0;
 
   @override
   void initState() {
@@ -46,7 +46,6 @@ class _CartlottoPageState extends State<CartlottoPage> {
       appBar: CustomAppBar(
         screenSize: screenSize,
         namePage: 'ตรวจสลาก',
-        allPrice: 0,
       ),
       body: Stack(
         children: [
@@ -68,14 +67,16 @@ class _CartlottoPageState extends State<CartlottoPage> {
                 ),
               ),
               Padding(
-                padding: const EdgeInsets.only(left: 10, top: 5),
+                padding: EdgeInsets.only(left: 10, top: 5),
                 child: Row(
                   children: [
-                    Text('สลาก ${widget.selectedTicketIds.length} ใบ',
-                        style: const TextStyle(
-                            color: Colors.black,
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold)),
+                    Text(
+                      'สลาก $totalData ใบ',
+                      style: const TextStyle(
+                          color: Colors.black,
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold),
+                    ),
                   ],
                 ),
               ),
@@ -90,157 +91,151 @@ class _CartlottoPageState extends State<CartlottoPage> {
               Expanded(
                 child: SizedBox(
                   width: screenSize.width,
-                  child: FutureBuilder<void>(
-                    future: loadData,
-                    builder: (context, snapshot) {
-                      if (snapshot.connectionState == ConnectionState.waiting) {
-                        return const Center(child: CircularProgressIndicator());
-                      } else if (snapshot.hasError) {
-                        return Center(child: Text('Error: ${snapshot.error}'));
-                      } else if (lottoinCart.data.isNotEmpty) {
-                        return Column(
-                          children: lottoinCart.data
-                              .map((lottocart) => Card(
+                  child: Card(
+                    child: Column(
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.only(right: 10),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: [
+                              TextButton(
+                                onPressed: choosemore,
+                                child: const Text(
+                                  'เลือกเลขเพิ่ม',
+                                  style: TextStyle(
+                                      color: Color.fromRGBO(221, 86, 76, 1)),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(top: 5),
+                          child: FutureBuilder<void>(
+                            future: loadData,
+                            builder: (context, snapshot) {
+                              if (snapshot.connectionState ==
+                                  ConnectionState.waiting) {
+                                return const Center(
+                                    child: CircularProgressIndicator());
+                              } else if (snapshot.hasError) {
+                                return Center(
+                                    child: Text('Error: ${snapshot.error}'));
+                              } else if (lottoinCart.data.isNotEmpty) {
+                                return SingleChildScrollView(
+                                  child: Padding(
+                                    padding: const EdgeInsets.fromLTRB(
+                                        30, 10, 30, 0),
                                     child: Column(
-                                      children: [
-                                        Padding(
-                                          padding:
-                                              const EdgeInsets.only(right: 10),
-                                          child: Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.end,
-                                            children: [
-                                              TextButton(
-                                                onPressed: choosemore,
-                                                child: const Text(
-                                                  'เลือกเลขเพิ่ม',
-                                                  style: TextStyle(
-                                                      color: Color.fromRGBO(
-                                                          221, 86, 76, 1)),
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                        Padding(
-                                          padding:
-                                              const EdgeInsets.only(top: 5),
-                                          child: SingleChildScrollView(
-                                            child: Padding(
-                                              padding:
-                                                  const EdgeInsets.fromLTRB(
-                                                      30, 10, 30, 0),
+                                      children: lottoinCart.data
+                                          .map(
+                                            (lottocart) => Card.outlined(
                                               child: Column(
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
                                                 children: [
-                                                  Card.outlined(
-                                                    child: Column(
-                                                      crossAxisAlignment:
-                                                          CrossAxisAlignment
-                                                              .start,
-                                                      children: [
-                                                        Row(
-                                                          mainAxisAlignment:
-                                                              MainAxisAlignment
-                                                                  .spaceBetween,
-                                                          children: [
-                                                            Column(
-                                                              children: [
-                                                                Padding(
-                                                                  padding:
-                                                                      const EdgeInsets
-                                                                          .all(
-                                                                          8.0),
-                                                                  child:
-                                                                      SizedBox(
-                                                                    width: 150,
-                                                                    height: 50,
-                                                                    child: Card(
-                                                                      color: const Color
-                                                                          .fromARGB(
-                                                                          255,
-                                                                          186,
-                                                                          186,
-                                                                          186),
-                                                                      child:
-                                                                          Center(
-                                                                        child:
-                                                                            Text(
-                                                                          formatNumber(
-                                                                              lottocart.numLotto),
-                                                                          style:
-                                                                              const TextStyle(
-                                                                            color:
-                                                                                Colors.black,
-                                                                            fontSize:
-                                                                                20,
-                                                                            fontWeight:
-                                                                                FontWeight.bold,
-                                                                          ),
-                                                                        ),
-                                                                      ),
-                                                                    ),
-                                                                  ),
-                                                                ),
-                                                              ],
-                                                            ),
-                                                            Column(
-                                                              children: [
-                                                                Padding(
-                                                                  padding:
-                                                                      const EdgeInsets
-                                                                          .all(
-                                                                          8.0),
-                                                                  child:
-                                                                      OutlinedButton(
-                                                                    onPressed:
-                                                                        delete,
-                                                                    child:
-                                                                        const Text(
-                                                                      'เอาออก',
-                                                                      style: TextStyle(
-                                                                          color:
-                                                                              Colors.black),
-                                                                    ),
-                                                                    style: OutlinedButton
-                                                                        .styleFrom(
-                                                                      side: const BorderSide(
-                                                                          color: Color.fromARGB(
-                                                                              255,
-                                                                              240,
-                                                                              8,
-                                                                              8)),
-                                                                    ),
-                                                                  ),
-                                                                ),
-                                                                const Padding(
-                                                                  padding:
-                                                                      EdgeInsets
-                                                                          .all(
-                                                                              8.0),
+                                                  Row(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .spaceBetween,
+                                                    children: [
+                                                      Column(
+                                                        children: [
+                                                          Padding(
+                                                            padding:
+                                                                const EdgeInsets
+                                                                    .all(8.0),
+                                                            child: SizedBox(
+                                                              width: 150,
+                                                              height: 50,
+                                                              child: Card(
+                                                                color: const Color
+                                                                    .fromARGB(
+                                                                    255,
+                                                                    186,
+                                                                    186,
+                                                                    186),
+                                                                child: Center(
                                                                   child: Text(
-                                                                      '80 บาท'),
+                                                                    formatNumber(
+                                                                        lottocart
+                                                                            .numLotto),
+                                                                    style: const TextStyle(
+                                                                        color: Colors
+                                                                            .black,
+                                                                        fontSize:
+                                                                            20,
+                                                                        fontWeight:
+                                                                            FontWeight.bold),
+                                                                  ),
                                                                 ),
-                                                              ],
+                                                              ),
                                                             ),
-                                                          ],
-                                                        ),
-                                                      ],
-                                                    ),
+                                                          ),
+                                                          const Text('งวดที่'),
+                                                          Text(lottocart
+                                                              .lottoData.period
+                                                              .toString()),
+                                                        ],
+                                                      ),
+                                                      Column(
+                                                        children: [
+                                                          Padding(
+                                                            padding:
+                                                                const EdgeInsets
+                                                                    .all(8.0),
+                                                            child:
+                                                                OutlinedButton(
+                                                              onPressed: delete(lottocart.cartId),
+                                                              child: const Text(
+                                                                'เอาออก',
+                                                                style: TextStyle(
+                                                                    color: Colors
+                                                                        .black),
+                                                              ),
+                                                              style:
+                                                                  OutlinedButton
+                                                                      .styleFrom(
+                                                                side: const BorderSide(
+                                                                    color: Color
+                                                                        .fromARGB(
+                                                                            255,
+                                                                            240,
+                                                                            8,
+                                                                            8)),
+                                                              ),
+                                                            ),
+                                                          ),
+                                                          Padding(
+                                                            padding:
+                                                                const EdgeInsets
+                                                                    .all(8.0),
+                                                            child: Text(lottocart
+                                                                .lottoData.price
+                                                                .toString()),
+                                                          ),
+                                                        ],
+                                                      ),
+                                                    ],
                                                   ),
                                                 ],
                                               ),
                                             ),
-                                          ),
-                                        ),
-                                      ],
+                                          )
+                                          .toList(),
                                     ),
-                                  ))
-                              .toList(),
-                        );
-                      } else {
-                        return const Center(child: Text('No data available'));
-                      }
-                    },
+                                  ),
+                                );
+                              } else {
+                                return const Center(
+                                    child: Text('No data available'));
+                              }
+                            },
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
               )
@@ -262,9 +257,9 @@ class _CartlottoPageState extends State<CartlottoPage> {
                           fontSize: 16,
                           fontWeight: FontWeight.bold),
                     ),
-                    const Text(
-                      '80 บาท',
-                      style: TextStyle(
+                    Text(
+                      '$totalPrice บาท',
+                      style: const TextStyle(
                           color: Colors.red,
                           fontSize: 24,
                           fontWeight: FontWeight.bold),
@@ -273,16 +268,17 @@ class _CartlottoPageState extends State<CartlottoPage> {
                       height: 10,
                     ),
                     ElevatedButton(
-                        onPressed: pay,
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: const Color.fromRGBO(255, 85, 85, 1),
-                          padding: const EdgeInsets.symmetric(vertical: 10),
-                          textStyle: const TextStyle(fontSize: 16),
-                        ),
-                        child: const Text(
-                          'ชำระเงิน',
-                          style: TextStyle(color: Colors.white),
-                        )),
+                      onPressed: pay,
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: const Color.fromRGBO(255, 85, 85, 1),
+                        padding: const EdgeInsets.symmetric(vertical: 10),
+                        textStyle: const TextStyle(fontSize: 16),
+                      ),
+                      child: const Text(
+                        'ชำระเงิน',
+                        style: TextStyle(color: Colors.white),
+                      ),
+                    ),
                   ],
                 ),
               ),
@@ -298,33 +294,41 @@ class _CartlottoPageState extends State<CartlottoPage> {
     );
   }
 
-  void delete() async {
-    // var config = await Configuration.getConfig();
-    // var url = config['apiEndpoint'];
+  delete(int cartId) async {
     // try {
-    //   var res = await http.delete(Uri.parse('$url/lottery/RemoveNumberFromCart${widget.memberidx}'));
-    //   log(res.statusCode.toString());
-    //   showDialog(
-    //     context: context,
-    //     builder: (context) => AlertDialog(
-    //       title: const Text('สำเร็จ'),
-    //       content: const Text('ลบ lotto เรียบร้อย'),
-    //       actions: [
-    //         FilledButton(
-    //             onPressed: () {
-    //               Navigator.popUntil(
-    //                 context,
-    //                 (route) => route.isFirst,
-    //               );
-    //             },
-    //             child: const Text('ปิด'))
-    //       ],
-    //     ),
-    //   );
-    // } catch (err) {}
+    //   final dataProvider = context.read<Data>();
+    //   final memberId = dataProvider.datauser.memberId;
+
+    //   var value = await Configuration.getConfig();
+    //   var url = value['apiEndpoint'];
+    //   RemovenumberfromcartRequestDelete body =
+    //       RemovenumberfromcartRequestDelete(cartId: cartId, memberId: memberId);
+    //   var requestUrl = await http.delete(
+    //       Uri.parse('$url/lottery/GetSerachNumber'),
+    //       headers: {"Content-Type": "application/json; charset=utf-8"},
+    //       body: jsonData);
+
+    //   if (requestUrl.statusCode == 200) {
+    //     log('Response: ${requestUrl.body}');
+    //     setState(() {
+    //       lottoinCart = GetnumbersincartResponseGet(data: [], allprice: 0);
+    //     }); // Initialize with an empty list
+    //   } else {
+    //     log('Error: Status code ${requestUrl.statusCode}');
+    //     // setState(() {
+    //     //   lottoinCart = GetnumbersincartResponseGet(data: [], allprice: 0);
+    //     //   totalPrice = 0;
+    //     //   totalData = 0;
+    //     // }); // Initialize with an empty list
+    //   }
+    // } catch (e) {
+    //   log('Error: $e');
+    // }
   }
 
-  void choosemore() {}
+  void choosemore() {
+    Navigator.pop(context);
+  }
 
   String formatNumber(String number) {
     return number.split('').join('  ');
@@ -345,25 +349,36 @@ class _CartlottoPageState extends State<CartlottoPage> {
 
       if (response.statusCode == 200) {
         log('Response: ${response.body}');
-        lottoinCart = getnumbersincartResponseGetFromJson(response.body);
+        setState(() {
+          lottoinCart = getnumbersincartResponseGetFromJson(response.body);
+          totalPrice = lottoinCart.allprice; // Set the total price here
+          totalData = lottoinCart.data.length;
+        });
         log('LottoinCart: $lottoinCart');
       } else {
         log('Error: Status code ${response.statusCode}');
-        lottoinCart = GetnumbersincartResponseGet(
-            data: [], allprice: 0); // Initialize with an empty list
+        setState(() {
+          lottoinCart = GetnumbersincartResponseGet(data: [], allprice: 0);
+          totalPrice = 0;
+          totalData = 0;
+        }); // Initialize with an empty list
       }
     } catch (e) {
       log('Error: $e');
-      lottoinCart = GetnumbersincartResponseGet(
-          data: [], allprice: 0); // Initialize with an empty list
+      setState(() {
+        lottoinCart = GetnumbersincartResponseGet(data: [], allprice: 0);
+        totalPrice = 0;
+        totalData = 0;
+      }); // Initialize with an empty list
     }
   }
 
   void pay() {
     Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => const PaylottoPage(),
-        ));
+      context,
+      MaterialPageRoute(
+        builder: (context) => const PaylottoPage(),
+      ),
+    );
   }
 }

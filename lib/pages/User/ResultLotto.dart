@@ -38,7 +38,7 @@ class _ResultLottoPageState extends State<ResultLottoPage> {
       appBar: CustomAppBar(
         screenSize: screenSize,
         namePage: 'ตรวจสลาก',
-        allPrice: 0,
+
       ),
       body: Stack(
         children: [

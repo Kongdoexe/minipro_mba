@@ -27,7 +27,7 @@ class _MyLottoPageState extends State<MyLottoPage> {
       appBar: CustomAppBar(
         screenSize: screenSize,
         namePage: 'สลากของฉัน',
-        allPrice: 0,
+
       ),
       body: SingleChildScrollView(
         padding: EdgeInsets.symmetric(

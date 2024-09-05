@@ -16,7 +16,7 @@ class _PaylottoPageState extends State<PaylottoPage> {
     final screenSize = MediaQuery.of(context).size;
     return Scaffold(
       backgroundColor: const Color.fromRGBO(255, 138, 128, 1),
-      appBar: CustomAppBar(screenSize: screenSize, namePage: 'ตรวจสลาก',allPrice: 0,),
+      appBar: CustomAppBar(screenSize: screenSize, namePage: 'ตรวจสลาก'),
       body: SingleChildScrollView(
         child: Column(
           children: [
