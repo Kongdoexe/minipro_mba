@@ -20,7 +20,6 @@ class PaylottoPage extends StatefulWidget {
 
 class _PaylottoPageState extends State<PaylottoPage> {
 
-  late Future<void> loadData;
   late RegsiterResponsePost money ;
 
   final myWidget = MyWidget();
@@ -28,13 +27,14 @@ class _PaylottoPageState extends State<PaylottoPage> {
   @override
   void initState() {
     super.initState();
-    loadData = loadDataAsync();
   }
 
 
   @override
   Widget build(BuildContext context) {
     final screenSize = MediaQuery.of(context).size;
+    var wallet_check = context.read<Data>();
+    
     return Scaffold(
       backgroundColor: const Color.fromRGBO(255, 138, 128, 1),
       appBar: CustomAppBar(screenSize: screenSize, namePage: 'ตรวจสลาก'),
@@ -63,10 +63,6 @@ class _PaylottoPageState extends State<PaylottoPage> {
                           width: 1000,
                           height: 120,
                           child: 
-                          // FutureBuilder(
-                          //   future: loadData, builder: (context, snapshot){
-                              
-                          //   })
                           Card.outlined(
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -89,15 +85,15 @@ class _PaylottoPageState extends State<PaylottoPage> {
                                               color: Colors.black,
                                               fontSize: 16,
                                               fontWeight: FontWeight.bold)),
-                                      const Row(
+                                      Row(
                                         mainAxisAlignment:
                                             MainAxisAlignment.spaceAround,
                                         children: [
-                                          Text('คุณมีเงินคงเหลือ',
-                                              style: TextStyle(
+                                          Text(wallet_check.datauser.wallet.toString(),
+                                              style: const TextStyle(
                                                 fontSize: 14,
                                               )),
-                                          Text(
+                                          const Text(
                                             ' 100 ',
                                             style: TextStyle(
                                               color: Color.fromARGB(
@@ -105,7 +101,7 @@ class _PaylottoPageState extends State<PaylottoPage> {
                                               fontSize: 14,
                                             ),
                                           ),
-                                          Text('บาท',
+                                          const Text('บาท',
                                               style: TextStyle(
                                                 fontSize: 14,
                                               )),
@@ -121,7 +117,7 @@ class _PaylottoPageState extends State<PaylottoPage> {
                                         style: ButtonStyle(
                                           backgroundColor:
                                               MaterialStateProperty.all<Color>(
-                                                  Color.fromARGB(
+                                                  const Color.fromARGB(
                                                       255, 240, 117, 29)),
                                         ),
                                       ),
@@ -172,36 +168,36 @@ class _PaylottoPageState extends State<PaylottoPage> {
     );
   }
 
-  Future<void> loadDataAsync() async {
-    final dataProvider = context.read<Data>();
-    final memberId = dataProvider.datauser.memberId;
+  // Future<void> loadDataAsync() async {
+  //   final dataProvider = context.read<Data>();
+  //   final memberId = dataProvider.datauser.memberId;
 
-    var value = await Configuration.getConfig();
-    var url = value['apiEndpoint'];
+  //   var value = await Configuration.getConfig();
+  //   var url = value['apiEndpoint'];
 
-    try {
-      final requestUrl = "$url/lottery/GetNumbersInCart/$memberId";
-      log('Request URL: $requestUrl');
+  //   try {
+  //     final requestUrl = "$url/lottery/GetNumbersInCart/$memberId";
+  //     log('Request URL: $requestUrl');
 
-      var response = await http.get(Uri.parse(requestUrl));
+  //     var response = await http.get(Uri.parse(requestUrl));
 
-      if (response.statusCode == 200) {
-        log('Response: ${response.body}');
-        setState(() {
+  //     if (response.statusCode == 200) {
+  //       log('Response: ${response.body}');
+  //       setState(() {
           
-        });
-        log('LottoinCart: ');
-      } else {
-        log('Error: Status code ${response.statusCode}');
-        setState(() {
+  //       });
+  //       log('LottoinCart: ');
+  //     } else {
+  //       log('Error: Status code ${response.statusCode}');
+  //       setState(() {
          
-        }); // Initialize with an empty list
-      }
-    } catch (e) {
-      log('Error: $e');
-      setState(() {
+  //       }); // Initialize with an empty list
+  //     }
+  //   } catch (e) {
+  //     log('Error: $e');
+  //     setState(() {
         
-      }); // Initialize with an empty list
-    }
-  }
+  //     }); // Initialize with an empty list
+  //   }
+  // }
 }
