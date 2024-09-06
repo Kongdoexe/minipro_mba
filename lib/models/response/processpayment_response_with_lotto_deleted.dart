@@ -1,9 +1,11 @@
 import 'dart:convert';
 
-ProcesspaymentResponseWithLottoDeleted processpaymentResponseWithLottoDeletedFromJson(String str) =>
-    ProcesspaymentResponseWithLottoDeleted.fromJson(json.decode(str));
+ProcesspaymentResponseWithLottoDeleted
+    processpaymentResponseWithLottoDeletedFromJson(String str) =>
+        ProcesspaymentResponseWithLottoDeleted.fromJson(json.decode(str));
 
-String processpaymentResponseWithLottoDeletedToJson(ProcesspaymentResponseWithLottoDeleted data) =>
+String processpaymentResponseWithLottoDeletedToJson(
+        ProcesspaymentResponseWithLottoDeleted data) =>
     json.encode(data.toJson());
 
 class ProcesspaymentResponseWithLottoDeleted {
@@ -15,10 +17,13 @@ class ProcesspaymentResponseWithLottoDeleted {
     required this.msg,
   });
 
-  factory ProcesspaymentResponseWithLottoDeleted.fromJson(Map<String, dynamic> json) =>
+  factory ProcesspaymentResponseWithLottoDeleted.fromJson(
+          Map<String, dynamic> json) =>
       ProcesspaymentResponseWithLottoDeleted(
-        lottoDeleted: List<String>.from(json["LottoDeleted"]),
-        msg: json["msg"],
+        lottoDeleted: json["LottoDeleted"] != null
+            ? List<String>.from(json["LottoDeleted"])
+            : [], // ใช้ List ว่างถ้า LottoDeleted เป็น null
+        msg: json["msg"] ?? '', // ใช้ข้อความว่างถ้า msg เป็น null
       );
 
   Map<String, dynamic> toJson() => {
