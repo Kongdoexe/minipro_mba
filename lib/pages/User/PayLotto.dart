@@ -13,7 +13,8 @@ import 'package:provider/provider.dart';
 import 'package:http/http.dart' as http;
 
 class PaylottoPage extends StatefulWidget {
-  const PaylottoPage({super.key});
+  int payResult;
+  PaylottoPage({super.key, required this.payResult});
 
   @override
   State<PaylottoPage> createState() => _PaylottoPageState();
@@ -167,10 +168,11 @@ class _PaylottoPageState extends State<PaylottoPage> {
 
         // อัปเดตยอดเงินใน wallet
         int updatedWalletBalance =
-            dataProvider.datauser.wallet; // ใช้ค่าปัจจุบันเป็นค่าพื้นฐาน
+            dataProvider.datauser.wallet - widget.payResult; // ใช้ค่าปัจจุบันเป็นค่าพื้นฐาน
         setState(() {
           dataProvider.datauser.wallet = updatedWalletBalance;
         });
+        log(dataProvider.datauser.wallet.toString());
 
         // แสดงกล่องข้อความสำเร็จ
         showDialog(
