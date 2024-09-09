@@ -18,73 +18,75 @@ class Homepageuser extends StatefulWidget {
 class _HomepageuserState extends State<Homepageuser> {
   @override
   Widget build(BuildContext context) {
-    final screenSize = MediaQuery.of(context).size;
+    final screenSize = MediaQuery.of(context).size; // กำหนดตัวแปร screenSize
     final userModel = context.read<Data>();
     log(userModel.datauser.memberId.toString());
 
     return Scaffold(
       backgroundColor: const Color.fromRGBO(255, 138, 128, 1),
       appBar: CustomAppBar(
-        screenSize: screenSize,
+        screenSize: screenSize, // ใช้ screenSize ที่กำหนดไว้
         namePage: 'หน้าหลัก',
       ),
       body: Stack(
         children: [
           Positioned.fill(
             child: Padding(
-              padding: EdgeInsets.only(top: screenSize.height * 0.25),
+              padding: EdgeInsets.only(top: screenSize.height * 0.25), // ใช้ screenSize
               child: Container(
                 decoration: BoxDecoration(
                   color: const Color.fromARGB(255, 230, 227, 227),
                   borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(screenSize.width * 0.32),
-                    topRight: Radius.circular(screenSize.width * 0.32),
+                    topLeft: Radius.circular(screenSize.width * 0.32), // ใช้ screenSize
+                    topRight: Radius.circular(screenSize.width * 0.32), // ใช้ screenSize
                   ),
                 ),
               ),
             ),
           ),
           Padding(
-            padding: const EdgeInsets.only(top: 30),
+            padding:  EdgeInsets.only(top: screenSize.height * 0.05),
             child: Align(
               alignment: Alignment.topCenter,
               child: SingleChildScrollView(
                 child: Container(
-                  width: 300,
+                  width: screenSize.width * 0.8, // ปรับขนาดตาม screenSize
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
                         'เลือกงวดรางวัลที่ออก',
                         style: TextStyle(
-                            fontFamily: 'MaliMedium',
-                            fontSize: screenSize.width * 0.04,
-                            fontWeight: FontWeight.w700),
+                          fontFamily: 'MaliMedium',
+                          fontSize: screenSize.width * 0.04, // ใช้ screenSize
+                          fontWeight: FontWeight.w700,
+                        ),
                       ),
                       Container(
                         decoration: BoxDecoration(
                           color: const Color.fromARGB(255, 255, 255, 255),
-                          borderRadius: BorderRadius.circular(15),
+                          borderRadius: BorderRadius.circular(screenSize.width * 0.04), // ใช้ screenSize
                         ),
                         child: SizedBox(
-                          width: 300,
-                          height: 80,
+                          width: screenSize.width * 0.8, // ใช้ screenSize
+                          height: screenSize.height * 0.1, // ใช้ screenSize
                           child: Padding(
-                            padding: const EdgeInsets.only(left: 40, right: 40),
+                            padding: EdgeInsets.symmetric(horizontal: screenSize.width * 0.1), // ใช้ screenSize
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               crossAxisAlignment: CrossAxisAlignment.center,
                               children: [
-                                const Text(
+                                Text(
                                   'รอบที่1',
                                   style: TextStyle(
-                                      fontFamily: 'MaliMedium',
-                                      fontSize: 40,
-                                      fontWeight: FontWeight.w900),
+                                    fontFamily: 'MaliMedium',
+                                    fontSize: screenSize.width * 0.07, // ใช้ screenSize
+                                    fontWeight: FontWeight.w900,
+                                  ),
                                 ),
                                 Image.asset(
                                   'assets/images/calendar.png',
-                                  width: 30,
+                                  width: screenSize.width * 0.08, // ใช้ screenSize
                                 ),
                               ],
                             ),
@@ -92,229 +94,241 @@ class _HomepageuserState extends State<Homepageuser> {
                         ),
                       ),
                       Padding(
-                        padding: const EdgeInsets.only(top: 30),
+                        padding: EdgeInsets.only(top: screenSize.height * 0.03), // ใช้ screenSize
                         child: Container(
                           decoration: BoxDecoration(
                             color: const Color.fromARGB(255, 255, 255, 255),
-                            borderRadius: BorderRadius.circular(30),
+                            borderRadius: BorderRadius.circular(screenSize.width * 0.08), // ใช้ screenSize
                           ),
                           child: SizedBox(
-                            width: 300,
-                            height: 470,
+                            width: screenSize.width * 0.8, // ใช้ screenSize
+                            height: screenSize.height * 0.6, // ใช้ screenSize
                             child: Column(
                               children: [
-                                const Padding(
-                                  padding: EdgeInsets.only(top: 15),
+                                Padding(
+                                  padding: EdgeInsets.only(top: screenSize.height * 0.02), // ใช้ screenSize
                                   child: Text(
                                     'รางวัลที่1',
                                     style: TextStyle(
-                                        fontFamily: 'MaliMedium',
-                                        fontSize: 30,
-                                        fontWeight: FontWeight.w800,
-                                        color: Color.fromRGBO(230, 77, 77, 1)),
+                                      fontFamily: 'MaliMedium',
+                                      fontSize: screenSize.width * 0.08, // ใช้ screenSize
+                                      fontWeight: FontWeight.w800,
+                                      color: const Color.fromRGBO(230, 77, 77, 1),
+                                    ),
                                   ),
                                 ),
-                                const Text(
+                                Text(
                                   '1234123',
                                   style: TextStyle(
-                                      fontFamily: 'MaliMedium',
-                                      fontSize: 40,
-                                      fontWeight: FontWeight.w300,
-                                      color: Color.fromRGBO(0, 0, 0, 1)),
+                                    fontFamily: 'MaliMedium',
+                                    fontSize: screenSize.width * 0.1, // ใช้ screenSize
+                                    fontWeight: FontWeight.w300,
+                                    color: const Color.fromRGBO(0, 0, 0, 1),
+                                  ),
                                 ),
-                                const Text(
+                                Text(
                                   'รางวัลละ xx',
                                   style: TextStyle(
-                                      fontFamily: 'MaliMedium',
-                                      fontSize: 13,
-                                      fontWeight: FontWeight.w300,
-                                      color: Color.fromRGBO(85, 83, 83, 1)),
+                                    fontFamily: 'MaliMedium',
+                                    fontSize: screenSize.width * 0.035, // ใช้ screenSize
+                                    fontWeight: FontWeight.w300,
+                                    color: const Color.fromRGBO(85, 83, 83, 1),
+                                  ),
                                 ),
-                                const Padding(
-                                  padding: EdgeInsets.only(right: 20, left: 20),
+                                Padding(
+                                  padding: EdgeInsets.symmetric(
+                                    horizontal: screenSize.width * 0.05, // ใช้ screenSize
+                                  ),
                                   child: Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
+                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                     children: [
                                       Column(
                                         children: [
                                           Padding(
-                                            padding: EdgeInsets.only(top: 15),
+                                            padding: EdgeInsets.only(top: screenSize.height * 0.02), // ใช้ screenSize
                                             child: Text(
                                               'รางวัลที่2',
                                               style: TextStyle(
-                                                  fontFamily: 'MaliMedium',
-                                                  fontSize: 15,
-                                                  fontWeight: FontWeight.w800,
-                                                  color: Color.fromRGBO(
-                                                      230, 77, 77, 1)),
+                                                fontFamily: 'MaliMedium',
+                                                fontSize: screenSize.width * 0.04, // ใช้ screenSize
+                                                fontWeight: FontWeight.w800,
+                                                color: const Color.fromRGBO(230, 77, 77, 1),
+                                              ),
                                             ),
                                           ),
                                           Text(
                                             '1234123',
                                             style: TextStyle(
-                                                fontFamily: 'MaliMedium',
-                                                fontSize: 25,
-                                                fontWeight: FontWeight.w300,
-                                                color: Color.fromRGBO(0, 0, 0,
-                                                    1)),
+                                              fontFamily: 'MaliMedium',
+                                              fontSize: screenSize.width * 0.06, // ใช้ screenSize
+                                              fontWeight: FontWeight.w300,
+                                              color: const Color.fromRGBO(0, 0, 0, 1),
+                                            ),
                                           ),
                                           Text(
                                             'รางวัลละ xx',
                                             style: TextStyle(
-                                                fontFamily: 'MaliMedium',
-                                                fontSize: 13,
-                                                fontWeight: FontWeight.w300,
-                                                color: Color.fromRGBO(
-                                                    85, 83, 83, 1)),
+                                              fontFamily: 'MaliMedium',
+                                              fontSize: screenSize.width * 0.035, // ใช้ screenSize
+                                              fontWeight: FontWeight.w300,
+                                              color: const Color.fromRGBO(85, 83, 83, 1),
+                                            ),
                                           ),
                                         ],
                                       ),
                                       Column(
                                         children: [
                                           Padding(
-                                            padding: EdgeInsets.only(top: 15),
+                                            padding: EdgeInsets.only(top: screenSize.height * 0.02), // ใช้ screenSize
                                             child: Text(
                                               'รางวัลที่3',
                                               style: TextStyle(
-                                                  fontFamily: 'MaliMedium',
-                                                  fontSize: 15,
-                                                  fontWeight: FontWeight.w800,
-                                                  color: Color.fromRGBO(
-                                                      230, 77, 77, 1)),
+                                                fontFamily: 'MaliMedium',
+                                                fontSize: screenSize.width * 0.04, // ใช้ screenSize
+                                                fontWeight: FontWeight.w800,
+                                                color: const Color.fromRGBO(230, 77, 77, 1),
+                                              ),
                                             ),
                                           ),
                                           Text(
                                             '1234123',
                                             style: TextStyle(
-                                                fontFamily: 'MaliMedium',
-                                                fontSize: 25,
-                                                fontWeight: FontWeight.w300,
-                                                color: Color.fromRGBO(0, 0, 0,
-                                                    1)),
-                                          ),
-                                          Text(
-                                            'รางวัลละ xx',
-                                            style: TextStyle(
-                                                fontFamily: 'MaliMedium',
-                                                fontSize: 13,
-                                                fontWeight: FontWeight.w300,
-                                                color: Color.fromRGBO(
-                                                    85, 83, 83, 1)),
-                                          ),
-                                        ],
-                                      )
-                                    ],
-                                  ),
-                                ),
-                                const Padding(
-                                  padding: EdgeInsets.only(
-                                      right: 20, left: 20, top: 40),
-                                  child: Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Column(
-                                        children: [
-                                          Padding(
-                                            padding: EdgeInsets.only(top: 15),
-                                            child: Text(
-                                              'รางวัลที่4',
-                                              style: TextStyle(
-                                                  fontFamily: 'MaliMedium',
-                                                  fontSize: 15,
-                                                  fontWeight: FontWeight.w800,
-                                                  color: Color.fromRGBO(230,
-                                                      77, 77, 1)),
+                                              fontFamily: 'MaliMedium',
+                                              fontSize: screenSize.width * 0.06, // ใช้ screenSize
+                                              fontWeight: FontWeight.w300,
+                                              color: const Color.fromRGBO(0, 0, 0, 1),
                                             ),
                                           ),
                                           Text(
-                                            '1234123',
-                                            style: TextStyle(
-                                                fontFamily: 'MaliMedium',
-                                                fontSize: 25,
-                                                fontWeight: FontWeight.w300,
-                                                color: Color.fromRGBO(0, 0, 0,
-                                                    1)),
-                                          ),
-                                          Text(
                                             'รางวัลละ xx',
                                             style: TextStyle(
-                                                fontFamily: 'MaliMedium',
-                                                fontSize: 13,
-                                                fontWeight: FontWeight.w300,
-                                                color: Color.fromRGBO(
-                                                    85, 83, 83, 1)),
+                                              fontFamily: 'MaliMedium',
+                                              fontSize: screenSize.width * 0.035, // ใช้ screenSize
+                                              fontWeight: FontWeight.w300,
+                                              color: const Color.fromRGBO(85, 83, 83, 1),
+                                            ),
                                           ),
                                         ],
                                       ),
-                                      Column(
-                                        children: [
-                                          Padding(
-                                            padding: EdgeInsets.only(top: 15),
-                                            child: Text(
-                                              'รางวัลที่5',
-                                              style: TextStyle(
-                                                  fontFamily: 'MaliMedium',
-                                                  fontSize: 15,
-                                                  fontWeight: FontWeight.w800,
-                                                  color: Color.fromRGBO(230,
-                                                      77, 77, 1)),
-                                            ),
-                                          ),
-                                          Text(
-                                            '1234123',
-                                            style: TextStyle(
-                                                fontFamily: 'MaliMedium',
-                                                fontSize: 25,
-                                                fontWeight: FontWeight.w300,
-                                                color: Color.fromRGBO(0, 0, 0,
-                                                    1)),
-                                          ),
-                                          Text(
-                                            'รางวัลละ xx',
-                                            style: TextStyle(
-                                                fontFamily: 'MaliMedium',
-                                                fontSize: 13,
-                                                fontWeight: FontWeight.w300,
-                                                color: Color.fromRGBO(
-                                                    85, 83, 83, 1)),
-                                          ),
-                                        ],
-                                      )
                                     ],
                                   ),
                                 ),
                                 Padding(
-                                  padding: const EdgeInsets.only(top: 40),
+                                  padding: EdgeInsets.only(
+                                    right: screenSize.width * 0.05,
+                                    left: screenSize.width * 0.05,
+                                    top: screenSize.height * 0.04,
+                                  ),
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Column(
+                                        children: [
+                                          Padding(
+                                            padding: EdgeInsets.only(top: screenSize.height * 0.02), // ใช้ screenSize
+                                            child: Text(
+                                              'รางวัลที่4',
+                                              style: TextStyle(
+                                                fontFamily: 'MaliMedium',
+                                                fontSize: screenSize.width * 0.04, // ใช้ screenSize
+                                                fontWeight: FontWeight.w800,
+                                                color: const Color.fromRGBO(230, 77, 77, 1),
+                                              ),
+                                            ),
+                                          ),
+                                          Text(
+                                            '1234123',
+                                            style: TextStyle(
+                                              fontFamily: 'MaliMedium',
+                                              fontSize: screenSize.width * 0.06, // ใช้ screenSize
+                                              fontWeight: FontWeight.w300,
+                                              color: const Color.fromRGBO(0, 0, 0, 1),
+                                            ),
+                                          ),
+                                          Text(
+                                            'รางวัลละ xx',
+                                            style: TextStyle(
+                                              fontFamily: 'MaliMedium',
+                                              fontSize: screenSize.width * 0.035, // ใช้ screenSize
+                                              fontWeight: FontWeight.w300,
+                                              color: const Color.fromRGBO(85, 83, 83, 1),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                      Column(
+                                        children: [
+                                          Padding(
+                                            padding: EdgeInsets.only(top: screenSize.height * 0.02), // ใช้ screenSize
+                                            child: Text(
+                                              'รางวัลที่5',
+                                              style: TextStyle(
+                                                fontFamily: 'MaliMedium',
+                                                fontSize: screenSize.width * 0.04, // ใช้ screenSize
+                                                fontWeight: FontWeight.w800,
+                                                color: const Color.fromRGBO(230, 77, 77, 1),
+                                              ),
+                                            ),
+                                          ),
+                                          Text(
+                                            '1234123',
+                                            style: TextStyle(
+                                              fontFamily: 'MaliMedium',
+                                              fontSize: screenSize.width * 0.06, // ใช้ screenSize
+                                              fontWeight: FontWeight.w300,
+                                              color: const Color.fromRGBO(0, 0, 0, 1),
+                                            ),
+                                          ),
+                                          Text(
+                                            'รางวัลละ xx',
+                                            style: TextStyle(
+                                              fontFamily: 'MaliMedium',
+                                              fontSize: screenSize.width * 0.035, // ใช้ screenSize
+                                              fontWeight: FontWeight.w300,
+                                              color: const Color.fromRGBO(85, 83, 83, 1),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                Padding(
+                                  padding: EdgeInsets.only(top: screenSize.height * 0.04), // ใช้ screenSize
                                   child: Column(
                                     children: [
                                       Container(
-                                        width: 250,
+                                        width: screenSize.width * 0.7, // ใช้ screenSize
                                         height: 2,
                                         color: Colors.grey,
                                       ),
-                                      const SizedBox(
-                                        height: 15,
+                                      SizedBox(
+                                        height: screenSize.height * 0.02, // ใช้ screenSize
                                       ),
                                       FilledButton(
                                         onPressed: buylotto,
                                         style: ElevatedButton.styleFrom(
                                           backgroundColor: Colors.amber,
                                           shape: RoundedRectangleBorder(
-                                            borderRadius: BorderRadius.circular(
-                                                30.0), 
+                                            borderRadius: BorderRadius.circular(30.0),
                                           ),
-                                          padding: const EdgeInsets.symmetric(
-                                              horizontal: 30.0, vertical: 10.0),
-                                          fixedSize: const Size(120, 25),
+                                          padding: EdgeInsets.symmetric(
+                                            horizontal: screenSize.width * 0.08, // ใช้ screenSize
+                                            vertical: screenSize.height * 0.015, // ใช้ screenSize
+                                          ),
+                                          fixedSize: Size(
+                                            screenSize.width * 0.4, // ใช้ screenSize
+                                            screenSize.height * 0.06, // ใช้ screenSize
+                                          ),
                                         ),
-                                        child: const Text(
-                                          'ซื้อสลาก', 
+                                        child: Text(
+                                          'ซื้อสลาก',
                                           style: TextStyle(
-                                              color: Colors.black,
-                                              fontFamily: 'MaliMedium',
-                                              fontSize: 12), 
+                                            color: Colors.black,
+                                            fontFamily: 'MaliMedium',
+                                            fontWeight: FontWeight.w500,
+                                            fontSize: screenSize.width * 0.035, // ใช้ screenSize
+                                          ),
                                         ),
                                       ),
                                     ],
@@ -336,7 +350,7 @@ class _HomepageuserState extends State<Homepageuser> {
       bottomNavigationBar: CustomNavigationBar(
         selectedIndex: 0,
         onDestinationSelected: (value) {},
-        screenSize: screenSize,
+        screenSize: screenSize, // ใช้ screenSize
       ),
     );
   }
