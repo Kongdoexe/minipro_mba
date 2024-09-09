@@ -113,7 +113,7 @@ class CustomNavigationBar extends StatelessWidget {
   void navigateProfile(BuildContext context) {
     Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) => const WalletTopUpPage()),
+      MaterialPageRoute(builder: (context) => const ProfilePage()),
     );
   }
 }
