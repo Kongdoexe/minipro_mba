@@ -1,6 +1,9 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:minipro_mba/config/config.dart';
 import 'package:minipro_mba/models/request/login_request_get.dart';
+import 'package:minipro_mba/models/response/allerrorresponseget.dart';
 import 'package:minipro_mba/models/response/login_response_get.dart';
 import 'package:minipro_mba/pages/Admin/HomePage.dart';
 import 'package:minipro_mba/pages/Register.dart';
@@ -25,7 +28,8 @@ class _LoginPageState extends State<LoginPage> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   final myWidget = MyWidget();
-
+  final handleError = HandleError();
+  
   @override
   void initState() {
     super.initState();
@@ -240,11 +244,10 @@ class _LoginPageState extends State<LoginPage> {
             myWidget.showCustomSnackbar("Message", "Unexpected isadmin value");
           }
         } catch (e) {
-          myWidget.showCustomSnackbar(
-              "Message", "Failed to parse server response $e");
+          handleError.handleError(response);
         }
       } else {
-        myWidget.showCustomSnackbar("Message", "Login failed $response");
+        handleError.handleError(response);
       }
     }).catchError((error) {
       myWidget.showCustomSnackbar(

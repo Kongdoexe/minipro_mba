@@ -25,8 +25,8 @@ class CheckLottoPage extends StatefulWidget {
 }
 
 class _CheckLottoPageState extends State<CheckLottoPage> {
-  TextEditingController test = TextEditingController();
   final myWidget = MyWidget();
+  final handleError = HandleError();
   String _text = '';
   late Future<void> loadData;
   List<GetuserdrawnumbersResponseGet> allLotto = [];
@@ -49,7 +49,6 @@ class _CheckLottoPageState extends State<CheckLottoPage> {
       appBar: CustomAppBar(
         screenSize: screenSize,
         namePage: 'ตรวจสลาก',
-
       ),
       body: Stack(
         children: [
@@ -279,7 +278,6 @@ class _CheckLottoPageState extends State<CheckLottoPage> {
   }
 
   void showDialogg(BuildContext context) {
-    final screenSize = MediaQuery.of(context).size;
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
@@ -303,7 +301,7 @@ class _CheckLottoPageState extends State<CheckLottoPage> {
               children: [
                 Text(
                   _text, // ข้อความหัวเรื่อง
-                  style: TextStyle(
+                  style: const TextStyle(
                     fontSize: 20,
                     fontWeight: FontWeight.w800,
                   ),
@@ -355,7 +353,7 @@ class _CheckLottoPageState extends State<CheckLottoPage> {
         final jsonResponse = json.decode(utf8.decode(response.bodyBytes));
 
         if (jsonResponse is Map<String, dynamic> || jsonResponse is String) {
-          _handleError(response);
+          handleError.handleError(response);
         } else if (jsonResponse is List) {
           try {
             allLotto =
@@ -367,7 +365,7 @@ class _CheckLottoPageState extends State<CheckLottoPage> {
           }
         }
       } else {
-        _handleError(response);
+        handleError.handleError(response);
       }
     } catch (e) {
       myWidget.showCustomSnackbar('Error', 'An error occurred: $e');
@@ -400,7 +398,7 @@ class _CheckLottoPageState extends State<CheckLottoPage> {
 
       if (response.statusCode == 200) {
         if (jsonResponse is Map<String, dynamic> || jsonResponse is String) {
-          _handleError(response);
+          handleError.handleError(response);
         } else if (jsonResponse is List) {
           final checkwinner =
               getwinningnumbersResponseGetFromJson(jsonEncode(jsonResponse));
@@ -412,29 +410,10 @@ class _CheckLottoPageState extends State<CheckLottoPage> {
           );
         }
       } else {
-        _handleError(response);
+        handleError.handleError(response);
       }
     } catch (e) {
       myWidget.showCustomSnackbar('Error', 'Network request failed: $e');
-    }
-  }
-
-  void _handleError(http.Response response) {
-    final jsonResponse = json.decode(utf8.decode(response.bodyBytes));
-    if (jsonResponse is Map<String, dynamic>) {
-      final msgValue = jsonResponse['msg'];
-      if (msgValue is String) {
-        myWidget.showCustomSnackbar('Message', msgValue);
-      } else if (msgValue is Map<String, dynamic>) {
-        try {
-          final msg = allerrorresponsegetFromJson(jsonEncode(msgValue));
-          myWidget.showCustomSnackbar('Message', msg.toString());
-        } catch (e) {
-          myWidget.showCustomSnackbar('Message', 'Error parsing "msg": $e');
-        }
-      }
-    } else {
-      myWidget.showCustomSnackbar('Error', 'Unexpected response format');
     }
   }
 
