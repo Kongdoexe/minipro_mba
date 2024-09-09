@@ -29,6 +29,7 @@ class _LoginPageState extends State<LoginPage> {
   final TextEditingController _passwordController = TextEditingController();
   final myWidget = MyWidget();
   final handleError = HandleError();
+  bool _isPasswordVisible = false;
   
   @override
   void initState() {
@@ -117,24 +118,33 @@ class _LoginPageState extends State<LoginPage> {
                         fontSize: screenSize.width * 0.04),
                   ),
                 ),
-                Padding(
+               Padding(
                   padding: EdgeInsets.only(
                       left: screenSize.width * 0.15,
                       right: screenSize.width * 0.15,
                       top: screenSize.height * 0.02),
                   child: TextField(
-                    controller:
-                        _passwordController, // เชื่อมโยง controller กับ TextField
-                    obscureText: true, // ซ่อนรหัสผ่านเมื่อป้อน
-                    decoration: const InputDecoration(
-                      border: OutlineInputBorder(
-                          borderSide: BorderSide(
-                        width: 1,
-                      )),
-                      focusedBorder: OutlineInputBorder(
+                    controller: _passwordController,
+                    obscureText: !_isPasswordVisible, // Toggle password visibility
+                    decoration: InputDecoration(
+                      border: const OutlineInputBorder(
+                        borderSide: BorderSide(width: 1),
+                      ),
+                      focusedBorder: const OutlineInputBorder(
                         borderSide: BorderSide(
-                            color: Color.fromRGBO(243, 134, 134, 1),
-                            width: 2), // เปลี่ยนขอบเป็นสีแดงเมื่อคลิก
+                            color: Color.fromRGBO(243, 134, 134, 1), width: 2),
+                      ),
+                      suffixIcon: IconButton(
+                        icon: Icon(
+                          _isPasswordVisible
+                              ? Icons.visibility
+                              : Icons.visibility_off,
+                        ),
+                        onPressed: () {
+                          setState(() {
+                            _isPasswordVisible = !_isPasswordVisible;
+                          });
+                        },
                       ),
                     ),
                   ),

@@ -23,6 +23,8 @@ class _RegisterState extends State<Register> {
   TextEditingController confirmPassword = TextEditingController();
   String url = '';
   final myWidget = MyWidget();
+  bool _isPasswordVisible = false;
+  bool _isPasswordVisible1 = false;
 
   @override
   void initState() {
@@ -86,7 +88,8 @@ class _RegisterState extends State<Register> {
                         width: 1,
                       ),
                     ),
-                   contentPadding: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+                    contentPadding:
+                        EdgeInsets.symmetric(vertical: 10, horizontal: 10),
                     focusedBorder: OutlineInputBorder(
                       borderSide: BorderSide(
                           color: Color.fromARGB(255, 247, 127, 118),
@@ -107,7 +110,8 @@ class _RegisterState extends State<Register> {
                         width: 1,
                       ),
                     ),
-                    contentPadding: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+                    contentPadding:
+                        EdgeInsets.symmetric(vertical: 10, horizontal: 10),
                     focusedBorder: OutlineInputBorder(
                       borderSide: BorderSide(
                           color: Color.fromARGB(255, 247, 127, 118),
@@ -129,7 +133,8 @@ class _RegisterState extends State<Register> {
                         width: 1,
                       ),
                     ),
-                    contentPadding: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+                    contentPadding:
+                        EdgeInsets.symmetric(vertical: 10, horizontal: 10),
                     focusedBorder: OutlineInputBorder(
                       borderSide: BorderSide(
                           color: Color.fromARGB(255, 247, 127, 118),
@@ -144,18 +149,32 @@ class _RegisterState extends State<Register> {
                 SizedBox(height: screenSize.height * 0.015),
                 TextField(
                   controller: password,
-                  obscureText: true,
-                  decoration: const InputDecoration(
-                    border: OutlineInputBorder(
+                  obscureText:
+                      !_isPasswordVisible, // This line only needs to appear once
+                  decoration: InputDecoration(
+                    border: const OutlineInputBorder(
                       borderSide: BorderSide(
                         width: 1,
                       ),
                     ),
-                    contentPadding: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
-                    focusedBorder: OutlineInputBorder(
+                    contentPadding: const EdgeInsets.symmetric(
+                        vertical: 10, horizontal: 10),
+                    focusedBorder: const OutlineInputBorder(
                       borderSide: BorderSide(
                           color: Color.fromARGB(255, 247, 127, 118),
                           width: 2), // เปลี่ยนขอบเป็นสีแดงเมื่อคลิก
+                    ),
+                    suffixIcon: IconButton(
+                      icon: Icon(
+                        _isPasswordVisible
+                            ? Icons.visibility
+                            : Icons.visibility_off,
+                      ),
+                      onPressed: () {
+                        setState(() {
+                          _isPasswordVisible = !_isPasswordVisible;
+                        });
+                      },
                     ),
                   ),
                 ),
@@ -166,18 +185,32 @@ class _RegisterState extends State<Register> {
                 SizedBox(height: screenSize.height * 0.015),
                 TextField(
                   controller: confirmPassword,
-                  obscureText: true,
-                  decoration: const InputDecoration(
-                    border: OutlineInputBorder(
+                  obscureText:
+                      !_isPasswordVisible1, // This line only needs to appear once
+                  decoration: InputDecoration(
+                    border: const OutlineInputBorder(
                       borderSide: BorderSide(
                         width: 1,
                       ),
                     ),
-                    contentPadding: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
-                    focusedBorder: OutlineInputBorder(
+                    contentPadding: const EdgeInsets.symmetric(
+                        vertical: 10, horizontal: 10),
+                    focusedBorder: const OutlineInputBorder(
                       borderSide: BorderSide(
                           color: Color.fromARGB(255, 247, 127, 118),
                           width: 2), // เปลี่ยนขอบเป็นสีแดงเมื่อคลิก
+                    ),
+                    suffixIcon: IconButton(
+                      icon: Icon(
+                        _isPasswordVisible1
+                            ? Icons.visibility
+                            : Icons.visibility_off,
+                      ),
+                      onPressed: () {
+                        setState(() {
+                          _isPasswordVisible1 = !_isPasswordVisible1;
+                        });
+                      },
                     ),
                   ),
                 ),
@@ -194,7 +227,8 @@ class _RegisterState extends State<Register> {
                         width: 1,
                       ),
                     ),
-                    contentPadding: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+                    contentPadding:
+                        EdgeInsets.symmetric(vertical: 10, horizontal: 10),
                     focusedBorder: OutlineInputBorder(
                       borderSide: BorderSide(
                           color: Color.fromARGB(255, 247, 127, 118),
