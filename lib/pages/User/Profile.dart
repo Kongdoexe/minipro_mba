@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:minipro_mba/pages/User/CustomerAppBar.dart';
 import 'package:minipro_mba/pages/User/CustomerNavbar.dart';
+import 'package:minipro_mba/pages/User/Wallet_topup.dart';
 import 'package:minipro_mba/share/ShareData.dart';
 import 'package:provider/provider.dart';
 
@@ -170,7 +171,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                 Padding(
                                   padding: EdgeInsets.only(top: screenSize.height * 0.02),
                                   child: TextButton(
-                                      onPressed: () {},
+                                      onPressed: walletpop,
                                       child: Column(
                                         children: [
                                           Image.asset(
@@ -202,7 +203,7 @@ class _ProfilePageState extends State<ProfilePage> {
           ),
           Positioned(
             bottom: screenSize.height * 0.59,
-            right: screenSize.width * 0.27,
+            right: screenSize.width * 0.25,
             child: ClipRRect(
               borderRadius: BorderRadius.circular(screenSize.width * 0.4), // กำหนดมุมโค้ง
               child: Image.asset(
@@ -219,6 +220,15 @@ class _ProfilePageState extends State<ProfilePage> {
         selectedIndex: 0,
         onDestinationSelected: (value) {},
         screenSize: screenSize,
+      ),
+    );
+  }
+
+  void walletpop() {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => WalletTopUpPage(),
       ),
     );
   }
