@@ -18,6 +18,7 @@ class _ProfilePageState extends State<ProfilePage> {
   Widget build(BuildContext context) {
     final screenSize = MediaQuery.of(context).size;
     final userModel = context.watch<Data>(); // ใช้ context.watch สำหรับการรีเฟรช
+    
 
     return Scaffold(
       backgroundColor: const Color.fromRGBO(255, 138, 128, 1),
