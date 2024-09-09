@@ -102,7 +102,7 @@ class _HomepageuserState extends State<Homepageuser> {
                           ),
                           child: SizedBox(
                             width: screenSize.width * 0.8, // ใช้ screenSize
-                            height: screenSize.height * 0.6, // ใช้ screenSize
+                            height: screenSize.height * 0.56, // ใช้ screenSize
                             child: Column(
                               children: [
                                 Padding(
@@ -111,7 +111,7 @@ class _HomepageuserState extends State<Homepageuser> {
                                     'รางวัลที่1',
                                     style: TextStyle(
                                       fontFamily: 'MaliMedium',
-                                      fontSize: screenSize.width * 0.08, // ใช้ screenSize
+                                      fontSize: screenSize.width * 0.06, // ใช้ screenSize
                                       fontWeight: FontWeight.w800,
                                       color: const Color.fromRGBO(230, 77, 77, 1),
                                     ),
@@ -121,7 +121,7 @@ class _HomepageuserState extends State<Homepageuser> {
                                   '1234123',
                                   style: TextStyle(
                                     fontFamily: 'MaliMedium',
-                                    fontSize: screenSize.width * 0.1, // ใช้ screenSize
+                                    fontSize: screenSize.width * 0.07, // ใช้ screenSize
                                     fontWeight: FontWeight.w300,
                                     color: const Color.fromRGBO(0, 0, 0, 1),
                                   ),
