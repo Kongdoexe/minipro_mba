@@ -276,11 +276,17 @@ class _WalletTopUpPageState extends State<WalletTopUpPage> {
 
       if (response.statusCode == 200) {
         handleError.handleError(response);
+        _topUpWallet(gratuity.toDouble());
       } else {
         handleError.handleError(response);
       }
     } catch (e) {
       myWidget.showCustomSnackbar("Message", 'An error occurred: $e');
     }
+  }
+
+  void _topUpWallet(double amount) {
+    final dataModel = context.read<Data>();
+    dataModel.updateWallet(dataModel.datauser.wallet + amount);
   }
 }

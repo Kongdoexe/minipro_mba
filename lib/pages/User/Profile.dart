@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:minipro_mba/config/config.dart';
 import 'package:minipro_mba/pages/User/CustomerAppBar.dart';
 import 'package:minipro_mba/pages/User/CustomerNavbar.dart';
 import 'package:minipro_mba/pages/User/Wallet_topup.dart';
@@ -16,7 +17,7 @@ class _ProfilePageState extends State<ProfilePage> {
   @override
   Widget build(BuildContext context) {
     final screenSize = MediaQuery.of(context).size;
-    final userModel = context.read<Data>();
+    final userModel = context.watch<Data>(); // ใช้ context.watch สำหรับการรีเฟรช
 
     return Scaffold(
       backgroundColor: const Color.fromRGBO(255, 138, 128, 1),
@@ -49,9 +50,8 @@ class _ProfilePageState extends State<ProfilePage> {
                     children: [
                       Container(
                         decoration: BoxDecoration(
-                          color: const Color.fromARGB(
-                              255, 255, 255, 255), // กำหนดสีของกล่อง
-                          borderRadius: BorderRadius.circular(screenSize.width * 0.05), // ทำให้ขอบมน
+                          color: const Color.fromARGB(255, 255, 255, 255),
+                          borderRadius: BorderRadius.circular(screenSize.width * 0.05),
                         ),
                         child: Column(
                           children: [
@@ -62,13 +62,13 @@ class _ProfilePageState extends State<ProfilePage> {
                                 children: [
                                   Padding(
                                     padding: EdgeInsets.only(top: screenSize.height * 0.12),
-                                    child: const Text(
-                                      'ผู้ใช้คนที่1',
-                                      style: TextStyle(
+                                    child: Text(
+                                      userModel.datauser.name,
+                                      style: const TextStyle(
                                           fontSize: 20,
                                           color: Colors.black,
                                           fontFamily: 'MaliMedium',
-                                          fontWeight: FontWeight.w600),
+                                          fontWeight: FontWeight.w700),
                                     ),
                                   ),
                                   Padding(
@@ -76,8 +76,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                     child: FilledButton(
                                         onPressed: () {},
                                         style: ElevatedButton.styleFrom(
-                                          backgroundColor: const Color.fromARGB(
-                                              255, 233, 119, 119),
+                                          backgroundColor: const Color.fromARGB(255, 233, 119, 119),
                                         ),
                                         child: const Text(
                                           'แก้ไขโปรไฟล์',
@@ -98,8 +97,7 @@ class _ProfilePageState extends State<ProfilePage> {
                         padding: EdgeInsets.only(top: screenSize.height * 0.02),
                         child: Container(
                           decoration: BoxDecoration(
-                            color: const Color.fromARGB(
-                                255, 238, 213, 213), // กำหนดสีของกล่อง
+                            color: const Color.fromARGB(255, 238, 213, 213),
                             borderRadius: BorderRadius.circular(screenSize.width * 0.05),
                           ),
                           child: SizedBox(
@@ -122,8 +120,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                   padding: EdgeInsets.only(top: screenSize.height * 0.02),
                                   child: Container(
                                     decoration: BoxDecoration(
-                                      color: const Color.fromARGB(255, 235, 131,
-                                          131), // กำหนดสีของกล่อง
+                                      color: const Color.fromARGB(255, 235, 131, 131),
                                       borderRadius: BorderRadius.circular(screenSize.width * 0.05),
                                     ),
                                     child: SizedBox(
@@ -134,23 +131,20 @@ class _ProfilePageState extends State<ProfilePage> {
                                           Padding(
                                             padding: EdgeInsets.only(top: screenSize.height * 0.01),
                                             child: Row(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment.center,
+                                                mainAxisAlignment: MainAxisAlignment.center,
                                                 children: [
                                                   Image.asset(
                                                     'assets/images/money-bag.png',
                                                     width: screenSize.width * 0.08,
                                                   ),
                                                   Padding(
-                                                    padding: EdgeInsets.only(
-                                                        left: screenSize.width * 0.05),
-                                                    child: const Text(
-                                                      '฿ 100.00',
-                                                      style: TextStyle(
+                                                    padding: EdgeInsets.only(left: screenSize.width * 0.05),
+                                                    child: Text(
+                                                      '฿ ${userModel. datauser.wallet}',
+                                                      style: const TextStyle(
                                                           fontSize: 25,
                                                           color: Colors.black,
-                                                          fontWeight:
-                                                              FontWeight.w700),
+                                                          fontWeight: FontWeight.w700),
                                                     ),
                                                   )
                                                 ]),
@@ -205,7 +199,7 @@ class _ProfilePageState extends State<ProfilePage> {
             bottom: screenSize.height * 0.59,
             right: screenSize.width * 0.25,
             child: ClipRRect(
-              borderRadius: BorderRadius.circular(screenSize.width * 0.4), // กำหนดมุมโค้ง
+              borderRadius: BorderRadius.circular(screenSize.width * 0.4),
               child: Image.asset(
                 'assets/images/user-avatar.png',
                 width: screenSize.width * 0.5,
@@ -224,8 +218,9 @@ class _ProfilePageState extends State<ProfilePage> {
     );
   }
 
-  void walletpop() {
-    Navigator.push(
+  void walletpop() async {
+    // Navigates to WalletTopUpPage and waits until it returns
+    await Navigator.push(
       context,
       MaterialPageRoute(
         builder: (context) => WalletTopUpPage(),

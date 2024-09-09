@@ -20,6 +20,9 @@ class _HomepageuserState extends State<Homepageuser> {
   Widget build(BuildContext context) {
     final screenSize = MediaQuery.of(context).size; // กำหนดตัวแปร screenSize
     final userModel = context.read<Data>();
+    String _text = '';
+
+
     log(userModel.datauser.memberId.toString());
 
     return Scaffold(
@@ -32,20 +35,23 @@ class _HomepageuserState extends State<Homepageuser> {
         children: [
           Positioned.fill(
             child: Padding(
-              padding: EdgeInsets.only(top: screenSize.height * 0.25), // ใช้ screenSize
+              padding: EdgeInsets.only(
+                  top: screenSize.height * 0.25), // ใช้ screenSize
               child: Container(
                 decoration: BoxDecoration(
                   color: const Color.fromARGB(255, 230, 227, 227),
                   borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(screenSize.width * 0.32), // ใช้ screenSize
-                    topRight: Radius.circular(screenSize.width * 0.32), // ใช้ screenSize
+                    topLeft: Radius.circular(
+                        screenSize.width * 0.32), // ใช้ screenSize
+                    topRight: Radius.circular(
+                        screenSize.width * 0.32), // ใช้ screenSize
                   ),
                 ),
               ),
             ),
           ),
           Padding(
-            padding:  EdgeInsets.only(top: screenSize.height * 0.05),
+            padding: EdgeInsets.only(top: screenSize.height * 0.05),
             child: Align(
               alignment: Alignment.topCenter,
               child: SingleChildScrollView(
@@ -65,13 +71,16 @@ class _HomepageuserState extends State<Homepageuser> {
                       Container(
                         decoration: BoxDecoration(
                           color: const Color.fromARGB(255, 255, 255, 255),
-                          borderRadius: BorderRadius.circular(screenSize.width * 0.04), // ใช้ screenSize
+                          borderRadius: BorderRadius.circular(
+                              screenSize.width * 0.04), // ใช้ screenSize
                         ),
                         child: SizedBox(
                           width: screenSize.width * 0.8, // ใช้ screenSize
                           height: screenSize.height * 0.1, // ใช้ screenSize
                           child: Padding(
-                            padding: EdgeInsets.symmetric(horizontal: screenSize.width * 0.1), // ใช้ screenSize
+                            padding: EdgeInsets.symmetric(
+                                horizontal:
+                                    screenSize.width * 0.1), // ใช้ screenSize
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               crossAxisAlignment: CrossAxisAlignment.center,
@@ -80,25 +89,32 @@ class _HomepageuserState extends State<Homepageuser> {
                                   'รอบที่1',
                                   style: TextStyle(
                                     fontFamily: 'MaliMedium',
-                                    fontSize: screenSize.width * 0.07, // ใช้ screenSize
+                                    fontSize: screenSize.width *
+                                        0.07, // ใช้ screenSize
                                     fontWeight: FontWeight.w900,
                                   ),
                                 ),
-                                Image.asset(
-                                  'assets/images/calendar.png',
-                                  width: screenSize.width * 0.08, // ใช้ screenSize
-                                ),
+                                TextButton(
+                                  onPressed: Select,
+                                  child: Image.asset(
+                                    'assets/images/calendar.png',
+                                    width: screenSize.width *
+                                        0.07, // ใช้ screenSize
+                                  ),
+                                )
                               ],
                             ),
                           ),
                         ),
                       ),
                       Padding(
-                        padding: EdgeInsets.only(top: screenSize.height * 0.03), // ใช้ screenSize
+                        padding: EdgeInsets.only(
+                            top: screenSize.height * 0.03), // ใช้ screenSize
                         child: Container(
                           decoration: BoxDecoration(
                             color: const Color.fromARGB(255, 255, 255, 255),
-                            borderRadius: BorderRadius.circular(screenSize.width * 0.08), // ใช้ screenSize
+                            borderRadius: BorderRadius.circular(
+                                screenSize.width * 0.08), // ใช้ screenSize
                           ),
                           child: SizedBox(
                             width: screenSize.width * 0.8, // ใช้ screenSize
@@ -106,14 +122,18 @@ class _HomepageuserState extends State<Homepageuser> {
                             child: Column(
                               children: [
                                 Padding(
-                                  padding: EdgeInsets.only(top: screenSize.height * 0.02), // ใช้ screenSize
+                                  padding: EdgeInsets.only(
+                                      top: screenSize.height *
+                                          0.02), // ใช้ screenSize
                                   child: Text(
                                     'รางวัลที่1',
                                     style: TextStyle(
                                       fontFamily: 'MaliMedium',
-                                      fontSize: screenSize.width * 0.06, // ใช้ screenSize
+                                      fontSize: screenSize.width *
+                                          0.06, // ใช้ screenSize
                                       fontWeight: FontWeight.w800,
-                                      color: const Color.fromRGBO(230, 77, 77, 1),
+                                      color:
+                                          const Color.fromRGBO(230, 77, 77, 1),
                                     ),
                                   ),
                                 ),
@@ -121,7 +141,8 @@ class _HomepageuserState extends State<Homepageuser> {
                                   '1234123',
                                   style: TextStyle(
                                     fontFamily: 'MaliMedium',
-                                    fontSize: screenSize.width * 0.07, // ใช้ screenSize
+                                    fontSize: screenSize.width *
+                                        0.07, // ใช้ screenSize
                                     fontWeight: FontWeight.w300,
                                     color: const Color.fromRGBO(0, 0, 0, 1),
                                   ),
@@ -130,29 +151,36 @@ class _HomepageuserState extends State<Homepageuser> {
                                   'รางวัลละ xx',
                                   style: TextStyle(
                                     fontFamily: 'MaliMedium',
-                                    fontSize: screenSize.width * 0.035, // ใช้ screenSize
+                                    fontSize: screenSize.width *
+                                        0.035, // ใช้ screenSize
                                     fontWeight: FontWeight.w300,
                                     color: const Color.fromRGBO(85, 83, 83, 1),
                                   ),
                                 ),
                                 Padding(
                                   padding: EdgeInsets.symmetric(
-                                    horizontal: screenSize.width * 0.05, // ใช้ screenSize
+                                    horizontal: screenSize.width *
+                                        0.05, // ใช้ screenSize
                                   ),
                                   child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
                                     children: [
                                       Column(
                                         children: [
                                           Padding(
-                                            padding: EdgeInsets.only(top: screenSize.height * 0.02), // ใช้ screenSize
+                                            padding: EdgeInsets.only(
+                                                top: screenSize.height *
+                                                    0.02), // ใช้ screenSize
                                             child: Text(
                                               'รางวัลที่2',
                                               style: TextStyle(
                                                 fontFamily: 'MaliMedium',
-                                                fontSize: screenSize.width * 0.04, // ใช้ screenSize
+                                                fontSize: screenSize.width *
+                                                    0.04, // ใช้ screenSize
                                                 fontWeight: FontWeight.w800,
-                                                color: const Color.fromRGBO(230, 77, 77, 1),
+                                                color: const Color.fromRGBO(
+                                                    230, 77, 77, 1),
                                               ),
                                             ),
                                           ),
@@ -160,18 +188,22 @@ class _HomepageuserState extends State<Homepageuser> {
                                             '1234123',
                                             style: TextStyle(
                                               fontFamily: 'MaliMedium',
-                                              fontSize: screenSize.width * 0.06, // ใช้ screenSize
+                                              fontSize: screenSize.width *
+                                                  0.06, // ใช้ screenSize
                                               fontWeight: FontWeight.w300,
-                                              color: const Color.fromRGBO(0, 0, 0, 1),
+                                              color: const Color.fromRGBO(
+                                                  0, 0, 0, 1),
                                             ),
                                           ),
                                           Text(
                                             'รางวัลละ xx',
                                             style: TextStyle(
                                               fontFamily: 'MaliMedium',
-                                              fontSize: screenSize.width * 0.035, // ใช้ screenSize
+                                              fontSize: screenSize.width *
+                                                  0.035, // ใช้ screenSize
                                               fontWeight: FontWeight.w300,
-                                              color: const Color.fromRGBO(85, 83, 83, 1),
+                                              color: const Color.fromRGBO(
+                                                  85, 83, 83, 1),
                                             ),
                                           ),
                                         ],
@@ -179,14 +211,18 @@ class _HomepageuserState extends State<Homepageuser> {
                                       Column(
                                         children: [
                                           Padding(
-                                            padding: EdgeInsets.only(top: screenSize.height * 0.02), // ใช้ screenSize
+                                            padding: EdgeInsets.only(
+                                                top: screenSize.height *
+                                                    0.02), // ใช้ screenSize
                                             child: Text(
                                               'รางวัลที่3',
                                               style: TextStyle(
                                                 fontFamily: 'MaliMedium',
-                                                fontSize: screenSize.width * 0.04, // ใช้ screenSize
+                                                fontSize: screenSize.width *
+                                                    0.04, // ใช้ screenSize
                                                 fontWeight: FontWeight.w800,
-                                                color: const Color.fromRGBO(230, 77, 77, 1),
+                                                color: const Color.fromRGBO(
+                                                    230, 77, 77, 1),
                                               ),
                                             ),
                                           ),
@@ -194,18 +230,22 @@ class _HomepageuserState extends State<Homepageuser> {
                                             '1234123',
                                             style: TextStyle(
                                               fontFamily: 'MaliMedium',
-                                              fontSize: screenSize.width * 0.06, // ใช้ screenSize
+                                              fontSize: screenSize.width *
+                                                  0.06, // ใช้ screenSize
                                               fontWeight: FontWeight.w300,
-                                              color: const Color.fromRGBO(0, 0, 0, 1),
+                                              color: const Color.fromRGBO(
+                                                  0, 0, 0, 1),
                                             ),
                                           ),
                                           Text(
                                             'รางวัลละ xx',
                                             style: TextStyle(
                                               fontFamily: 'MaliMedium',
-                                              fontSize: screenSize.width * 0.035, // ใช้ screenSize
+                                              fontSize: screenSize.width *
+                                                  0.035, // ใช้ screenSize
                                               fontWeight: FontWeight.w300,
-                                              color: const Color.fromRGBO(85, 83, 83, 1),
+                                              color: const Color.fromRGBO(
+                                                  85, 83, 83, 1),
                                             ),
                                           ),
                                         ],
@@ -220,19 +260,24 @@ class _HomepageuserState extends State<Homepageuser> {
                                     top: screenSize.height * 0.04,
                                   ),
                                   child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
                                     children: [
                                       Column(
                                         children: [
                                           Padding(
-                                            padding: EdgeInsets.only(top: screenSize.height * 0.02), // ใช้ screenSize
+                                            padding: EdgeInsets.only(
+                                                top: screenSize.height *
+                                                    0.02), // ใช้ screenSize
                                             child: Text(
                                               'รางวัลที่4',
                                               style: TextStyle(
                                                 fontFamily: 'MaliMedium',
-                                                fontSize: screenSize.width * 0.04, // ใช้ screenSize
+                                                fontSize: screenSize.width *
+                                                    0.04, // ใช้ screenSize
                                                 fontWeight: FontWeight.w800,
-                                                color: const Color.fromRGBO(230, 77, 77, 1),
+                                                color: const Color.fromRGBO(
+                                                    230, 77, 77, 1),
                                               ),
                                             ),
                                           ),
@@ -240,18 +285,22 @@ class _HomepageuserState extends State<Homepageuser> {
                                             '1234123',
                                             style: TextStyle(
                                               fontFamily: 'MaliMedium',
-                                              fontSize: screenSize.width * 0.06, // ใช้ screenSize
+                                              fontSize: screenSize.width *
+                                                  0.06, // ใช้ screenSize
                                               fontWeight: FontWeight.w300,
-                                              color: const Color.fromRGBO(0, 0, 0, 1),
+                                              color: const Color.fromRGBO(
+                                                  0, 0, 0, 1),
                                             ),
                                           ),
                                           Text(
                                             'รางวัลละ xx',
                                             style: TextStyle(
                                               fontFamily: 'MaliMedium',
-                                              fontSize: screenSize.width * 0.035, // ใช้ screenSize
+                                              fontSize: screenSize.width *
+                                                  0.035, // ใช้ screenSize
                                               fontWeight: FontWeight.w300,
-                                              color: const Color.fromRGBO(85, 83, 83, 1),
+                                              color: const Color.fromRGBO(
+                                                  85, 83, 83, 1),
                                             ),
                                           ),
                                         ],
@@ -259,14 +308,18 @@ class _HomepageuserState extends State<Homepageuser> {
                                       Column(
                                         children: [
                                           Padding(
-                                            padding: EdgeInsets.only(top: screenSize.height * 0.02), // ใช้ screenSize
+                                            padding: EdgeInsets.only(
+                                                top: screenSize.height *
+                                                    0.02), // ใช้ screenSize
                                             child: Text(
                                               'รางวัลที่5',
                                               style: TextStyle(
                                                 fontFamily: 'MaliMedium',
-                                                fontSize: screenSize.width * 0.04, // ใช้ screenSize
+                                                fontSize: screenSize.width *
+                                                    0.04, // ใช้ screenSize
                                                 fontWeight: FontWeight.w800,
-                                                color: const Color.fromRGBO(230, 77, 77, 1),
+                                                color: const Color.fromRGBO(
+                                                    230, 77, 77, 1),
                                               ),
                                             ),
                                           ),
@@ -274,18 +327,22 @@ class _HomepageuserState extends State<Homepageuser> {
                                             '1234123',
                                             style: TextStyle(
                                               fontFamily: 'MaliMedium',
-                                              fontSize: screenSize.width * 0.06, // ใช้ screenSize
+                                              fontSize: screenSize.width *
+                                                  0.06, // ใช้ screenSize
                                               fontWeight: FontWeight.w300,
-                                              color: const Color.fromRGBO(0, 0, 0, 1),
+                                              color: const Color.fromRGBO(
+                                                  0, 0, 0, 1),
                                             ),
                                           ),
                                           Text(
                                             'รางวัลละ xx',
                                             style: TextStyle(
                                               fontFamily: 'MaliMedium',
-                                              fontSize: screenSize.width * 0.035, // ใช้ screenSize
+                                              fontSize: screenSize.width *
+                                                  0.035, // ใช้ screenSize
                                               fontWeight: FontWeight.w300,
-                                              color: const Color.fromRGBO(85, 83, 83, 1),
+                                              color: const Color.fromRGBO(
+                                                  85, 83, 83, 1),
                                             ),
                                           ),
                                         ],
@@ -294,31 +351,40 @@ class _HomepageuserState extends State<Homepageuser> {
                                   ),
                                 ),
                                 Padding(
-                                  padding: EdgeInsets.only(top: screenSize.height * 0.04), // ใช้ screenSize
+                                  padding: EdgeInsets.only(
+                                      top: screenSize.height *
+                                          0.04), // ใช้ screenSize
                                   child: Column(
                                     children: [
                                       Container(
-                                        width: screenSize.width * 0.7, // ใช้ screenSize
+                                        width: screenSize.width *
+                                            0.7, // ใช้ screenSize
                                         height: 2,
                                         color: Colors.grey,
                                       ),
                                       SizedBox(
-                                        height: screenSize.height * 0.02, // ใช้ screenSize
+                                        height: screenSize.height *
+                                            0.02, // ใช้ screenSize
                                       ),
                                       FilledButton(
-                                        onPressed: buylotto,
+                                        onPressed: () => buylotto(context),
                                         style: ElevatedButton.styleFrom(
                                           backgroundColor: Colors.amber,
                                           shape: RoundedRectangleBorder(
-                                            borderRadius: BorderRadius.circular(30.0),
+                                            borderRadius:
+                                                BorderRadius.circular(30.0),
                                           ),
                                           padding: EdgeInsets.symmetric(
-                                            horizontal: screenSize.width * 0.08, // ใช้ screenSize
-                                            vertical: screenSize.height * 0.015, // ใช้ screenSize
+                                            horizontal: screenSize.width *
+                                                0.08, // ใช้ screenSize
+                                            vertical: screenSize.height *
+                                                0.015, // ใช้ screenSize
                                           ),
                                           fixedSize: Size(
-                                            screenSize.width * 0.4, // ใช้ screenSize
-                                            screenSize.height * 0.06, // ใช้ screenSize
+                                            screenSize.width *
+                                                0.4, // ใช้ screenSize
+                                            screenSize.height *
+                                                0.06, // ใช้ screenSize
                                           ),
                                         ),
                                         child: Text(
@@ -327,7 +393,8 @@ class _HomepageuserState extends State<Homepageuser> {
                                             color: Colors.black,
                                             fontFamily: 'MaliMedium',
                                             fontWeight: FontWeight.w500,
-                                            fontSize: screenSize.width * 0.035, // ใช้ screenSize
+                                            fontSize: screenSize.width *
+                                                0.035, // ใช้ screenSize
                                           ),
                                         ),
                                       ),
@@ -355,12 +422,72 @@ class _HomepageuserState extends State<Homepageuser> {
     );
   }
 
-  void buylotto() {
+  void buylotto(BuildContext context) {
     final memberID = context.read<Data>();
     Navigator.push(
       context,
       MaterialPageRoute(
         builder: (context) => ChooselottoPage(),
+      ),
+    );
+  }
+
+  void Select() {
+    final member = context.read<Data>();
+     showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        backgroundColor: Colors.transparent,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(10),
+        ),
+        title: Container(
+          decoration: BoxDecoration(
+            color: const Color.fromRGBO(255, 149, 0, 0.8),
+            borderRadius: BorderRadius.circular(10),
+          ),
+          padding: const EdgeInsets.all(10.0),
+          child: Container(
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(10),
+            ),
+            padding: const EdgeInsets.all(10.0),
+            child: Column(
+              children: [
+                Text(
+                  "รอบที่ ${member.period}", // ข้อความหัวเรื่อง
+                  style: const TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.w800,
+                  ),
+                ),
+                Padding(
+                  padding: EdgeInsets.symmetric(
+                      horizontal: MediaQuery.of(context).size.width * 0.1),
+                  child: FilledButton(
+                    onPressed: () {
+                      Navigator.of(context).pop(); // ปิด Dialog
+                    },
+                    style: ButtonStyle(
+                      backgroundColor: WidgetStateProperty.all<Color>(
+                          const Color.fromRGBO(255, 34, 34, 1)),
+                    ),
+                    child: const Center(
+                      child: Text(
+                        'เลือก',
+                        style: TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.w800,
+                        ),
+                      ),
+                    ),
+                  ),
+                )
+              ],
+            ),
+          ),
+        ),
       ),
     );
   }

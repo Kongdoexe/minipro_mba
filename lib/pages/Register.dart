@@ -20,6 +20,7 @@ class _RegisterState extends State<Register> {
   TextEditingController password = TextEditingController();
   TextEditingController phone = TextEditingController();
   TextEditingController wallet = TextEditingController();
+  TextEditingController confirmPassword = TextEditingController();
   String url = '';
   final myWidget = MyWidget();
 
@@ -68,7 +69,7 @@ class _RegisterState extends State<Register> {
           color: const Color.fromARGB(0, 0, 0, 0),
           child: Padding(
             padding: EdgeInsets.only(
-                top: screenSize.height * 0.04,
+                top: screenSize.height * 0.02,
                 left: screenSize.width * 0.12,
                 right: screenSize.width * 0.12),
             child: Column(
@@ -85,6 +86,7 @@ class _RegisterState extends State<Register> {
                         width: 1,
                       ),
                     ),
+                   contentPadding: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
                     focusedBorder: OutlineInputBorder(
                       borderSide: BorderSide(
                           color: Color.fromARGB(255, 247, 127, 118),
@@ -105,6 +107,7 @@ class _RegisterState extends State<Register> {
                         width: 1,
                       ),
                     ),
+                    contentPadding: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
                     focusedBorder: OutlineInputBorder(
                       borderSide: BorderSide(
                           color: Color.fromARGB(255, 247, 127, 118),
@@ -126,6 +129,7 @@ class _RegisterState extends State<Register> {
                         width: 1,
                       ),
                     ),
+                    contentPadding: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
                     focusedBorder: OutlineInputBorder(
                       borderSide: BorderSide(
                           color: Color.fromARGB(255, 247, 127, 118),
@@ -147,6 +151,29 @@ class _RegisterState extends State<Register> {
                         width: 1,
                       ),
                     ),
+                    contentPadding: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
+                    focusedBorder: OutlineInputBorder(
+                      borderSide: BorderSide(
+                          color: Color.fromARGB(255, 247, 127, 118),
+                          width: 2), // เปลี่ยนขอบเป็นสีแดงเมื่อคลิก
+                    ),
+                  ),
+                ),
+                Padding(
+                  padding: EdgeInsets.only(top: screenSize.height * 0.02),
+                  child: const Text('ยืนยันรหัสผ่าน : '),
+                ),
+                SizedBox(height: screenSize.height * 0.015),
+                TextField(
+                  controller: confirmPassword,
+                  obscureText: true,
+                  decoration: const InputDecoration(
+                    border: OutlineInputBorder(
+                      borderSide: BorderSide(
+                        width: 1,
+                      ),
+                    ),
+                    contentPadding: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
                     focusedBorder: OutlineInputBorder(
                       borderSide: BorderSide(
                           color: Color.fromARGB(255, 247, 127, 118),
@@ -167,6 +194,7 @@ class _RegisterState extends State<Register> {
                         width: 1,
                       ),
                     ),
+                    contentPadding: EdgeInsets.symmetric(vertical: 10, horizontal: 10),
                     focusedBorder: OutlineInputBorder(
                       borderSide: BorderSide(
                           color: Color.fromARGB(255, 247, 127, 118),
@@ -228,7 +256,15 @@ class _RegisterState extends State<Register> {
         email.text.isNotEmpty &&
         phone.text.isNotEmpty &&
         password.text.isNotEmpty &&
+        confirmPassword.text.isNotEmpty && // ตรวจสอบว่ากรอกยืนยันรหัสผ่านแล้ว
         wallet.text.isNotEmpty) {
+      // ตรวจสอบว่ารหัสผ่านตรงกับการยืนยันรหัสผ่าน
+      if (password.text != confirmPassword.text) {
+        // แสดงข้อความแจ้งเตือนว่ารหัสผ่านไม่ตรงกัน
+        myWidget.showCustomSnackbar('Message', 'รหัสผ่านไม่ตรงกัน');
+        return; // หยุดการทำงานถ้ารหัสผ่านไม่ตรงกัน
+      }
+
       // สร้างข้อมูลการลงทะเบียน
       RegsiterRequestPost registrationData = RegsiterRequestPost(
           name: name.text,
@@ -250,7 +286,6 @@ class _RegisterState extends State<Register> {
         final jsonResponse = json.decode(utf8.decode(res.bodyBytes));
         if (res.statusCode == 200) {
           // ถ้าการลงทะเบียนสำเร็จ
-          // แสดง Dialog เมื่อสำเร็จ
           showDialog(
             context: context,
             builder: (context) => AlertDialog(
