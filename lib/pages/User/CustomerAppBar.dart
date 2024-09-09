@@ -117,6 +117,7 @@ class CustomAppBar extends StatelessWidget implements PreferredSizeWidget {
         phone: 0,
         wallet: 0,
         isadmin: 0));
+    UserId.setPeriod(0);
     Navigator.push(
       context,
       MaterialPageRoute(builder: (context) => const LoginPage()),

@@ -9,17 +9,17 @@ AddfundsRequestPut addfundsRequestPutFromJson(String str) => AddfundsRequestPut.
 String addfundsRequestPutToJson(AddfundsRequestPut data) => json.encode(data.toJson());
 
 class AddfundsRequestPut {
-    int cash;
+    int gratuity;
 
     AddfundsRequestPut({
-        required this.cash,
+        required this.gratuity,
     });
 
     factory AddfundsRequestPut.fromJson(Map<String, dynamic> json) => AddfundsRequestPut(
-        cash: json["cash"],
+        gratuity: json["gratuity"],
     );
 
     Map<String, dynamic> toJson() => {
-        "cash": cash,
+        "gratuity": gratuity,
     };
 }
