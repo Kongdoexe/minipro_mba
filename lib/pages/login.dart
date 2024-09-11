@@ -30,7 +30,7 @@ class _LoginPageState extends State<LoginPage> {
   final myWidget = MyWidget();
   final handleError = HandleError();
   bool _isPasswordVisible = false;
-  
+
   @override
   void initState() {
     super.initState();
@@ -118,14 +118,15 @@ class _LoginPageState extends State<LoginPage> {
                         fontSize: screenSize.width * 0.04),
                   ),
                 ),
-               Padding(
+                Padding(
                   padding: EdgeInsets.only(
                       left: screenSize.width * 0.15,
                       right: screenSize.width * 0.15,
                       top: screenSize.height * 0.02),
                   child: TextField(
                     controller: _passwordController,
-                    obscureText: !_isPasswordVisible, // Toggle password visibility
+                    obscureText:
+                        !_isPasswordVisible, // Toggle password visibility
                     decoration: InputDecoration(
                       border: const OutlineInputBorder(
                         borderSide: BorderSide(width: 1),

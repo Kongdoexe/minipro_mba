@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:minipro_mba/config/config.dart';
 import 'package:minipro_mba/pages/User/CustomerAppBar.dart';
 import 'package:minipro_mba/pages/User/CustomerNavbar.dart';
+import 'package:minipro_mba/pages/User/EditProfile.dart';
 import 'package:minipro_mba/pages/User/Wallet_topup.dart';
 import 'package:minipro_mba/share/ShareData.dart';
 import 'package:provider/provider.dart';
@@ -75,7 +76,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                   Padding(
                                     padding: EdgeInsets.all(screenSize.width * 0.03),
                                     child: FilledButton(
-                                        onPressed: () {},
+                                        onPressed: editpro,
                                         style: ElevatedButton.styleFrom(
                                           backgroundColor: const Color.fromARGB(255, 233, 119, 119),
                                         ),
@@ -225,6 +226,15 @@ class _ProfilePageState extends State<ProfilePage> {
       context,
       MaterialPageRoute(
         builder: (context) => WalletTopUpPage(),
+      ),
+    );
+  }
+
+  void editpro() async {
+    await Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => EditprofilePage(),
       ),
     );
   }
