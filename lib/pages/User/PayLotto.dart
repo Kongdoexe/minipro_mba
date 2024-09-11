@@ -5,6 +5,7 @@ import 'package:iconsax/iconsax.dart';
 import 'package:minipro_mba/config/config.dart';
 import 'package:minipro_mba/models/response/processpayment_response_with_lotto_deleted.dart';
 import 'package:minipro_mba/models/response/regsiter_response_post.dart';
+import 'package:minipro_mba/pages/User/CartLotto.dart';
 import 'package:minipro_mba/pages/User/CustomerAppBar.dart';
 import 'package:minipro_mba/pages/User/CustomerNavbar.dart';
 import 'package:minipro_mba/share/ShareData.dart';
@@ -145,36 +146,94 @@ class _PaylottoPageState extends State<PaylottoPage> {
   }
 
   Future<void> paylotto() async {
-    final dataProvider = context.read<Data>();
-    final memberId = dataProvider.datauser.memberId;
+  final dataProvider = context.read<Data>();
+  final memberId = dataProvider.datauser.memberId;
 
-    var value = await Configuration.getConfig();
-    var url = value['apiEndpoint'];
+  var value = await Configuration.getConfig();
+  var url = value['apiEndpoint'];
 
-    try {
-      final requestUrl = "$url/lottery/ProcessPayment/$memberId";
-      log('Request URL: $requestUrl');
+  try {
+    final requestUrl = "$url/lottery/ProcessPayment/$memberId";
+    log('Request URL: $requestUrl');
 
-      var response = await http.put(Uri.parse(requestUrl));
+    var response = await http.put(Uri.parse(requestUrl));
 
-      if (response.statusCode == 200) {
-        log('Response: ${response.body}');
+    if (response.statusCode == 200) {
+      log('Response: ${response.body}');
 
-        var processResponse =
-            processpaymentResponseWithLottoDeletedFromJson(response.body);
+      var processResponse =
+          processpaymentResponseWithLottoDeletedFromJson(response.body);
 
-        log('LottoDeleted: ${processResponse.lottoDeleted}');
-        log('Message: ${processResponse.msg}');
+      log('LottoDeleted: ${processResponse.lottoDeleted}');
+      log('Message: ${processResponse.msg}');
 
-        // อัปเดตยอดเงินใน wallet
+      if (processResponse.lottoDeleted.isNotEmpty) {
+        // Show popup to inform user about deleted lotto numbers
+        showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+            backgroundColor: const Color.fromARGB(255, 245, 156, 55),
+            title: Center(
+              child: Column(
+                children: [
+                  Image.asset(
+                    'assets/images/warning.png',
+                    width: MediaQuery.of(context).size.width * 0.2,
+                  ),
+                  const Text(
+                    'รายการสลากบางรายการถูกซื้อไปแล้ว',
+                    style: TextStyle(
+                        color: Color.fromRGBO(255, 255, 255, 1),
+                        fontWeight: FontWeight.w800,
+                        fontSize: 20),
+                  ),
+                ],
+              ),
+            ),
+            content: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                const Text(
+                  'รายการที่ถูกลบ:',
+                  style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                ...processResponse.lottoDeleted.map((number) => Text(number)),
+              ],
+            ),
+            actions: [
+              FilledButton(
+                onPressed: () {
+                  Navigator.of(context).pop(); // Close the dialog
+                  Navigator.of(context).pop(); // Return to cart page
+                },
+                style: ButtonStyle(
+                  backgroundColor: MaterialStateProperty.all<Color>(
+                      const Color.fromARGB(255, 230, 92, 87)),
+                ),
+                child: const Center(
+                    child: Text(
+                  'รับทราบ',
+                  style: TextStyle(
+                    fontSize: 20,
+                    fontWeight: FontWeight.w800,
+                  ),
+                )),
+              )
+            ],
+          ),
+        );
+      } else {
+        // Proceed with successful payment
         int updatedWalletBalance =
-            dataProvider.datauser.wallet - widget.payResult; // ใช้ค่าปัจจุบันเป็นค่าพื้นฐาน
+            dataProvider.datauser.wallet - widget.payResult;
         setState(() {
           dataProvider.datauser.wallet = updatedWalletBalance;
         });
         log(dataProvider.datauser.wallet.toString());
 
-        // แสดงกล่องข้อความสำเร็จ
         showDialog(
           context: context,
           builder: (context) => AlertDialog(
@@ -199,59 +258,7 @@ class _PaylottoPageState extends State<PaylottoPage> {
             actions: [
               FilledButton(
                 onPressed: () {
-                  Navigator.of(context).pop(); // ปิด Dialog
-                },
-                style: ButtonStyle(
-                  backgroundColor: MaterialStateProperty.all<Color>(
-                      const Color.fromARGB(255, 230, 92, 87)),
-                ),
-                child: const Center(
-                    child: Text(
-                  'ตกลง',
-                  style: TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.w800,
-                  ),
-                )),
-              )
-            ],
-          ),
-        );
-      } else {
-        log('Error: Status code ${response.statusCode}');
-
-        showDialog(
-          context: context,
-          builder: (context) => AlertDialog(
-            backgroundColor: const Color.fromARGB(255, 245, 156, 55),
-            title: Center(
-              child: Column(
-                children: [
-                  Image.asset(
-                    'assets/images/warning.png',
-                    width: MediaQuery.of(context).size.width * 0.2,
-                  ),
-                  const Text(
-                    'ยอดเงินไม่พอ',
-                    style: TextStyle(
-                        color: Color.fromRGBO(255, 255, 255, 1),
-                        fontWeight: FontWeight.w800,
-                        fontSize: 30),
-                  ),
-                  const Text(
-                    'โปรดเติมเงิน',
-                    style: TextStyle(
-                        color: Color.fromRGBO(255, 255, 255, 1),
-                        fontWeight: FontWeight.w800,
-                        fontSize: 30),
-                  ),
-                ],
-              ),
-            ),
-            actions: [
-              FilledButton(
-                onPressed: () {
-                  Navigator.of(context).pop(); // ปิด Dialog
+                  Navigator.of(context).pop(); // Close dialog
                 },
                 style: ButtonStyle(
                   backgroundColor: MaterialStateProperty.all<Color>(
@@ -270,8 +277,111 @@ class _PaylottoPageState extends State<PaylottoPage> {
           ),
         );
       }
-    } catch (e) {
-      log('Error: $e');
+    } else {
+      log('Error: Status code ${response.statusCode}');
     }
+  } catch (e) {
+    log('Error: $e');
+  }
+}
+
+
+  // โหลดหน้าตะกร้าใหม่
+  // void reloadCart() {
+  //   Navigator.of(context).pushReplacement(MaterialPageRoute(
+  //     builder: (context) => const CartlottoPage(),
+  //   ));
+  // }
+
+  // ลบพวกที่โดนซื้อแล้ว
+  // void removeDeletedLotto(List<String> lottoDeleted) {
+  //   final dataProvider = context.read<Data>();
+  //   dataProvider.datauser.cartItems
+  //       .removeWhere((item) => deletedNumbers.contains(item.lottoNumber));
+  //   setState(() {});
+  // }
+
+  // แสดงกล่องข้อความสำเร็จ
+  void showSuccessDialog() {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        backgroundColor: const Color.fromARGB(255, 245, 156, 55),
+        title: Center(
+          child: Column(
+            children: [
+              Image.asset(
+                'assets/images/check.png',
+                width: MediaQuery.of(context).size.width * 0.2,
+              ),
+              const Text(
+                'ชำระเงินสำเร็จ',
+                style: TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.w800,
+                    fontSize: 30),
+              ),
+            ],
+          ),
+        ),
+        actions: [
+          FilledButton(
+            onPressed: () {
+              Navigator.of(context).pop(); // ปิด Dialog
+            },
+            style: ButtonStyle(
+              backgroundColor: MaterialStateProperty.all<Color>(
+                  const Color.fromARGB(255, 230, 92, 87)),
+            ),
+            child: const Center(
+                child: Text(
+              'ตกลง',
+              style: TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.w800,
+              ),
+            )),
+          )
+        ],
+      ),
+    );
+  }
+
+// แสดงกล่องข้อความข้อผิดพลาด
+  void showErrorDialog() {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        backgroundColor: const Color.fromARGB(255, 245, 156, 55),
+        title: const Text(
+          'ยอดเงินไม่พอ',
+          style: TextStyle(
+              color: Colors.white, fontWeight: FontWeight.bold, fontSize: 20),
+        ),
+        content: const Text(
+          'โปรดเติมเงิน',
+          style: TextStyle(color: Colors.white),
+        ),
+        actions: [
+          FilledButton(
+            onPressed: () {
+              Navigator.of(context).pop(); // ปิด Dialog
+            },
+            style: ButtonStyle(
+              backgroundColor: MaterialStateProperty.all<Color>(
+                  const Color.fromARGB(255, 230, 92, 87)),
+            ),
+            child: const Center(
+                child: Text(
+              'ตกลง',
+              style: TextStyle(
+                fontSize: 20,
+                fontWeight: FontWeight.w800,
+              ),
+            )),
+          )
+        ],
+      ),
+    );
   }
 }

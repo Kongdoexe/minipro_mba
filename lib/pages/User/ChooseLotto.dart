@@ -29,7 +29,6 @@ class _ChooselottoPageState extends State<ChooselottoPage> {
   List<int> selectedTicketIds = [];
   final TextEditingController _searchController = TextEditingController();
   final myWidget = MyWidget();
-  
 
   @override
   void initState() {
@@ -53,7 +52,6 @@ class _ChooselottoPageState extends State<ChooselottoPage> {
       appBar: CustomAppBar(
         screenSize: screenSize,
         namePage: 'ซื้อสลาก',
-
       ),
       body: Container(
           child: Column(
@@ -177,7 +175,8 @@ class _ChooselottoPageState extends State<ChooselottoPage> {
                                                               186),
                                                       child: Center(
                                                         child: Text(
-                                                          formatNumber(lotto.number),
+                                                          formatNumber(
+                                                              lotto.number),
                                                           style:
                                                               const TextStyle(
                                                             color: Colors.black,
@@ -301,12 +300,85 @@ class _ChooselottoPageState extends State<ChooselottoPage> {
       if (response.statusCode == 200) {
         // Successfully inserted
         log('Ticket inserted successfully');
+        log('Member id ${member.memberId}');
+
+        // แสดง Dialog แจ้งความสำเร็จ
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: const Text('สำเร็จ'),
+              content: const Text('เพิ่มสลากลงตะกร้าเรียบร้อย'),
+              actions: <Widget>[
+                TextButton(
+                  onPressed: () {
+                    Navigator.of(context).pop(); // ปิด Dialog
+                  },
+                  child: const Text('ตกลง'),
+                ),
+              ],
+            );
+          },
+        );
+      } else if (response.statusCode == 404) {
+        // แสดง Dialog แจ้งข้อผิดพลาดเมื่อไม่พบสลากหรือถูกซื้อไปแล้ว
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: const Text('ข้อผิดพลาด'),
+              content: const Text('ไม่พบสลากหรือถูกซื้อไปแล้ว'),
+              actions: <Widget>[
+                TextButton(
+                  onPressed: () {
+                    Navigator.of(context).pop(); // ปิด Dialog
+                  },
+                  child: const Text('ตกลง'),
+                ),
+              ],
+            );
+          },
+        );
       } else {
-        // Handle the error
+        // Handle other errors
         log('Failed to insert ticket: ${response.body}');
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: const Text('ข้อผิดพลาด'),
+              content: Text('เกิดข้อผิดพลาด: ${response.body}'),
+              actions: <Widget>[
+                TextButton(
+                  onPressed: () {
+                    Navigator.of(context).pop(); // ปิด Dialog
+                  },
+                  child: const Text('ตกลง'),
+                ),
+              ],
+            );
+          },
+        );
       }
     } catch (err) {
       log('Error inserting ticket: $err');
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: const Text('ข้อผิดพลาด'),
+            content: Text('เกิดข้อผิดพลาด: $err'),
+            actions: <Widget>[
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop(); // ปิด Dialog
+                },
+                child: const Text('ตกลง'),
+              ),
+            ],
+          );
+        },
+      );
     }
   }
 
@@ -375,8 +447,8 @@ class _ChooselottoPageState extends State<ChooselottoPage> {
       Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (context) => CartlottoPage(
-              selectedTicketIds: selectedTicketIds),
+          builder: (context) =>
+              CartlottoPage(selectedTicketIds: selectedTicketIds),
         ),
       );
     } else {
