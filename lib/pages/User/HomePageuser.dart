@@ -1,12 +1,15 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
+import 'package:minipro_mba/config/config.dart';
+import 'package:minipro_mba/models/response/getprize_response_get.dart';
 import 'package:minipro_mba/pages/User/ChooseLotto.dart';
 import 'package:minipro_mba/pages/User/CustomerAppBar.dart';
 import 'package:minipro_mba/pages/User/CustomerNavbar.dart';
 import 'package:minipro_mba/pages/User/PayLotto.dart';
 import 'package:minipro_mba/share/ShareData.dart';
-import 'package:provider/provider.dart'; // ตรวจสอบว่ามีการติดตั้ง package นี้แล้ว
+import 'package:provider/provider.dart';
+import 'package:http/http.dart' as http;
 
 class Homepageuser extends StatefulWidget {
   const Homepageuser({super.key});
@@ -22,8 +25,8 @@ class _HomepageuserState extends State<Homepageuser> {
     final userModel = context.read<Data>();
     String _text = '';
 
-
     log(userModel.datauser.memberId.toString());
+     List<GetprizeResponseGet> prizeData = [];
 
     return Scaffold(
       backgroundColor: const Color.fromRGBO(255, 138, 128, 1),
@@ -138,7 +141,7 @@ class _HomepageuserState extends State<Homepageuser> {
                                   ),
                                 ),
                                 Text(
-                                  '1234123',
+                                  prizeData.isNotEmpty ? prizeData[0].rank.toString() : 'xxxxxxx',
                                   style: TextStyle(
                                     fontFamily: 'MaliMedium',
                                     fontSize: screenSize.width *
@@ -432,63 +435,104 @@ class _HomepageuserState extends State<Homepageuser> {
     );
   }
 
-  void Select() {
+  String url = ""; // ประกาศตัวแปร url
+
+  @override
+  void initState() {
+    super.initState();
+    Configuration.getConfig().then(
+      (value) {
+        setState(() {
+          url = value['apiEndpoint'].toString(); // กำหนดค่า url จาก config
+        });
+      },
+    ).catchError((err) {
+      print('Error in initState: $err');
+    });
+  }
+
+  Future<void> Select() async {
     final member = context.read<Data>();
-     showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        backgroundColor: Colors.transparent,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(10),
-        ),
-        title: Container(
-          decoration: BoxDecoration(
-            color: const Color.fromRGBO(255, 149, 0, 0.8),
-            borderRadius: BorderRadius.circular(10),
-          ),
-          padding: const EdgeInsets.all(10.0),
-          child: Container(
-            decoration: BoxDecoration(
-              color: Colors.white,
+
+    try {
+      // เรียก HTTP request
+      var response = await http.get(
+        Uri.parse('$url/draw/Getprize'), 
+        headers: {"Content-Type": "application/json; charset=utf-8"},
+      );
+
+      // ตรวจสอบว่าสถานะเป็น 200 (OK)
+      if (response.statusCode == 200) {
+        // Parse JSON response
+        List<GetprizeResponseGet> prizeData =
+            getprizeResponseGetFromJson(response.body);
+
+        showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+            backgroundColor: Colors.transparent,
+            shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(10),
             ),
-            padding: const EdgeInsets.all(10.0),
-            child: Column(
-              children: [
-                Text(
-                  "รอบที่ ${member.period}", // ข้อความหัวเรื่อง
-                  style: const TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.w800,
-                  ),
+            title: Container(
+              decoration: BoxDecoration(
+                color: const Color.fromRGBO(255, 149, 0, 0.8),
+                borderRadius: BorderRadius.circular(10),
+              ),
+              padding: const EdgeInsets.all(10.0),
+              child: Container(
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(10),
                 ),
-                Padding(
-                  padding: EdgeInsets.symmetric(
-                      horizontal: MediaQuery.of(context).size.width * 0.1),
-                  child: FilledButton(
-                    onPressed: () {
-                      Navigator.of(context).pop(); // ปิด Dialog
-                    },
-                    style: ButtonStyle(
-                      backgroundColor: WidgetStateProperty.all<Color>(
-                          const Color.fromRGBO(255, 34, 34, 1)),
+                padding: const EdgeInsets.all(10.0),
+                child: Column(
+                  children: [
+                    Text(
+                      "รอบที่ ${member.period}", // ข้อความหัวเรื่อง
+                      style: const TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.w800,
+                      ),
                     ),
-                    child: const Center(
-                      child: Text(
-                        'เลือก',
-                        style: TextStyle(
-                          fontSize: 20,
-                          fontWeight: FontWeight.w800,
+                    Padding(
+                      padding: EdgeInsets.symmetric(
+                          horizontal: MediaQuery.of(context).size.width * 0.1),
+                      child: FilledButton(
+                        onPressed: () {
+                          Navigator.of(context).pop(); // ปิด Dialog
+                        },
+                        style: ButtonStyle(
+                          backgroundColor: MaterialStateProperty.all<Color>(
+                              const Color.fromRGBO(255, 34, 34, 1)),
+                        ),
+                        child: const Center(
+                          child: Text(
+                            'เลือก',
+                            style: TextStyle(
+                              fontSize: 20,
+                              fontWeight: FontWeight.w800,
+                            ),
+                          ),
                         ),
                       ),
                     ),
-                  ),
-                )
-              ],
+                    // แสดงข้อมูล response จาก API ที่เพิ่งได้รับ
+                    for (var prize in prizeData)
+                      Text(
+                          "ผู้ชนะที่ ${prize.rank}, เงินรางวัล: ${prize.gratuity}")
+                  ],
+                ),
+              ),
             ),
           ),
-        ),
-      ),
-    );
+        );
+      } else {
+        // กรณี response status ไม่ใช่ 200
+        print("Error: ${response.statusCode}");
+      }
+    } catch (e) {
+      print("Error: $e");
+    }
   }
 }
