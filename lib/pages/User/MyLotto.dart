@@ -22,7 +22,7 @@ class _MyLottoPageState extends State<MyLottoPage> {
   final myWidget = MyWidget();
   final handleError = HandleError();
   late Future<void> loadData;
-  late List<GetuserdrawnumbersResponseGet> allLotto;
+  late List<GetuserdrawnumbersResponseGet> allLotto = [];
 
   @override
   void initState() {
