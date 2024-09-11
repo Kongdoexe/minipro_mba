@@ -11,12 +11,14 @@ String getprizeResponseGetToJson(List<GetprizeResponseGet> data) => json.encode(
 class GetprizeResponseGet {
     int winnerId;
     int rank;
-    int? memberId;
+    String number;
+    dynamic memberId;
     int gratuity;
 
     GetprizeResponseGet({
         required this.winnerId,
         required this.rank,
+        required this.number,
         required this.memberId,
         required this.gratuity,
     });
@@ -24,6 +26,7 @@ class GetprizeResponseGet {
     factory GetprizeResponseGet.fromJson(Map<String, dynamic> json) => GetprizeResponseGet(
         winnerId: json["WinnerID"],
         rank: json["Rank"],
+        number: json["Number"],
         memberId: json["MemberID"],
         gratuity: json["Gratuity"],
     );
@@ -31,6 +34,7 @@ class GetprizeResponseGet {
     Map<String, dynamic> toJson() => {
         "WinnerID": winnerId,
         "Rank": rank,
+        "Number": number,
         "MemberID": memberId,
         "Gratuity": gratuity,
     };
