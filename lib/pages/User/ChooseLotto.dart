@@ -301,25 +301,28 @@ class _ChooselottoPageState extends State<ChooselottoPage> {
         // Successfully inserted
         log('Ticket inserted successfully');
         log('Member id ${member.memberId}');
+        setState(() {
+          _handleError(response);
+        });
 
         // แสดง Dialog แจ้งความสำเร็จ
-        showDialog(
-          context: context,
-          builder: (BuildContext context) {
-            return AlertDialog(
-              title: const Text('สำเร็จ'),
-              content: const Text('เพิ่มสลากลงตะกร้าเรียบร้อย'),
-              actions: <Widget>[
-                TextButton(
-                  onPressed: () {
-                    Navigator.of(context).pop(); // ปิด Dialog
-                  },
-                  child: const Text('ตกลง'),
-                ),
-              ],
-            );
-          },
-        );
+        // showDialog(
+        //   context: context,
+        //   builder: (BuildContext context) {
+        //     return AlertDialog(
+        //       title: const Text('สำเร็จ'),
+        //       content: const Text('เพิ่มสลากลงตะกร้าเรียบร้อย'),
+        //       actions: <Widget>[
+        //         TextButton(
+        //           onPressed: () {
+        //             Navigator.of(context).pop(); // ปิด Dialog
+        //           },
+        //           child: const Text('ตกลง'),
+        //         ),
+        //       ],
+        //     );
+        //   },
+        // );
       } else if (response.statusCode == 404) {
         // แสดง Dialog แจ้งข้อผิดพลาดเมื่อไม่พบสลากหรือถูกซื้อไปแล้ว
         showDialog(
