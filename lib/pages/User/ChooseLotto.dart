@@ -365,23 +365,23 @@ class _ChooselottoPageState extends State<ChooselottoPage> {
       }
     } catch (err) {
       log('Error inserting ticket: $err');
-      showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: const Text('ข้อผิดพลาด'),
-            content: Text('เกิดข้อผิดพลาด: $err'),
-            actions: <Widget>[
-              TextButton(
-                onPressed: () {
-                  Navigator.of(context).pop(); // ปิด Dialog
-                },
-                child: const Text('ตกลง'),
-              ),
-            ],
-          );
-        },
-      );
+      // showDialog(
+      //   context: context,
+      //   builder: (BuildContext context) {
+      //     return AlertDialog(
+      //       title: const Text('ข้อผิดพลาด'),
+      //       content: Text('เกิดข้อผิดพลาด: $err'),
+      //       actions: <Widget>[
+      //         TextButton(
+      //           onPressed: () {
+      //             Navigator.of(context).pop(); // ปิด Dialog
+      //           },
+      //           child: const Text('ตกลง'),
+      //         ),
+      //       ],
+      //     );
+      //   },
+      // );
     }
   }
 

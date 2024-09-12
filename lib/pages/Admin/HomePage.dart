@@ -272,6 +272,7 @@ class _HomePageState extends State<HomePage> {
         setState(() {
           var data = jsonDecode(response.body);
           log(jsonEncode(data));
+          salesdata = fetchSalesData(); // รีเฟรชข้อมูลหลังรีเซ็ตระบบ
         });
         showDialog(
           context: context,
@@ -342,6 +343,8 @@ class _HomePageState extends State<HomePage> {
         setState(() {
           var data = jsonDecode(response.body);
           log(jsonEncode(data));
+          salesdata = fetchSalesData();// รีเฟรชข้อมูลหลังรีเซ็ตระบบ
+
         });
         showDialog(
           context: context,
