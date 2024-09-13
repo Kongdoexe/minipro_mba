@@ -5,7 +5,6 @@ import 'package:minipro_mba/pages/User/CheckLotto.dart';
 import 'package:minipro_mba/pages/User/HomePageuser.dart';
 import 'package:minipro_mba/pages/User/MyLotto.dart';
 import 'package:minipro_mba/pages/User/Profile.dart';
-import 'package:minipro_mba/pages/User/Wallet_topup.dart';
 import 'package:minipro_mba/share/ShareData.dart';
 import 'package:provider/provider.dart';
 
@@ -105,8 +104,6 @@ class CustomNavigationBar extends StatelessWidget {
   }
 
   void navigateBuyLotto(BuildContext context) {
-    final dataProvider = context.read<Data>(); 
-    final memberId = dataProvider.datauser.memberId;
     _setperiod(context);
     Navigator.push(
       context,

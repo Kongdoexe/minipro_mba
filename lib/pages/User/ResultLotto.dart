@@ -1,7 +1,6 @@
 import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:minipro_mba/config/config.dart';
-import 'package:minipro_mba/models/request/addfunds_request_put.dart';
 import 'package:minipro_mba/models/request/addwinningstowallet_request_post.dart';
 import 'package:minipro_mba/models/response/getwinningnumbers_response_get.dart';
 import 'package:minipro_mba/pages/User/CheckLotto.dart';
@@ -67,7 +66,6 @@ class _ResultLottoPageState extends State<ResultLottoPage> {
   @override
   Widget build(BuildContext context) {
     final screenSize = MediaQuery.of(context).size;
-    final data = context.read<Data>();
     return Scaffold(
       backgroundColor: const Color.fromRGBO(255, 138, 128, 1),
       appBar: CustomAppBar(
