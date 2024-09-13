@@ -3,7 +3,8 @@ import 'package:minipro_mba/models/response/login_response_get.dart';
 
 class Data with ChangeNotifier {
   int _period = 0;
-  
+  int _lastperiod = 0;
+
   Member _datauser = Member(
       memberId: 0,
       name: "",
@@ -15,9 +16,15 @@ class Data with ChangeNotifier {
 
   Member get datauser => _datauser;
   int get period => _period;
-  
+  int get lastperiod => _lastperiod;
+
   void setDataUser(Member user) {
     _datauser = user;
+    notifyListeners();
+  }
+
+  void setLastperiod(int period) {
+    _lastperiod = period;
     notifyListeners();
   }
 

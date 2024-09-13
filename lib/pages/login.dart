@@ -234,6 +234,7 @@ class _LoginPageState extends State<LoginPage> {
               loginResponseGetFromJson(response.body);
           userTest.setDataUser(memberlogin.member);
           userTest.setPeriod(memberlogin.periodLotto);
+          userTest.setLastperiod(memberlogin.periodLotto);
 
           // ตรวจสอบค่า isadmin
           if (memberlogin.member.isadmin == 0) {

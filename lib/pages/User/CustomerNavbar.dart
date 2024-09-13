@@ -81,6 +81,7 @@ class CustomNavigationBar extends StatelessWidget {
   }
 
   void navigateHomePage(BuildContext context) {
+    _setperiod(context);
     Navigator.push(
       context,
       MaterialPageRoute(builder: (context) => const Homepageuser()),
@@ -88,6 +89,7 @@ class CustomNavigationBar extends StatelessWidget {
   }
 
   void navigateCheckLotto(BuildContext context) {
+    _setperiod(context);
     Navigator.push(
       context,
       MaterialPageRoute(builder: (context) => const CheckLottoPage()),
@@ -95,6 +97,7 @@ class CustomNavigationBar extends StatelessWidget {
   }
 
   void navigateMyLotto(BuildContext context) {
+    _setperiod(context);
     Navigator.push(
       context,
       MaterialPageRoute(builder: (context) => const MyLottoPage()),
@@ -104,6 +107,7 @@ class CustomNavigationBar extends StatelessWidget {
   void navigateBuyLotto(BuildContext context) {
     final dataProvider = context.read<Data>(); 
     final memberId = dataProvider.datauser.memberId;
+    _setperiod(context);
     Navigator.push(
       context,
       MaterialPageRoute(builder: (context) => const ChooselottoPage()),
@@ -111,9 +115,15 @@ class CustomNavigationBar extends StatelessWidget {
   }
 
   void navigateProfile(BuildContext context) {
+    _setperiod(context);
     Navigator.push(
       context,
       MaterialPageRoute(builder: (context) => const ProfilePage()),
     );
+  }
+
+  void _setperiod(BuildContext context) {
+    final memberId = context.read<Data>();
+    memberId.setPeriod(memberId.lastperiod);
   }
 }

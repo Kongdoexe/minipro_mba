@@ -198,14 +198,14 @@ class _ProfilePageState extends State<ProfilePage> {
             ],
           ),
           Positioned(
-            bottom: screenSize.height * 0.59,
+            bottom: screenSize.height * 0.58,
             right: screenSize.width * 0.25,
             child: ClipRRect(
               borderRadius: BorderRadius.circular(screenSize.width * 0.4),
               child: Image.asset(
                 'assets/images/user-avatar.png',
                 width: screenSize.width * 0.5,
-                height: screenSize.width * 0.4,
+                height: screenSize.width * 0.38,
                 fit: BoxFit.cover,
               ),
             ),
@@ -213,7 +213,7 @@ class _ProfilePageState extends State<ProfilePage> {
         ],
       ),
       bottomNavigationBar: CustomNavigationBar(
-        selectedIndex: 0,
+        selectedIndex: 4,
         onDestinationSelected: (value) {},
         screenSize: screenSize,
       ),
