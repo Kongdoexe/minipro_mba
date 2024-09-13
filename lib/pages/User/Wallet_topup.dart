@@ -249,7 +249,7 @@ class _WalletTopUpPageState extends State<WalletTopUpPage> {
   void goEditProfile() {
     Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) => const EditprofilePage()),
+      MaterialPageRoute(builder: (context) => const EditProfilePage()),
     );
   }
 
