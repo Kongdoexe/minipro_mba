@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:minipro_mba/config/config.dart';
+import 'package:minipro_mba/models/request/selectalllotto_request_get.dart';
 import 'package:minipro_mba/models/response/getuserdrawnumbers_response_get.dart';
 import 'package:minipro_mba/pages/User/ChooseLotto.dart';
 import 'package:minipro_mba/pages/User/CustomerAppBar.dart';
@@ -19,6 +20,7 @@ class MyLottoPage extends StatefulWidget {
 }
 
 class _MyLottoPageState extends State<MyLottoPage> {
+  bool isPressed = false;
   final myWidget = MyWidget();
   final handleError = HandleError();
   late Future<void> loadData;
@@ -73,6 +75,33 @@ class _MyLottoPageState extends State<MyLottoPage> {
               color: Colors.black,
               thickness: screenSize.height * 0.003,
             ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                buildLottoButton(
+                  context,
+                  "เลขรอบปัจจุบัน",
+                  !isPressed,
+                  () {
+                    setStateGenWinnerLotto(false);
+                    loadData = loadDataAsync();
+                  },
+                ),
+                buildLottoButton(
+                  context,
+                  "เลขที่เคยซื้อ",
+                  isPressed,
+                  () {
+                    setStateGenWinnerLotto(true);
+                    loadData = loadDataAsync();
+                  },
+                ),
+              ],
+            ),
+            Divider(
+              color: Colors.black,
+              thickness: screenSize.height * 0.003,
+            ),
             FutureBuilder(
               future: loadData,
               builder: (context, snapshot) {
@@ -82,6 +111,11 @@ class _MyLottoPageState extends State<MyLottoPage> {
                 if (snapshot.hasError) {
                   return Center(child: Text('Error: ${snapshot.error}'));
                 }
+
+                if (allLotto.isEmpty) {
+                  return const SizedBox.shrink();
+                }
+
                 return SingleChildScrollView(
                   child: Column(
                     children: allLotto
@@ -160,6 +194,44 @@ class _MyLottoPageState extends State<MyLottoPage> {
     );
   }
 
+  Widget buildLottoButton(BuildContext context, String text, bool isActive,
+      VoidCallback onPressed) {
+    final screenSize = MediaQuery.of(context).size;
+
+    return SizedBox(
+      width: screenSize.width * 0.38,
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 200),
+        curve: Curves.easeInOut,
+        decoration: BoxDecoration(
+          color: isActive
+              ? const Color.fromRGBO(200, 30, 30, 1)
+              : const Color.fromRGBO(255, 34, 34, 1),
+          borderRadius: BorderRadius.circular(60),
+        ),
+        child: TextButton(
+          onPressed: onPressed,
+          style: TextButton.styleFrom(backgroundColor: Colors.transparent),
+          child: Text(
+            text,
+            style: TextStyle(
+              fontFamily: 'MaliMedium',
+              fontSize: screenSize.width * 0.034,
+              fontWeight: FontWeight.bold,
+              color: Colors.white,
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  void setStateGenWinnerLotto(bool newState) {
+    setState(() {
+      isPressed = newState;
+    });
+  }
+
   void goChooseLotto() {
     Navigator.push(context,
         MaterialPageRoute(builder: (context) => const ChooselottoPage()));
@@ -176,13 +248,18 @@ class _MyLottoPageState extends State<MyLottoPage> {
 
   Future<void> loadDataAsync() async {
     try {
+      await Future.delayed(Duration(milliseconds: 500));
       final url = await loadUrl();
       final member = context.read<Data>();
+      var body = SelectalllottoRequestGet(status: isPressed);
+      var jsonBody = selectalllottoRequestGetToJson(body);
+      allLotto = [];
 
-      final response = await http.get(
+      final response = await http.post(
         Uri.parse(
             '$url/lottery/GetUserDrawNumbers/${member.datauser.memberId}'),
         headers: {"Content-Type": "application/json; charset=utf-8"},
+        body: jsonBody,
       );
       if (response.statusCode == 200) {
         final jsonResponse = json.decode(utf8.decode(response.bodyBytes));

@@ -1,9 +1,17 @@
 import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:minipro_mba/config/config.dart';
+import 'package:minipro_mba/models/request/addfunds_request_put.dart';
+import 'package:minipro_mba/models/request/addwinningstowallet_request_post.dart';
 import 'package:minipro_mba/models/response/getwinningnumbers_response_get.dart';
+import 'package:minipro_mba/pages/User/CheckLotto.dart';
 import 'package:minipro_mba/pages/User/CustomerAppBar.dart';
 import 'package:minipro_mba/pages/User/CustomerNavbar.dart';
+import 'package:minipro_mba/share/ShareWidget.dart';
+import 'package:provider/provider.dart';
+import 'package:http/http.dart' as http;
+
+import '../../share/ShareData.dart';
 
 class ResultLottoPage extends StatefulWidget {
   final List<GetwinningnumbersResponseGet> result;
@@ -16,93 +24,115 @@ class ResultLottoPage extends StatefulWidget {
 class _ResultLottoPageState extends State<ResultLottoPage> {
   final PageController _pageController = PageController();
   int _currentPage = 0;
-  late Future<void> loadData;
+  bool _isLoading = true;
+  late bool hasTrue;
+  late bool hasPeriodlast;
 
   @override
   void initState() {
     super.initState();
-    loadData = loadDataAsync();
+    _pageController.addListener(_onPageChanged);
+    _loadData();
+  }
 
-    _pageController.addListener(() {
+  @override
+  void dispose() {
+    _pageController.removeListener(_onPageChanged);
+    _pageController.dispose();
+    super.dispose();
+  }
+
+  void _onPageChanged() {
+    if (mounted) {
       setState(() {
         _currentPage = _pageController.page?.round() ?? 0;
       });
-    });
+    }
+  }
+
+  Future<void> _loadData() async {
+    try {
+      await loadDataAsync(context);
+    } catch (e, stacktrace) {
+      log("An error occurred: $e, stacktrace: $stacktrace");
+    } finally {
+      if (mounted) {
+        setState(() {
+          _isLoading = false;
+        });
+      }
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     final screenSize = MediaQuery.of(context).size;
+    final data = context.read<Data>();
     return Scaffold(
       backgroundColor: const Color.fromRGBO(255, 138, 128, 1),
       appBar: CustomAppBar(
         screenSize: screenSize,
         namePage: 'ตรวจสลาก',
-
       ),
       body: Stack(
         children: [
-          FutureBuilder(
-              future: loadData,
-              builder: (context, snapshot) {
-                if (snapshot.connectionState != ConnectionState.done) {
-                  return const Center(
-                    child: CircularProgressIndicator(),
-                  );
-                }
-                return Positioned.fill(
-                  child: Padding(
-                    padding: EdgeInsets.only(
-                      right: screenSize.width * 0.12,
-                      left: screenSize.width * 0.12,
-                      bottom: screenSize.height * 0.135,
-                      top: screenSize.height * 0.06,
-                    ),
-                    child: Container(
-                      decoration: const BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.all(Radius.circular(10)),
-                      ),
-                      child: Column(
-                        children: [
-                          Expanded(
-                            child: PageView(
-                              controller: _pageController,
-                              children: widget.result
-                                  .map((result) => result.hasWinner
-                                      ? buildTrueWidget(screenSize, result)
-                                      : buildFalseWidget(screenSize, result))
-                                  .toList(),
-                            ),
-                          ),
-                          Padding(
-                            padding: EdgeInsets.only(
-                                bottom: screenSize.height * 0.01),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children:
-                                  List.generate(widget.result.length, (index) {
-                                return Container(
-                                  margin: EdgeInsets.symmetric(
-                                      horizontal: screenSize.width * 0.014),
-                                  width: screenSize.width * 0.025,
-                                  height: screenSize.height * 0.025,
-                                  decoration: BoxDecoration(
-                                    shape: BoxShape.circle,
-                                    color: _currentPage == index
-                                        ? const Color.fromARGB(255, 0, 0, 0)
-                                        : Colors.grey,
-                                  ),
-                                );
-                              }),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
+          if (_isLoading)
+            const Center(
+              child: CircularProgressIndicator(),
+            )
+          else
+            Positioned.fill(
+              child: Padding(
+                padding: EdgeInsets.only(
+                  right: screenSize.width * 0.12,
+                  left: screenSize.width * 0.12,
+                  bottom: screenSize.height * 0.135,
+                  top: screenSize.height * 0.06,
+                ),
+                child: Container(
+                  decoration: const BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.all(Radius.circular(10)),
                   ),
-                );
-              }),
+                  child: Column(
+                    children: [
+                      Expanded(
+                        child: PageView(
+                          controller: _pageController,
+                          children: widget.result
+                              .map((result) => result.hasWinner
+                                  ? buildTrueWidget(screenSize, result)
+                                  : buildFalseWidget(screenSize, result))
+                              .toList(),
+                        ),
+                      ),
+                      Padding(
+                        padding:
+                            EdgeInsets.only(bottom: screenSize.height * 0.01),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children:
+                              List.generate(widget.result.length, (index) {
+                            return Container(
+                              margin: EdgeInsets.symmetric(
+                                  horizontal: screenSize.width * 0.014),
+                              width: screenSize.width * 0.025,
+                              height: screenSize.height * 0.025,
+                              decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                color: _currentPage == index
+                                    ? const Color.fromARGB(255, 0, 0, 0)
+                                    : Colors.grey,
+                              ),
+                            );
+                          }),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
           Positioned.fill(
             child: Column(
               children: [
@@ -123,12 +153,14 @@ class _ResultLottoPageState extends State<ResultLottoPage> {
                   width: screenSize.width * 0.35,
                   height: screenSize.height * 0.06,
                   child: TextButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      hasTrue && hasPeriodlast ? cashIN() : backtoCheckLotto();
+                    },
                     style: TextButton.styleFrom(
                       backgroundColor: const Color.fromRGBO(255, 209, 128, 1),
                     ),
                     child: Text(
-                      "รับรางวัล",
+                      hasTrue && hasPeriodlast ? "ขึ้นเงินรางวัล" : "ตกลง",
                       style: TextStyle(
                         fontFamily: 'MaliMedium',
                         fontSize: screenSize.width * 0.04,
@@ -287,14 +319,72 @@ class _ResultLottoPageState extends State<ResultLottoPage> {
     return url;
   }
 
-  Future<void> loadDataAsync() async {
+  Future<void> loadDataAsync(BuildContext context) async {
     try {
-      // var url = await loadUrl();
-      if (widget.result.contains(true)) {
-        log("message");
+      final data = context.read<Data>();
+      setState(() {
+        hasTrue = widget.result.any((item) => item.hasWinner == true);
+        hasPeriodlast = data.lastperiod == data.period;
+      });
+    } catch (e, stacktrace) {
+      MyWidget().showCustomSnackbar(
+          "Error", "An error occurred: $e, stacktrace: $stacktrace");
+    }
+  }
+
+  void _setperiod() {
+    final memberId = context.read<Data>();
+    memberId.setPeriod(memberId.lastperiod);
+  }
+
+  void backtoCheckLotto() {
+    _setperiod();
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => const CheckLottoPage()),
+    );
+  }
+
+  void cashIN() async {
+    try {
+      _setperiod();
+      final data = context.read<Data>();
+      final url = await loadUrl();
+
+      List<Datum> bodyData = [];
+      for (var result in widget.result) {
+        bodyData.add(Datum(
+          hasWinner: result.hasWinner,
+          number: result.number,
+          rank: result.rank,
+          gratuity: result.gratuity,
+          period: result.period,
+        ));
       }
-    } catch (e) {
-      log("An error occurred: $e");
+
+      var body = AddwinningstowalletRequestPost(
+        id: data.datauser.memberId,
+        data: bodyData,
+      );
+
+      final jsonBody = addwinningstowalletRequestPostToJson(body);
+      print(jsonBody);
+
+      var response = await http.put(
+        Uri.parse("$url/wallet/AddFunds/${data.datauser.memberId}"),
+        headers: {"Content-Type": "application/json; charset=utf-8"},
+        body: jsonBody,
+      );
+
+      if (response.statusCode == 200) {
+        HandleError().handleError(response);
+      } else {
+        HandleError().handleError(response);
+      }
+    } catch (e, stacktrace) {
+      // Display error message in a Snackbar
+      MyWidget().showCustomSnackbar(
+          "Error", "An error occurred: $e, stacktrace: $stacktrace");
     }
   }
 }

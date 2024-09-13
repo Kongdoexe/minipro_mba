@@ -6,6 +6,7 @@ import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
 import 'package:minipro_mba/config/config.dart';
 import 'package:minipro_mba/models/request/getwinningnumbers_request_get.dart';
+import 'package:minipro_mba/models/request/selectalllotto_request_get.dart';
 import 'package:minipro_mba/models/response/getuserdrawnumbers_response_get.dart';
 import 'package:minipro_mba/models/response/allerrorresponseget.dart';
 import 'package:minipro_mba/models/response/getwinningnumbers_response_get.dart';
@@ -32,6 +33,7 @@ class _CheckLottoPageState extends State<CheckLottoPage> {
   List<GetuserdrawnumbersResponseGet> allLotto = [];
   List<TextEditingController> lottoControllers = [];
   late Allerrorresponseget msg;
+  int selectedPeriod = 0;
 
   @override
   void initState() {
@@ -118,7 +120,8 @@ class _CheckLottoPageState extends State<CheckLottoPage> {
                               ),
                               IconButton(
                                 icon: const Icon(Icons.calendar_month),
-                                onPressed: () => showDialogg(context),
+                                onPressed: () =>
+                                    showDialogg(context, screenSize),
                               ),
                             ],
                           ),
@@ -277,7 +280,13 @@ class _CheckLottoPageState extends State<CheckLottoPage> {
     );
   }
 
-  void showDialogg(BuildContext context) {
+  void showDialogg(BuildContext context, Size screenSize) {
+    final member = context.read<Data>();
+    List<int> periods =
+        List.generate(member.period, (index) => index + 1).reversed.toList();
+    PageController pageController = PageController(initialPage: 0);
+    selectedPeriod = periods[0];
+
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
@@ -299,11 +308,19 @@ class _CheckLottoPageState extends State<CheckLottoPage> {
             padding: const EdgeInsets.all(10.0),
             child: Column(
               children: [
-                Text(
-                  _text, // ข้อความหัวเรื่อง
-                  style: const TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.w800,
+                SizedBox(
+                  width: screenSize.width * 0.4,
+                  height: screenSize.height * 0.2,
+                  child: PageView(
+                    controller: pageController,
+                    reverse: true, // Scroll from right to left
+                    onPageChanged: (index) {
+                      selectedPeriod = periods[index];
+                    },
+                    children: periods
+                        .map((period) =>
+                            _buildPage(screenSize, 'รอบที่ $period'))
+                        .toList(),
                   ),
                 ),
                 Padding(
@@ -311,7 +328,8 @@ class _CheckLottoPageState extends State<CheckLottoPage> {
                       horizontal: MediaQuery.of(context).size.width * 0.1),
                   child: FilledButton(
                     onPressed: () {
-                      Navigator.of(context).pop(); // ปิด Dialog
+                      Navigator.of(context).pop();
+                      chooseloadDataAsync();
                     },
                     style: ButtonStyle(
                       backgroundColor: WidgetStateProperty.all<Color>(
@@ -327,7 +345,7 @@ class _CheckLottoPageState extends State<CheckLottoPage> {
                       ),
                     ),
                   ),
-                )
+                ),
               ],
             ),
           ),
@@ -336,17 +354,45 @@ class _CheckLottoPageState extends State<CheckLottoPage> {
     );
   }
 
+  Widget _buildPage(Size screenSize, String text) {
+    return Center(
+      child: Text(
+        text,
+        style: TextStyle(
+          fontSize: screenSize.width * 0.1,
+          fontWeight: FontWeight.w800,
+        ),
+      ),
+    );
+  }
+
+  void chooseloadDataAsync() {
+    try {
+      final member = context.read<Data>();
+      setState(() {
+        member.setPeriod(selectedPeriod);
+        _text = "รอบที่ $selectedPeriod";
+      });
+    } catch (e) {
+      myWidget.showCustomSnackbar("Error", "An error occurred: $e");
+    }
+  }
+
   Future<void> loadDataAsync() async {
     try {
       final url = await loadUrl();
       final member = context.read<Data>();
+      var body = SelectalllottoRequestGet(status: false);
+      var jsonBody = selectalllottoRequestGetToJson(body);
+
       setState(() {
         _text = "รอบที่ ${member.period}";
       });
       final memberId = member.datauser.memberId;
-      final response = await http.get(
+      final response = await http.post(
         Uri.parse('$url/lottery/GetUserDrawNumbers/$memberId'),
         headers: {"Content-Type": "application/json; charset=utf-8"},
+        body: jsonBody,
       );
 
       if (response.statusCode == 200) {
