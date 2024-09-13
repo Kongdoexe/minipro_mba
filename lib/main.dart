@@ -1,8 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:get/get_navigation/src/root/get_material_app.dart';
-import 'package:minipro_mba/pages/Admin/HomePage.dart';
-import 'package:minipro_mba/pages/User/HomePageuser.dart';
-import 'package:minipro_mba/pages/User/Wallet_topup.dart';
 import 'package:minipro_mba/pages/login.dart';
 import 'package:minipro_mba/share/ShareData.dart';
 import 'package:provider/provider.dart';
@@ -25,10 +22,10 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Flutter Demo',
-      // theme: ThemeData(
-      //   colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-      //   useMaterial3: true,
-      // ),
+      theme: ThemeData(
+        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+        useMaterial3: true,
+      ),
       home: const LoginPage(),
     );
   }

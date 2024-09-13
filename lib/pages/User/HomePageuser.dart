@@ -1,4 +1,3 @@
-import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:minipro_mba/config/config.dart';
@@ -842,7 +841,6 @@ class _HomepageuserState extends State<Homepageuser> {
   }
 
   void buylotto(BuildContext context) {
-    final memberID = context.read<Data>();
     Navigator.push(
       context,
       MaterialPageRoute(
@@ -866,8 +864,6 @@ class _HomepageuserState extends State<Homepageuser> {
   }
 
   Future<void> Select() async {
-    final member = context.read<Data>();
-
     try {
       var response = await http.get(
         Uri.parse('$url/draw/Getprize'),
@@ -878,9 +874,9 @@ class _HomepageuserState extends State<Homepageuser> {
         List<GetprizeResponseGet> fetchedPrizeData =
             getprizeResponseGetFromJson(response.body);
 
-        int maxPeriod = fetchedPrizeData
+        int? maxPeriod = fetchedPrizeData
             .map((e) => e.period)
-            .reduce((a, b) => a > b ? a : b);
+            .reduce((a, b) => a! > b! ? a : b);
 
         showDialog(
           context: context,

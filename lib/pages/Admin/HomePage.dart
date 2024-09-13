@@ -4,8 +4,10 @@ import 'package:minipro_mba/models/response/getsalesdata_response_get.dart';
 import 'package:minipro_mba/pages/Admin/Admin_AppBar.dart';
 import 'package:minipro_mba/pages/Admin/Admin_NavBar.dart';
 import 'package:http/http.dart' as http;
-import 'dart:developer'; 
+import 'dart:developer';
 import 'dart:convert';
+
+import 'package:minipro_mba/share/ShareWidget.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -268,7 +270,6 @@ class _HomePageState extends State<HomePage> {
       var response = await http.post(Uri.parse('$url/lottery/insertLottery'));
 
       if (response.statusCode == 200) {
-        // Assuming `data` contains the lotto results.
         setState(() {
           var data = jsonDecode(response.body);
           log(jsonEncode(data));
@@ -324,10 +325,10 @@ class _HomePageState extends State<HomePage> {
           ),
         );
       } else {
-        log('Failed to insert lotto: ${response.body}');
+        HandleError().handleError(response);
       }
     } catch (err) {
-      log('Error inserting lotto: $err');
+      MyWidget().showCustomSnackbar('Error', 'Error inserting lotto: $err');
     }
   }
 
@@ -339,12 +340,10 @@ class _HomePageState extends State<HomePage> {
       var response = await http.delete(Uri.parse('$url/draw/ResetSystem'));
 
       if (response.statusCode == 200) {
-        // Assuming `data` contains the lotto results.
         setState(() {
           var data = jsonDecode(response.body);
           log(jsonEncode(data));
-          salesdata = fetchSalesData();// รีเฟรชข้อมูลหลังรีเซ็ตระบบ
-
+          salesdata = fetchSalesData(); // รีเฟรชข้อมูลหลังรีเซ็ตระบบ
         });
         showDialog(
           context: context,
@@ -377,7 +376,7 @@ class _HomePageState extends State<HomePage> {
             actions: [
               FilledButton(
                 onPressed: () {
-                  Navigator.of(context).pop(); // ปิด Dialog
+                  Navigator.of(context).pop();
                 },
                 style: ButtonStyle(
                   backgroundColor: MaterialStateProperty.all<Color>(
@@ -395,11 +394,12 @@ class _HomePageState extends State<HomePage> {
             ],
           ),
         );
+        insertlotto();
       } else {
-        log('Failed to insert lotto: ${response.body}');
+        HandleError().handleError(response);
       }
     } catch (err) {
-      log('Error inserting lotto: $err');
+      MyWidget().showCustomSnackbar('Error', 'Error inserting lotto: $err');
     }
   }
 
@@ -408,17 +408,18 @@ class _HomePageState extends State<HomePage> {
     var url = config['apiEndpoint'];
 
     try {
-    final response = await http.get(Uri.parse('$url/sales/GetSalesData'));
+      final response = await http.get(Uri.parse('$url/sales/GetSalesData'));
 
-    if (response.statusCode == 200) {
-      return getsalesdataResponseGetFromJson(response.body);
-    } else {
-      log('Failed to load sales data: ${response.statusCode}');
-      throw Exception('Failed to load sales data');
+      if (response.statusCode == 200) {
+        return getsalesdataResponseGetFromJson(response.body);
+      } else {
+        MyWidget().showCustomSnackbar(
+            'Error', 'Failed to load sales data: ${response.statusCode}');
+        throw Exception('Failed to load sales data');
+      }
+    } catch (e) {
+      MyWidget().showCustomSnackbar('Error', 'Error inserting lotto: $e');
+      rethrow;
     }
-  } catch (e) {
-    log('Error fetching sales data: $e');
-    rethrow;
-  }
   }
 }

@@ -441,23 +441,19 @@ class _ChooselottoPageState extends State<ChooselottoPage> {
 
   check() {
     var memberId = context.read<Data>();
-    if (memberId.datauser.memberId != null) {
-      for (int ticketId in selectedTicketIds) {
-        insertTicketIntoCart(ticketId);
-        log('Inserting ticket ID: $ticketId');
-        log('memberId ${memberId.datauser.memberId}');
-      }
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) =>
-              CartlottoPage(selectedTicketIds: selectedTicketIds),
-        ),
-      );
-    } else {
-      log('Member ID is null');
+    for (int ticketId in selectedTicketIds) {
+      insertTicketIntoCart(ticketId);
+      log('Inserting ticket ID: $ticketId');
+      log('memberId ${memberId.datauser.memberId}');
     }
-  }
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) =>
+            CartlottoPage(selectedTicketIds: selectedTicketIds),
+      ),
+    );
+    }
 
   void _handleError(http.Response response) {
     final jsonResponse = json.decode(utf8.decode(response.bodyBytes));

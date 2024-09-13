@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:minipro_mba/config/config.dart';
 import 'package:minipro_mba/pages/User/CustomerAppBar.dart';
 import 'package:minipro_mba/pages/User/CustomerNavbar.dart';
 import 'package:minipro_mba/pages/User/EditProfile.dart';

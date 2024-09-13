@@ -1,11 +1,8 @@
 import 'dart:developer';
-import 'dart:convert';
 import 'package:flutter/material.dart';
-import 'package:iconsax/iconsax.dart';
 import 'package:minipro_mba/config/config.dart';
 import 'package:minipro_mba/models/response/processpayment_response_with_lotto_deleted.dart';
 import 'package:minipro_mba/models/response/regsiter_response_post.dart';
-import 'package:minipro_mba/pages/User/CartLotto.dart';
 import 'package:minipro_mba/pages/User/CustomerAppBar.dart';
 import 'package:minipro_mba/pages/User/CustomerNavbar.dart';
 import 'package:minipro_mba/share/ShareData.dart';
@@ -13,6 +10,7 @@ import 'package:minipro_mba/share/ShareWidget.dart';
 import 'package:provider/provider.dart';
 import 'package:http/http.dart' as http;
 
+// ignore: must_be_immutable
 class PaylottoPage extends StatefulWidget {
   int payResult;
   PaylottoPage({super.key, required this.payResult});
