@@ -109,7 +109,7 @@ class _PaylottoPageState extends State<PaylottoPage> {
                                         ],
                                       ),
                                       FilledButton(
-                                        onPressed: () => paylotto(),
+                                        onPressed: paylotto,
                                         child: const Text(
                                           'ชำระเงิน',
                                           style: TextStyle(
@@ -154,6 +154,11 @@ class _PaylottoPageState extends State<PaylottoPage> {
     var url = value['apiEndpoint'];
 
     try {
+      if (widget.payResult > dataProvider.datauser.wallet) {
+        showErrorCashPay();
+        return;
+      }
+
       final requestUrl = "$url/lottery/ProcessPayment/$memberId";
       log('Request URL: $requestUrl');
 
@@ -169,7 +174,7 @@ class _PaylottoPageState extends State<PaylottoPage> {
         log('Message: ${processResponse.msg}');
 
         if (processResponse.lottoDeleted.isNotEmpty) {
-          // Show popup to inform user about deleted lotto numbers
+          // Show popup for deleted lotto numbers
           showDialog(
             context: context,
             builder: (context) => AlertDialog(
@@ -207,8 +212,12 @@ class _PaylottoPageState extends State<PaylottoPage> {
               actions: [
                 FilledButton(
                   onPressed: () {
-                    Navigator.of(context).pop(); // Close the dialog
-                    Navigator.of(context).pop(); // Return to cart page
+                    Navigator.of(context).pop();
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const ChooselottoPage()),
+                    );
                   },
                   style: ButtonStyle(
                     backgroundColor: MaterialStateProperty.all<Color>(
@@ -222,18 +231,24 @@ class _PaylottoPageState extends State<PaylottoPage> {
                       fontWeight: FontWeight.w800,
                     ),
                   )),
-                )
+                ),
               ],
             ),
           );
+          final resultdelete = processResponse.lottoDeleted.length * 80;
+          final result = widget.payResult - resultdelete;
+          int updatedWalletBalance = dataProvider.datauser.wallet - result;
+          setState(() {
+            dataProvider.datauser.wallet = updatedWalletBalance;
+          });
         } else {
-          // Proceed with successful payment
+          // Successful payment
           int updatedWalletBalance =
               dataProvider.datauser.wallet - widget.payResult;
           setState(() {
             dataProvider.datauser.wallet = updatedWalletBalance;
           });
-          log(dataProvider.datauser.wallet.toString());
+          log('Updated wallet balance: ${dataProvider.datauser.wallet}');
 
           showDialog(
             context: context,
@@ -278,7 +293,7 @@ class _PaylottoPageState extends State<PaylottoPage> {
                       fontWeight: FontWeight.w800,
                     ),
                   )),
-                )
+                ),
               ],
             ),
           );
@@ -291,6 +306,7 @@ class _PaylottoPageState extends State<PaylottoPage> {
       }
     } catch (e) {
       log('Error: $e');
+      // Optionally, you could show an error dialog here
     }
   }
 
@@ -314,6 +330,7 @@ class _PaylottoPageState extends State<PaylottoPage> {
 // แสดงกล่องข้อความข้อผิดพลาด
 
   void showErrorCashPay() {
+    final screenSize = MediaQuery.of(context).size;
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
@@ -325,27 +342,27 @@ class _PaylottoPageState extends State<PaylottoPage> {
                 'assets/images/warning.png',
                 width: MediaQuery.of(context).size.width * 0.2,
               ),
-              const Text(
+              Text(
                 'ยอดเงินไม่เพียงพอ',
                 style: TextStyle(
                     color: Color.fromRGBO(255, 255, 255, 1),
                     fontWeight: FontWeight.w800,
-                    fontSize: 30),
+                    fontSize: screenSize.width * 0.06),
               ),
-              const Text(
+              Text(
                 'โปรดเติมเงิน',
                 style: TextStyle(
                     color: Color.fromRGBO(255, 255, 255, 1),
                     fontWeight: FontWeight.w800,
-                    fontSize: 30),
+                    fontSize: screenSize.width * 0.06),
               ),
             ],
           ),
         ),
         actions: [
           FilledButton(
-            onPressed: () async {
-              await Navigator.push(
+            onPressed: () {
+              Navigator.push(
                 context,
                 MaterialPageRoute(
                     builder: (context) => const WalletTopUpPage()),
@@ -368,41 +385,4 @@ class _PaylottoPageState extends State<PaylottoPage> {
       ),
     );
   }
-
-  // void showErrorDialog() {
-  //   showDialog(
-  //     context: context,
-  //     builder: (context) => AlertDialog(
-  //       backgroundColor: const Color.fromARGB(255, 245, 156, 55),
-  //       title: const Text(
-  //         'ยอดเงินไม่พอ',
-  //         style: TextStyle(
-  //             color: Colors.white, fontWeight: FontWeight.bold, fontSize: 20),
-  //       ),
-  //       content: const Text(
-  //         'โปรดเติมเงิน',
-  //         style: TextStyle(color: Colors.white),
-  //       ),
-  //       actions: [
-  //         FilledButton(
-  //           onPressed: () {
-  //             Navigator.of(context).pop(); // ปิด Dialog
-  //           },
-  //           style: ButtonStyle(
-  //             backgroundColor: MaterialStateProperty.all<Color>(
-  //                 const Color.fromARGB(255, 230, 92, 87)),
-  //           ),
-  //           child: const Center(
-  //               child: Text(
-  //             'ตกลง',
-  //             style: TextStyle(
-  //               fontSize: 20,
-  //               fontWeight: FontWeight.w800,
-  //             ),
-  //           )),
-  //         )
-  //       ],
-  //     ),
-  //   );
-  // }
 }

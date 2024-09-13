@@ -379,8 +379,9 @@ class _ResultLottoPageState extends State<ResultLottoPage> {
 
       if (response.statusCode == 200) {
         showSuccessAddWallet();
-        double resultcash = (cashall + data.datauser.wallet) as double;
-        data.updateWallet(resultcash);
+        int resultcash = cashall + data.datauser.wallet;
+        double result = resultcash.toDouble();
+        data.updateWallet(result);
       } else {
         handleError.handleError(response);
       }

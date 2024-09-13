@@ -6,12 +6,13 @@ import 'package:provider/provider.dart';
 
 void main() {
   runApp(
-    GetMaterialApp(
-    home: ChangeNotifierProvider(
-        create: (context) => Data(),
-        child: const MyApp(),
+    ChangeNotifierProvider(
+      create: (context) => Data(), // สร้าง Provider ของ Data
+      child: const GetMaterialApp(
+        home: MyApp(), // หน้าหลักของแอป
       ),
-  ),);
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {

@@ -14,11 +14,11 @@ class CustomNavigationBar extends StatelessWidget {
   final Size screenSize;
 
   const CustomNavigationBar({
-    Key? key,
+    super.key,
     required this.selectedIndex,
     required this.onDestinationSelected,
     required this.screenSize,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
