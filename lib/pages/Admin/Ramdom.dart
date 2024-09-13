@@ -183,27 +183,27 @@ class _RandomPageState extends State<RandomPage> {
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceBetween,
                                 children: [
-                                  Text(
-                                    "รางวัลที่ ${winner.rank}: ",
-                                    style: TextStyle(
-                                      fontFamily: 'MaliMedium',
-                                      fontSize:
-                                          MediaQuery.of(context).size.width *
-                                              0.05,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                  Text(
-                                    winner.memberId.toString(),
-                                    style: TextStyle(
-                                      fontFamily: 'MaliMedium',
-                                      fontSize:
-                                          MediaQuery.of(context).size.width *
-                                              0.05,
-                                      fontWeight: FontWeight.bold,
-                                      color: Colors.red,
-                                    ),
-                                  ),
+                                  // Text(
+                                  //   "รางวัลที่ ${winner.rank}: ",
+                                  //   style: TextStyle(
+                                  //     fontFamily: 'MaliMedium',
+                                  //     fontSize:
+                                  //         MediaQuery.of(context).size.width *
+                                  //             0.05,
+                                  //     fontWeight: FontWeight.bold,
+                                  //   ),
+                                  // ),
+                                  // Text(
+                                  //   winner.memberId.toString(),
+                                  //   style: TextStyle(
+                                  //     fontFamily: 'MaliMedium',
+                                  //     fontSize:
+                                  //         MediaQuery.of(context).size.width *
+                                  //             0.05,
+                                  //     fontWeight: FontWeight.bold,
+                                  //     color: Colors.red,
+                                  //   ),
+                                  // ),
                                 ],
                               ),
                               Padding(
@@ -212,30 +212,30 @@ class _RandomPageState extends State<RandomPage> {
                                       0.012,
                                 ),
                               ),
-                              SizedBox(
-                                width: MediaQuery.of(context).size.width * 0.34,
-                                height:
-                                    MediaQuery.of(context).size.height * 0.05,
-                                child: TextButton(
-                                  onPressed: () =>
-                                      randomLotto(winner.rank, isPressed),
-                                  style: TextButton.styleFrom(
-                                    backgroundColor:
-                                        const Color.fromRGBO(252, 225, 87, 1),
-                                  ),
-                                  child: Text(
-                                    "สุ่มออกรางวัล",
-                                    style: TextStyle(
-                                      fontFamily: 'MaliMedium',
-                                      fontSize:
-                                          MediaQuery.of(context).size.width *
-                                              0.036,
-                                      fontWeight: FontWeight.bold,
-                                      color: Colors.black,
-                                    ),
-                                  ),
-                                ),
-                              ),
+                              // SizedBox(
+                              //   width: MediaQuery.of(context).size.width * 0.34,
+                              //   height:
+                              //       MediaQuery.of(context).size.height * 0.05,
+                              //   child: TextButton(
+                              //     onPressed: () =>
+                              //         randomLotto(winner.rank, isPressed),
+                              //     style: TextButton.styleFrom(
+                              //       backgroundColor:
+                              //           const Color.fromRGBO(252, 225, 87, 1),
+                              //     ),
+                              //     child: Text(
+                              //       "สุ่มออกรางวัล",
+                              //       style: TextStyle(
+                              //         fontFamily: 'MaliMedium',
+                              //         fontSize:
+                              //             MediaQuery.of(context).size.width *
+                              //                 0.036,
+                              //         fontWeight: FontWeight.bold,
+                              //         color: Colors.black,
+                              //       ),
+                              //     ),
+                              //   ),
+                              // ),
                             ],
                           ),
                         ),

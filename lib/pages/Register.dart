@@ -215,28 +215,6 @@ class _RegisterState extends State<Register> {
                   ),
                 ),
                 Padding(
-                  padding: EdgeInsets.only(top: screenSize.height * 0.02),
-                  child: const Text('จำนวนเงินในวอลเล็ท : '),
-                ),
-                SizedBox(height: screenSize.height * 0.015),
-                TextField(
-                  controller: wallet,
-                  decoration: const InputDecoration(
-                    border: OutlineInputBorder(
-                      borderSide: BorderSide(
-                        width: 1,
-                      ),
-                    ),
-                    contentPadding:
-                        EdgeInsets.symmetric(vertical: 10, horizontal: 10),
-                    focusedBorder: OutlineInputBorder(
-                      borderSide: BorderSide(
-                          color: Color.fromARGB(255, 247, 127, 118),
-                          width: 2), // เปลี่ยนขอบเป็นสีแดงเมื่อคลิก
-                    ),
-                  ),
-                ),
-                Padding(
                   padding: EdgeInsets.only(top: screenSize.height * 0.04),
                   child: Center(
                       child: SizedBox(
@@ -290,8 +268,7 @@ class _RegisterState extends State<Register> {
         email.text.isNotEmpty &&
         phone.text.isNotEmpty &&
         password.text.isNotEmpty &&
-        confirmPassword.text.isNotEmpty && // ตรวจสอบว่ากรอกยืนยันรหัสผ่านแล้ว
-        wallet.text.isNotEmpty) {
+        confirmPassword.text.isNotEmpty) {
       // ตรวจสอบว่ารหัสผ่านตรงกับการยืนยันรหัสผ่าน
       if (password.text != confirmPassword.text) {
         // แสดงข้อความแจ้งเตือนว่ารหัสผ่านไม่ตรงกัน
@@ -305,7 +282,7 @@ class _RegisterState extends State<Register> {
           email: email.text,
           password: password.text,
           phone: int.parse(phone.text),
-          wallet: int.parse(wallet.text),
+          wallet: 0,
           isadmin: 0);
 
       var datauser = regsiterRequestPostToJson(registrationData);
