@@ -26,6 +26,8 @@ class _ResultLottoPageState extends State<ResultLottoPage> {
   bool _isLoading = true;
   late bool hasTrue;
   late bool hasPeriodlast;
+  final myWidget = MyWidget();
+  final handleError = HandleError();
 
   @override
   void initState() {
@@ -107,13 +109,14 @@ class _ResultLottoPageState extends State<ResultLottoPage> {
                       Padding(
                         padding:
                             EdgeInsets.only(bottom: screenSize.height * 0.01),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
+                        child: Wrap(
+                          spacing: screenSize.width * 0.012,
+                          runSpacing:
+                              screenSize.height * 0.01, // ระยะห่างระหว่างแถว
+                          alignment: WrapAlignment.center, // จัดแนวตามแนวนอน
                           children:
                               List.generate(widget.result.length, (index) {
                             return Container(
-                              margin: EdgeInsets.symmetric(
-                                  horizontal: screenSize.width * 0.014),
                               width: screenSize.width * 0.025,
                               height: screenSize.height * 0.025,
                               decoration: BoxDecoration(
@@ -348,7 +351,7 @@ class _ResultLottoPageState extends State<ResultLottoPage> {
       _setperiod();
       final data = context.read<Data>();
       final url = await loadUrl();
-
+      var cashall = 0;
       List<Datum> bodyData = [];
       for (var result in widget.result) {
         bodyData.add(Datum(
@@ -358,6 +361,7 @@ class _ResultLottoPageState extends State<ResultLottoPage> {
           gratuity: result.gratuity,
           period: result.period,
         ));
+        cashall += result.gratuity;
       }
 
       var body = AddwinningstowalletRequestPost(
@@ -366,23 +370,91 @@ class _ResultLottoPageState extends State<ResultLottoPage> {
       );
 
       final jsonBody = addwinningstowalletRequestPostToJson(body);
-      print(jsonBody);
 
       var response = await http.put(
-        Uri.parse("$url/wallet/AddFunds/${data.datauser.memberId}"),
+        Uri.parse("$url/lottery/AddWinningsToWallet"),
         headers: {"Content-Type": "application/json; charset=utf-8"},
         body: jsonBody,
       );
 
       if (response.statusCode == 200) {
-        HandleError().handleError(response);
+        showSuccessAddWallet();
+        double resultcash = (cashall + data.datauser.wallet) as double;
+        data.updateWallet(resultcash);
       } else {
-        HandleError().handleError(response);
+        handleError.handleError(response);
       }
     } catch (e, stacktrace) {
-      // Display error message in a Snackbar
-      MyWidget().showCustomSnackbar(
+      myWidget.showCustomSnackbar(
           "Error", "An error occurred: $e, stacktrace: $stacktrace");
     }
+  }
+
+  void showSuccessAddWallet() {
+    final screenSize = MediaQuery.of(context).size;
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        backgroundColor: const Color.fromARGB(255, 245, 156, 55),
+        title: Center(
+          child: Column(
+            children: [
+              Image.asset(
+                'assets/images/check.png',
+                width: MediaQuery.of(context).size.width * 0.2,
+              ),
+              Text(
+                'ขึ้นเงินสำเร็จ',
+                style: TextStyle(
+                    color: const Color.fromRGBO(0, 0, 0, 1),
+                    fontWeight: FontWeight.w800,
+                    fontSize: screenSize.width * 0.08),
+              ),
+              Text(
+                'จำนวนเงินถูกเพิ่มเข้า',
+                style: TextStyle(
+                    color: const Color.fromRGBO(255, 255, 255, 1),
+                    fontWeight: FontWeight.w800,
+                    fontSize: screenSize.width * 0.04),
+              ),
+              Text(
+                'วอลเล็ทแล้ว',
+                style: TextStyle(
+                    color: const Color.fromRGBO(255, 255, 255, 1),
+                    fontWeight: FontWeight.w800,
+                    fontSize: screenSize.width * 0.04),
+              ),
+            ],
+          ),
+        ),
+        actions: [
+          Center(
+            child: SizedBox(
+              width: screenSize.width * 0.4,
+              child: FilledButton(
+                onPressed: () async {
+                  await Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => const CheckLottoPage()),
+                  );
+                },
+                style: ButtonStyle(
+                  backgroundColor: MaterialStateProperty.all<Color>(
+                      const Color.fromARGB(255, 230, 92, 87)),
+                ),
+                child: Text(
+                  'ตกลง',
+                  style: TextStyle(
+                    fontSize: screenSize.width * 0.06,
+                    fontWeight: FontWeight.w800,
+                  ),
+                ),
+              ),
+            ),
+          )
+        ],
+      ),
+    );
   }
 }

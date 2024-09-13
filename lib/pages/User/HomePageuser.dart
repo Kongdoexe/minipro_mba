@@ -57,7 +57,7 @@ class _HomepageuserState extends State<Homepageuser> {
             child: Align(
               alignment: Alignment.topCenter,
               child: SingleChildScrollView(
-                child: Container(
+                child: SizedBox(
                   width: screenSize.width * 0.8,
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -75,7 +75,7 @@ class _HomepageuserState extends State<Homepageuser> {
                                 BorderRadius.circular(screenSize.width * 0.04),
                           ),
                           child: SizedBox(
-                            width: screenSize.width * 0.8,
+                            width: screenSize.width * 0.96,
                             height: screenSize.height * 0.11,
                             child: Padding(
                               padding: EdgeInsets.all(screenSize.width * 0.07),
@@ -97,10 +97,10 @@ class _HomepageuserState extends State<Homepageuser> {
                                       fontSize: screenSize.width * 0.05,
                                       fontWeight: FontWeight.w700,
                                     ),),
-                                    Image.asset(
-                                    'assets/images/money2.png',
-                                    width: screenSize.width * 0.08,
-                                  ),
+                                  //   Image.asset(
+                                  //   'assets/images/money2.png',
+                                  //   width: screenSize.width * 0.08,
+                                  // ),
                                 ],
                               ),
                             ),

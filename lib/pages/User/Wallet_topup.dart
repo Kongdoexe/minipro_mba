@@ -25,7 +25,7 @@ class _WalletTopUpPageState extends State<WalletTopUpPage> {
   @override
   Widget build(BuildContext context) {
     final screenSize = MediaQuery.of(context).size;
-    final userModel = context.watch<Data>();
+    final userModel = context.read<Data>();
 
     return Scaffold(
       backgroundColor: const Color.fromRGBO(255, 138, 128, 1),
@@ -277,6 +277,7 @@ class _WalletTopUpPageState extends State<WalletTopUpPage> {
       if (response.statusCode == 200) {
         handleError.handleError(response);
         _topUpWallet(gratuity.toDouble());
+        _showDialogSuccess();
         _navigateToHomeWithDelay();
       } else {
         handleError.handleError(response);
@@ -298,5 +299,53 @@ class _WalletTopUpPageState extends State<WalletTopUpPage> {
         MaterialPageRoute(builder: (context) => const Homepageuser()),
       );
     });
+  }
+  
+  void _showDialogSuccess() {
+    final screenSize = MediaQuery.of(context).size;
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        backgroundColor: const Color.fromARGB(255, 245, 156, 55),
+        title: Center(
+          child: Column(
+            children: [
+              Image.asset(
+                'assets/images/check.png',
+                width: MediaQuery.of(context).size.width * 0.2,
+              ),
+              Text(
+                'เติมเงินสำเร็จ',
+                style: TextStyle(
+                    color: const Color.fromRGBO(255, 255, 255, 1),
+                    fontWeight: FontWeight.w800,
+                    fontSize: screenSize.width * 0.08),
+              ),
+            ],
+          ),
+        ),
+        actions: [
+          Center(
+            child: SizedBox(
+              width: screenSize.width * 0.4,
+              child: FilledButton(
+                onPressed: () {},
+                style: ButtonStyle(
+                  backgroundColor: MaterialStateProperty.all<Color>(
+                      const Color.fromARGB(255, 230, 92, 87)),
+                ),
+                child: Text(
+                  'ตกลง',
+                  style: TextStyle(
+                    fontSize: screenSize.width * 0.06,
+                    fontWeight: FontWeight.w800,
+                  ),
+                ),
+              ),
+            ),
+          )
+        ],
+      ),
+    );
   }
 }

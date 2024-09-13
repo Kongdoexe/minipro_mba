@@ -344,13 +344,13 @@ class _ChooselottoPageState extends State<ChooselottoPage> {
         );
       } else {
         // Handle other errors
-        log('Failed to insert ticket: ${response.body}');
+        final jsonResponse = json.decode(utf8.decode(response.bodyBytes));
         showDialog(
           context: context,
           builder: (BuildContext context) {
             return AlertDialog(
               title: const Text('ข้อผิดพลาด'),
-              content: Text('เกิดข้อผิดพลาด: ${response.body}'),
+              content: Text('เกิดข้อผิดพลาด: $jsonResponse'),
               actions: <Widget>[
                 TextButton(
                   onPressed: () {
